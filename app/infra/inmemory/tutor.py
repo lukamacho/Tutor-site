@@ -21,3 +21,6 @@ class Tutor:
 
     def add_homework(self, student_id: int, homework_text: str) -> None:
         pass
+
+    def add_language(self, language: str) -> None:
+        self.languages.append(language)
