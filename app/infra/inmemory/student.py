@@ -1,5 +1,6 @@
 from dataclasses import dataclass, field
-from typing import Optional
+from typing import Dict, Optional
+
 
 @dataclass
 class Student:
@@ -21,5 +22,7 @@ class Student:
     def buy_lessons(self, course_id: int, num_lessons: int) -> None:
         pass
 
-    def reschedule_lesson(self, course_id: int, old_timeslot: str, new_timeslot: str) -> None:
+    def reschedule_lesson(
+        self, course_id: int, old_timeslot: str, new_timeslot: str
+    ) -> None:
         pass
