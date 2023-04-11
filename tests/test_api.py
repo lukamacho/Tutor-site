@@ -1,6 +1,6 @@
 from fastapi.testclient import TestClient
 
-from app.core.admin.admin import ADMIN_KEY
+from app.core.admin.interactor import ADMIN_KEY
 
 API_ADMIN_KEY = "admin_key"
 API_ARG_KEY_NAME = "api_key"
