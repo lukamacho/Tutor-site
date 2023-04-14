@@ -1,9 +1,10 @@
 from fastapi.applications import FastAPI
 
 from app.infra.fastapi.admin_api import admin_api
-from app.infra.fastapi.tutor_api import tutor_api
 from app.infra.fastapi.homepage_api import homepage_api
 from app.infra.fastapi.student_api import student_api
+from app.infra.fastapi.tutor_api import tutor_api
+
 
 def setup_fastapi() -> FastAPI:
     app = FastAPI()
