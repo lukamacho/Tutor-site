@@ -14,6 +14,7 @@ class SQLStudentRepository:
             create table if not exists Students (
                 first_name TEXT,
                 last_name TEXT,
+                password TEXT NOT NULL,
                 email TEXT primary key,
                 balance INTEGER
             );
@@ -38,3 +39,29 @@ class SQLStudentRepository:
             return Student(*row)
 
         return None
+
+    def set_balance(self, student_mail: str, new_balance: int) -> None:
+        self.conn.execute(
+            "UPDATE Students SET balance = ? WHERE email = ? ",
+            (
+                new_balance,
+                student_mail,
+            ),
+        )
+        self.conn.commit()
+
+    def get_balance(self, student_mail: str) -> int:
+        student = self.get_student(student_mail)
+        if student is None:
+            return 0
+        return student.balance
+
+    def increase_balance(self, student_mail: str, amount: int) -> None:
+        current_balance = self.get_balance(student_mail)
+        new_balance = current_balance + amount
+        self.set_balance(student_mail, new_balance)
+
+    def decrease_balance(self, student_mail: str, amount: int) -> None:
+        current_balance = self.get_balance(student_mail)
+        new_balance = current_balance - amount
+        self.set_balance(student_mail, new_balance)
