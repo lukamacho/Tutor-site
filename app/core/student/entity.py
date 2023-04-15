@@ -6,4 +6,4 @@ class Student:
     first_name: str
     last_name: str
     email: str
-    balance: int
+    current_balance: int

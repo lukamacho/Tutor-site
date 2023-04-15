@@ -12,12 +12,11 @@ class SQLTutorRepository:
         self.conn.executescript(
             """
             create table if not exists Tutors (
-                first_name TEXT NOT NULL,
-                last_name TEXT NOT NULL,
-                password TEXT NOT NULL,
+                first_name TEXT,
+                last_name TEXT,
                 email TEXT primary key,
                 balance INTEGER,
-                biography TEXT NOT NULL,
+                biography TEXT,
             );
             """
         )
@@ -38,27 +37,3 @@ class SQLTutorRepository:
             return Tutor(*row)
 
         return None
-
-    def get_tutor_balance(self, email: str) -> int:
-        tutor = self.get_tutor(email)
-        return tutor.balance
-
-    def set_tutor_balance(self, email: str, new_balance: int) -> None:
-        self.conn.execute(
-            "UPDATE Tutors SET balance = ? WHERE email = ?",
-            (
-                new_balance,
-                email,
-            ),
-        )
-        self.conn.commit()
-
-    def decrease_balance(self, email: str, amount: int) -> None:
-        current_balance = self.get_tutor_balance(email)
-        new_balance = current_balance - amount
-        self.set_tutor_balance(new_balance)
-
-    def increase_balance(self, email: str, amount: int) -> None:
-        current_balance = self.get_tutor_balance(email)
-        new_balance = current_balance + amount
-        self.set_tutor_balance(new_balance)

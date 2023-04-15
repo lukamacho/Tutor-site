@@ -12,10 +12,9 @@ class SQLCourseRepository:
         self.conn.executescript(
             """
             create table if not exists Courses (
-                subject TEXT NOT NULL,
-                tutor_mail TEXT NOT NULL,
-                price INTEGER,
-                FOREIGN KEY (tutor_mail) REFERENCES Tutors (email)
+                subject TEXT,
+                tutor_mail TEXT,
+                price INTEGER
             );
             """
         )
