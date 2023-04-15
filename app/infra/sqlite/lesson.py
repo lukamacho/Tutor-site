@@ -71,7 +71,7 @@ class SQLLessonRepository:
         self.set_number_of_lessons(tutor_mail, student_mail, number_of_lessons, subject)
 
     def set_lesson_price(
-            self, tutor_mail: str, student_mail: str, subject: str, new_price: int
+        self, tutor_mail: str, student_mail: str, subject: str, new_price: int
     ) -> None:
         self.conn.execute(
             "UPDATE Lessons SET lesson_price = ? WHERE tutor_mail = ? and student_mail = ? and subject = ?",
