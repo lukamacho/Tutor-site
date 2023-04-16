@@ -7,7 +7,7 @@ from app.core.lesson.entity import Lesson
 
 
 @dataclass
-class SQLLessonRepository:
+class SqlLessonRepository:
     def __init__(self, filename: str) -> None:
         self.conn = sqlite3.connect(filename, check_same_thread=False)
         self.conn.executescript(
@@ -24,6 +24,23 @@ class SQLLessonRepository:
             """
         )
         self.conn.commit()
+
+    def create_lesson(
+        self,
+        subject: str,
+        tutor_mail: str,
+        student_mail: str,
+        number_of_lessons: int,
+        lesson_price: int,
+    ) -> Lesson:
+        self.conn.execute(
+            " INSERT INTO Lessons VALUES (?,?,?,?,?)",
+            (subject, tutor_mail, student_mail, number_of_lessons, lesson_price),
+        )
+        self.conn.commit()
+        return Lesson(
+            subject, tutor_mail, student_mail, number_of_lessons, lesson_price
+        )
 
     def get_lesson(self, tutor_mail: str, student_mail: str, subject: str) -> Lesson:
         for row in self.conn.execute(

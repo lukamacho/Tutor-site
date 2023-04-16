@@ -6,7 +6,7 @@ from app.core.course.entity import Course
 
 
 @dataclass
-class SQLCourseRepository:
+class SqlCourseRepository:
     def __init__(self, filename: str) -> None:
         self.conn = sqlite3.connect(filename, check_same_thread=False)
         self.conn.executescript(
