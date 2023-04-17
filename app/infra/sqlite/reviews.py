@@ -35,7 +35,7 @@ class SqlTReviewRepository:
         self.conn.commit()
         return Review(review_text, tutor_mail, student_mail)
 
-    def get_review(self, tutor_mail: str, student_mail: str) -> None:
+    def get_review(self, tutor_mail: str, student_mail: str) -> Optional[Review]:
         for row in self.conn.execute(
             " SELECT * FROM Reviews WHERE tutor_mail = ? and student_mail = ?",
             (tutor_mail, student_mail,),
