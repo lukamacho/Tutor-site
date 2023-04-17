@@ -49,6 +49,8 @@ class SqlLessonRepository:
         ):
             return Lesson(*row)
 
+        return None
+
     def get_number_of_lessons(
         self, tutor_mail: str, student_mail: str, subject: str
     ) -> int:
