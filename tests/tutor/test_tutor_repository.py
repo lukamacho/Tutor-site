@@ -62,18 +62,22 @@ def test_set_balance() -> None:
     balance = 0
     biography = "I am."
 
+    new_balance = 200
+
     tutor_repository.create_tutor(first_name, last_name, email, password, balance, biography);
-    tutor_repository.set_balance(email, 200)
+    tutor_repository.set_balance(email, new_balance)
     get_response = tutor_repository.get_balance(email)
 
     assert isinstance(get_response, int)
-    assert get_response is 200
+    assert get_response is new_balance
 
-    tutor_repository.set_balance(email, 6000)
+    new_balance = 6000
+
+    tutor_repository.set_balance(email, new_balance)
     get_response = tutor_repository.get_balance(email)
 
     assert isinstance(get_response, int)
-    assert get_response is 6000
+    assert get_response is new_balance
 
 def test_increase_balance() -> None:
     tutor_repository = SqlTutorRepository("")
@@ -85,18 +89,24 @@ def test_increase_balance() -> None:
     balance = 4000
     biography = "I know things."
 
+    increment = 2000
+
     tutor_repository.create_tutor(first_name, last_name, email, password, balance, biography);
-    tutor_repository.increase_balance(email, 2000)
+    tutor_repository.increase_balance(email, increment)
+    get_response = tutor_repository.get_balance(email)
+
+    new_balance = balance + increment
+
+    assert isinstance(get_response, int)
+    assert get_response is new_balance
+
+    decrement = 5999
+
+    tutor_repository.decrease_balance(email, decrement)
     get_response = tutor_repository.get_balance(email)
 
     assert isinstance(get_response, int)
-    assert get_response is 6000
-
-    tutor_repository.decrease_balance(email, 5999)
-    get_response = tutor_repository.get_balance(email)
-
-    assert isinstance(get_response, int)
-    assert get_response is 1
+    assert get_response is new_balance - decrement
 
 def test_change_commission_pct() -> None:
     tutor_repository = SqlTutorRepository("")
@@ -108,24 +118,30 @@ def test_change_commission_pct() -> None:
     balance = 0
     biography = "I know things."
 
+    commission_pct = 0.25
+
     tutor_repository.create_tutor(first_name, last_name, email, password, balance, biography);
 
     get_response = tutor_repository.get_tutor(email)
 
     assert isinstance(get_response, Tutor)
-    assert get_response.commission_pct is 0.25
+    assert get_response.commission_pct is commission_pct
 
-    tutor_repository.set_commission_pct(email, 0.3)
+    new_commission_pct = 0.3
+
+    tutor_repository.set_commission_pct(email, new_commission_pct)
     get_response = tutor_repository.get_tutor(email)
 
     assert isinstance(get_response, Tutor)
-    assert get_response.commission_pct is 0.3
+    assert get_response.commission_pct is new_commission_pct
 
-    tutor_repository.decrease_balance(email)
+    decrement = 0.1
+
+    tutor_repository.decrease_commission_pct(email)
     get_response = tutor_repository.get_tutor(email)
 
     assert isinstance(get_response, Tutor)
-    assert get_response.commission_pct is 0.2
+    assert get_response.commission_pct is new_commission_pct - decrement
 
 def test_change_information() -> None:
     tutor_repository = SqlTutorRepository("")
