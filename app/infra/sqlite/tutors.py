@@ -96,7 +96,7 @@ class SqlTutorRepository:
     def decrease_commission_pct(self, tutor_mail: str) -> None:
         tutor = self.get_tutor(tutor_mail)
         commission_pct = tutor.commission_pct
-        new_commission_pct = commission_pct - 1
+        new_commission_pct = commission_pct - 0.01
         self.set_commission_pct(tutor_mail, new_commission_pct)
 
     def change_first_name(self, tutor_mail: str, first_name: str) -> None:

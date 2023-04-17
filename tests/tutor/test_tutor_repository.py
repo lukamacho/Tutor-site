@@ -1,4 +1,4 @@
-from app.infra.sqlite.tutor import SqlTutorRepository
+from app.infra.sqlite.tutors import SqlTutorRepository
 from app.core.tutor.entity import Tutor
 
 def test_create_tutor() -> None:
@@ -135,7 +135,7 @@ def test_change_commission_pct() -> None:
     assert isinstance(get_response, Tutor)
     assert get_response.commission_pct is new_commission_pct
 
-    decrement = 0.1
+    decrement = 0.01
 
     tutor_repository.decrease_commission_pct(email)
     get_response = tutor_repository.get_tutor(email)
