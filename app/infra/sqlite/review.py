@@ -4,8 +4,9 @@ from dataclasses import dataclass
 from app.core.review.entity import Review
 from typing import Optional
 
+
 @dataclass
-class SqlTReviewRepository:
+class SqlReviewRepository:
     def __init__(self, filename: str) -> None:
         self.conn = sqlite3.connect(filename, check_same_thread=False)
         self.conn.executescript(
@@ -38,7 +39,10 @@ class SqlTReviewRepository:
     def get_review(self, tutor_mail: str, student_mail: str) -> Optional[Review]:
         for row in self.conn.execute(
             " SELECT * FROM Reviews WHERE tutor_mail = ? and student_mail = ?",
-            (tutor_mail, student_mail,),
+            (
+                tutor_mail,
+                student_mail,
+            ),
         ):
             return Review(*row)
 

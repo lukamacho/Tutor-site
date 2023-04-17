@@ -5,7 +5,7 @@ from fastapi import FastAPI
 from app.infra.fastapi.api_main import setup_fastapi
 from app.infra.sqlite.course import SqlCourseRepository
 from app.infra.sqlite.lesson import SqlLessonRepository
-from app.infra.sqlite.students import SqlStudentRepository
+from app.infra.sqlite.student import SqlStudentRepository
 from app.infra.sqlite.tutors import SqlTutorRepository
 
 
