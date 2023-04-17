@@ -1,8 +1,6 @@
 import sqlite3
 from dataclasses import dataclass
-from typing import Optional
 
-from app.core.course.entity import Course
 from app.core.lesson.entity import Lesson
 
 
@@ -12,7 +10,7 @@ class SqlLessonRepository:
         self.conn = sqlite3.connect(filename, check_same_thread=False)
         self.conn.executescript(
             """
-            create table if not exists Courses (
+            create table if not exists Lessons (
                 subject TEXT NOT NULL,
                 tutor_mail TEXT NOT NULL,
                 student_mail TEXT NOT NULL,
@@ -81,7 +79,7 @@ class SqlLessonRepository:
         self.set_number_of_lessons(tutor_mail, student_mail, number_of_lessons, subject)
 
     def increase_lesson_number(
-        self, tutor_mail: str, student_mail: str, added_lessons, subject: str
+        self, tutor_mail: str, student_mail: str, added_lessons: int, subject: str
     ) -> None:
         number_of_lessons = self.get_number_of_lessons(
             tutor_mail, student_mail, subject

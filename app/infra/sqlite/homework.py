@@ -1,5 +1,6 @@
 import sqlite3
 from dataclasses import dataclass
+from typing import List
 
 from app.core.homework.homework import Homework
 
@@ -53,6 +54,16 @@ class SqlHomeworkRepository:
         )
         self.conn.commit()
         return Homework(new_homework_text, tutor_mail, student_mail)
+
+    def get_student_homework(self, student_mail: str) -> List[Homework]:
+        homeworks = List[Homework]
+        for row in self.conn.execute(
+            " SELECT * FROM Homeworks WHERE student_mail = ?",
+            (student_mail),
+        ):
+            homeworks.append(Homework(*row))
+
+        return homeworks
 
     def delete_homework(
         self, homework_text: str, tutor_mail: str, student_mail: str

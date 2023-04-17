@@ -6,7 +6,7 @@ from app.core.message.entity import Message
 
 
 @dataclass
-class SqlHomeworkRepository:
+class SqlMessageRepository:
     def __init__(self, filename: str) -> None:
         self.conn = sqlite3.connect(filename, check_same_thread=False)
         self.conn.executescript(
@@ -42,28 +42,20 @@ class SqlHomeworkRepository:
             " SELECT * FROM Messages WHERE tutor_mail = ? and student_mail = ?",
             (tutor_mail, student_mail),
         ):
-            messages.append(*row)
+            messages.append(Message(*row))
 
         return messages
 
-    def delete_tutor_messages(
-            self, tutor_mail: str
-    ) -> None:
+    def delete_tutor_messages(self, tutor_mail: str) -> None:
         self.conn.execute(
             "DELETE FROM TABLE Messages WHERE  tutor_mail = ?  ",
-            (
-                tutor_mail,
-            ),
+            (tutor_mail,),
         )
         self.conn.commit()
 
-    def delete_student_messages(
-            self, student_mail: str
-    ) -> None:
+    def delete_student_messages(self, student_mail: str) -> None:
         self.conn.execute(
             "DELETE FROM TABLE Messages WHERE  student_mail = ?  ",
-            (
-                student_mail,
-            ),
+            (student_mail,),
         )
         self.conn.commit()
