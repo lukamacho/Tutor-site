@@ -2,7 +2,7 @@ import sqlite3
 from dataclasses import dataclass
 
 from app.core.review.entity import Review
-
+from typing import Optional
 
 @dataclass
 class SqlTReviewRepository:
