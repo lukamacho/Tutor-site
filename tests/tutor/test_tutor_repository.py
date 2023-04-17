@@ -79,7 +79,7 @@ def test_set_balance() -> None:
     assert isinstance(get_response, int)
     assert get_response is new_balance
 
-def test_increase_balance() -> None:
+def test_change_balance() -> None:
     tutor_repository = SqlTutorRepository("")
 
     first_name = "Han"
