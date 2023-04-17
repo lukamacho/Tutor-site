@@ -35,6 +35,15 @@ class SqlTReviewRepository:
         self.conn.commit()
         return Review(review_text, tutor_mail, student_mail)
 
+    def get_review(self, tutor_mail: str, student_mail: str) -> None:
+        for row in self.conn.execute(
+            " SELECT * FROM Reviews WHERE tutor_mail = ? and student_mail = ?",
+            (tutor_mail, student_mail,),
+        ):
+            return Review(*row)
+
+        return None
+
     def delete_review(self, tutor_mail: str, student_mail: str) -> None:
         self.conn.execute(
             " DELETE FROM Reviews where tutor_mail = ? and student_mail = ? ",
