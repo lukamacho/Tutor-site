@@ -46,6 +46,12 @@ def test_get_tutor() -> None:
     assert get_response.biography is biography
     assert get_response.commission_pct is 0.25
 
+    new_email = "idontexist@gmail.com"
+
+    get_response = tutor_repository.get_tutor(new_email)
+
+    assert get_response is None
+
 def test_set_balance() -> None:
     tutor_repository = SqlTutorRepository("")
 
