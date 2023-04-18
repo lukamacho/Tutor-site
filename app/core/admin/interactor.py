@@ -1,12 +1,18 @@
+import smtplib
+import ssl
 from dataclasses import dataclass
-from enum import Enum
-from typing import List, Protocol
-
-from result import Err, Ok, Result
+from typing import Protocol
 
 
-class AdminError(Enum):
-    INCORRECT_ADMIN_KEY = 0
+class IEmailService(Protocol):
+    def send_mail(self,receiver_email: str, message: str) -> None:
+        pass
 
 
-ADMIN_KEY = "sezam-gaighe"
+@dataclass
+class AdminInteractor:
+    email_service : IEmailService
+    def send_hello(self,):
+        self.email_service.send_mail("skhokhi@gmail.com", "hello")
+
+
