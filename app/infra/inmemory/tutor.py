@@ -10,7 +10,7 @@ class Tutor:
     languages: List[str]
     biography: str
     current_balance = 0
-    commision_pct = 0.25
+    commission_pct = 0.25
     subject_prices: Dict[str, int] = field(default_factory=dict)
     availability_calendar: Dict[str, int] = field(default_factory=dict)
 

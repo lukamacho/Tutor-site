@@ -1,9 +1,9 @@
-from app.infra.sqlite.reviews import SqlTReviewRepository
+from app.infra.sqlite.review import SqlReviewRepository
 from app.core.review.entity import Review
 
 
 def test_create_review() -> None:
-    review_repository = SqlTReviewRepository("")
+    review_repository = SqlReviewRepository("")
 
     review_text = "Great tutor."
     tutor_mail = "tutor@gmail.com"
@@ -18,7 +18,7 @@ def test_create_review() -> None:
 
 
 def test_get_review() -> None:
-    review_repository = SqlTReviewRepository("")
+    review_repository = SqlReviewRepository("")
 
     review_text = "Great tutor."
     tutor_mail = "tutor@gmail.com"
@@ -39,7 +39,7 @@ def test_get_review() -> None:
     assert get_response is None
 
 def test_delete_review() -> None:
-    review_repository = SqlTReviewRepository("")
+    review_repository = SqlReviewRepository("")
 
     review_text = "Great tutor."
     tutor_mail = "tutor@gmail.com"
@@ -56,7 +56,7 @@ def test_delete_review() -> None:
     assert get_response is None
 
 def test_change_review() -> None:
-    review_repository = SqlTReviewRepository("")
+    review_repository = SqlReviewRepository("")
 
     review_text = "Great tutor."
     tutor_mail = "tutor@gmail.com"

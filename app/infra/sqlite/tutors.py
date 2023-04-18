@@ -7,6 +7,7 @@ from app.core.tutor.entity import Tutor
 
 @dataclass
 class SqlTutorRepository:
+    # profile_picture BLOB, ar dagaviwydes
     def __init__(self, filename: str) -> None:
         self.conn = sqlite3.connect(filename, check_same_thread=False)
         self.conn.executescript(
@@ -16,7 +17,7 @@ class SqlTutorRepository:
                 last_name TEXT ,
                 email TEXT primary key,
                 password TEXT NOT NULL,
-                commission_pct REAL NOT NULL
+                commission_pct REAL NOT NULL,
                 balance INTEGER,
                 biography TEXT,
             );

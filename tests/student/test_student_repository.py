@@ -1,4 +1,4 @@
-from app.infra.sqlite.students import SqlStudentRepository
+from app.infra.sqlite.student import SqlStudentRepository
 from app.core.student.entity import Student
 
 def test_create_student() -> None:

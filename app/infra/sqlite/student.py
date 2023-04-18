@@ -7,6 +7,7 @@ from app.core.student.entity import Student
 
 @dataclass
 class SqlStudentRepository:
+    # profile_picture BLOB, ar dagaviwydes
     def __init__(self, filename: str) -> None:
         self.conn = sqlite3.connect(filename, check_same_thread=False)
         self.conn.executescript(
