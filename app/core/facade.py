@@ -5,9 +5,11 @@ from app.core.admin.interactor import AdminInteractor, IEmailService
 
 @dataclass
 class OlympianTutorService:
-    admin_interactor : AdminInteractor
+    admin_interactor: AdminInteractor
+
     def send_hello(self):
         self.admin_interactor.send_hello()
+
     @classmethod
-    def create(cls, emailer: IEmailService):
+    def create(cls, emailer: IEmailService) -> "OlympianTutorService":
         return cls(admin_interactor=AdminInteractor(emailer))
