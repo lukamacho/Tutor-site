@@ -9,4 +9,4 @@ admin_api = APIRouter()
 @admin_api.get("/admin/hello")
 def get_admin(core: OlympianTutorService = Depends(get_core)):
     print("hello sender")
-    core.send_hello()
+    core.admin_interactor.send_verification()
