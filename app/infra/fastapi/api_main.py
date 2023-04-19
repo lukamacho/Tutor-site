@@ -6,6 +6,7 @@ from app.infra.fastapi.student_api import student_api
 from app.infra.fastapi.tutor_api import tutor_api
 from app.core.facade import OlympianTutorService
 
+
 def setup_fastapi(core: OlympianTutorService) -> FastAPI:
     app = FastAPI()
 

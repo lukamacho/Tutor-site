@@ -2,7 +2,9 @@ from typing import Protocol
 
 from fastapi import FastAPI
 
+from app.infra.emailer.smtp import SMTPEmailService
 from app.infra.fastapi.api_main import setup_fastapi
+from app.core.facade import OlympianTutorService
 from app.infra.sqlite.course import SqlCourseRepository
 from app.infra.sqlite.lesson import SqlLessonRepository
 from app.infra.sqlite.student import SqlStudentRepository
@@ -31,4 +33,4 @@ def setup() -> FastAPI:
     # course_repository = setup_course_repository()
     # lesson_repository = setup_lesson_repository()
 
-    return setup_fastapi()
+    return setup_fastapi(OlympianTutorService.create(emailer=SMTPEmailService))
