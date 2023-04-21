@@ -6,6 +6,7 @@ from app.core.course.interactor import CourseInteractor, ICourseInteractor
 from app.core.lesson.interactor import LessonInteractor, ILessonInteractor
 from app.core.review.entity import Review
 from app.core.review.interactor import ReviewInteractor, IReviewInteractor
+from app.core.student.interactor import IStudentInteractor, StudentInteractor
 
 
 @dataclass
@@ -100,10 +101,12 @@ class OlympianTutorService:
         course_interactor: ICourseInteractor,
         review_interactor: IReviewInteractor,
         lesson_interactor: ILessonInteractor,
+        student_interactor: IStudentInteractor,
     ) -> "OlympianTutorService":
         return cls(
             admin_interactor=AdminInteractor(emailer),
             course_interactor=CourseInteractor(course_interactor),
             review_interactor=ReviewInteractor(review_interactor),
             lesson_interactor=LessonInteractor(lesson_interactor),
+            student_interactor=StudentInteractor(student_interactor)
         )
