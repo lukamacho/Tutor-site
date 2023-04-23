@@ -3,9 +3,11 @@ from typing import Optional, List
 
 from app.core.admin.interactor import AdminInteractor, IEmailService
 from app.core.course.interactor import CourseInteractor, ICourseInteractor
+from app.core.lesson.entity import Lesson
 from app.core.lesson.interactor import LessonInteractor, ILessonInteractor
 from app.core.review.entity import Review
 from app.core.review.interactor import ReviewInteractor, IReviewInteractor
+from app.core.student.entity import Student
 from app.core.student.interactor import IStudentInteractor, StudentInteractor
 
 
@@ -15,6 +17,7 @@ class OlympianTutorService:
     course_interactor: CourseInteractor
     review_interactor: ReviewInteractor
     lesson_interactor: LessonInteractor
+    student_interactor: StudentInteractor
 
     def send_hello(self):
         self.admin_interactor.send_hello()
@@ -94,6 +97,30 @@ class OlympianTutorService:
             tutor_mail, student_mail, subject, new_price
         )
 
+    def create_student(self, email: str, password: str) -> Student:
+        return self.student_repository.create_student(email, password)
+
+    def get_student(self, email: str) -> Optional[Student]:
+        return self.student_repository.get_student(email)
+
+    def set_balance(self, student_mail: str, new_balance: int) -> None:
+        self.student_repository.set_balance(student_mail, new_balance)
+
+    def get_balance(self, student_mail: str) -> int:
+        return self.student_repository.get_balance(student_mail)
+
+    def increase_balance(self, student_mail: str, amount: int) -> None:
+        self.student_repository.increase_balance(student_mail, amount)
+
+    def decrease_balance(self, student_mail: str, amount: int) -> None:
+        self.student_repository.decrease_balance(student_mail, amount)
+
+    def change_first_name(self, student_mail: str, first_name: str) -> None:
+        self.student_repository.change_first_name(student_mail, first_name)
+
+    def change_last_name(self, student_mail: str, last_name: str) -> None:
+        self.student_repository.change_last_name(student_mail, last_name)
+
     @classmethod
     def create(
         cls,
@@ -108,5 +135,5 @@ class OlympianTutorService:
             course_interactor=CourseInteractor(course_interactor),
             review_interactor=ReviewInteractor(review_interactor),
             lesson_interactor=LessonInteractor(lesson_interactor),
-            student_interactor=StudentInteractor(student_interactor)
+            student_interactor=StudentInteractor(student_interactor),
         )

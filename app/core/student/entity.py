@@ -8,3 +8,4 @@ class Student:
     email: str
     password: str
     balance: int
+    profile_address: str
