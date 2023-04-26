@@ -61,7 +61,7 @@ class ReviewInteractor:
         return self.review_repository.get_review(tutor_mail, student_mail)
 
     def get_tutor_reviews(self, tutor_mail: str) -> List[Review]:
-        return self.review_repository.get_review(tutor_mail)
+        return self.review_repository.get_tutor_reviews(tutor_mail)
 
     def delete_review(self, tutor_mail: str, student_mail: str) -> None:
         self.review_repository.delete_review(tutor_mail, student_mail)
