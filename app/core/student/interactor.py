@@ -64,8 +64,8 @@ class IStudentRepository(Protocol):
 class StudentInteractor:
     student_repository: IStudentRepository
 
-    def create_student(self, email: str, password: str) -> Student:
-        return self.student_repository.create_student(email, password)
+    def create_student(self, first_name: str, last_name: str, email: str, password: str, balance: int) -> Student:
+        return self.student_repository.create_student(first_name, last_name, email, password, balance)
 
     def get_student(self, email: str) -> Optional[Student]:
         return self.student_repository.get_student(email)
