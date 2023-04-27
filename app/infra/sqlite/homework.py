@@ -2,7 +2,7 @@ import sqlite3
 from dataclasses import dataclass
 from typing import List
 
-from app.core.homework.homework import Homework
+from app.core.homework.entity import Homework
 
 
 @dataclass

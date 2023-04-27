@@ -12,3 +12,4 @@ class Tutor:
     balance: int
     biography: str
     language: List[str]
+    profile_address: str
