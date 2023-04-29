@@ -1,10 +1,8 @@
-from app.infra.sqlite.student import SqlStudentRepository
+from app.core.student.interactor import IStudentRepository
 from app.core.student.entity import Student
 
 
-def test_create_student() -> None:
-    student_repository = SqlStudentRepository("")
-
+def test_create_student(student_repository: IStudentRepository) -> None:
     first_name = "Anne"
     last_name = "Warwick"
     email = "annewarwick@gmail.com"
@@ -21,9 +19,7 @@ def test_create_student() -> None:
     assert response.balance == balance
 
 
-def test_get_student() -> None:
-    student_repository = SqlStudentRepository("")
-
+def test_get_student(student_repository: IStudentRepository) -> None:
     first_name = "Mia"
     last_name = "Seaworth"
     email = "miaseaworth@gmail.com"
@@ -47,9 +43,7 @@ def test_get_student() -> None:
     assert get_response is None
 
 
-def test_set_balance() -> None:
-    student_repository = SqlStudentRepository("")
-
+def test_set_balance(student_repository: IStudentRepository) -> None:
     first_name = "Nina"
     last_name = "Fanning"
     email = "ninafanning@gmail.com"
@@ -74,9 +68,7 @@ def test_set_balance() -> None:
     assert get_response == new_balance
 
 
-def test_change_balance() -> None:
-    student_repository = SqlStudentRepository("")
-
+def test_change_balance(student_repository: IStudentRepository) -> None:
     first_name = "Emma"
     last_name = "Murdoch"
     email = "emmamurdoch@gmail.com"
@@ -103,9 +95,7 @@ def test_change_balance() -> None:
     assert get_response == new_balance - decrement
 
 
-def test_change_information() -> None:
-    student_repository = SqlStudentRepository("")
-
+def test_change_information(student_repository: IStudentRepository) -> None:
     first_name = "Peter"
     last_name = "Smith"
     email = "petersmith@gmail.com"
