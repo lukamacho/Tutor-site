@@ -6,23 +6,90 @@ from typing import Dict, Optional
 class Student:
     first_name: str
     last_name: str
-    current_balance: 0
+    email: str
+    password: str
+    balance: 0
     lessons: Dict[int, int] = field(default_factory=dict)
 
-    def set_student_info(self, first_name: str, last_name: str) -> None:
+    def set_balance(self, new_balance: int) -> None:
+        self.balance = new_balance
+
+    def get_balance(self) -> int:
+        return self.balance
+
+    def increase_balance(self, amount: int) -> None:
+        self.balance += amount
+
+    def decrease_balance(self, amount: int) -> None:
+        self.balance -= amount
+
+    def change_first_name(self, first_name: str) -> None:
         self.first_name = first_name
+
+    def change_last_name(self, last_name: str) -> None:
         self.last_name = last_name
 
-    def add_lessons(self, course_id: int, num_lessons: int) -> None:
-        self.lessons[course_id] += num_lessons
+    # def set_student_info(self, first_name: str, last_name: str) -> None:
+    #     self.first_name = first_name
+    #     self.last_name = last_name
+    #
+    # def add_lessons(self, course_id: int, num_lessons: int) -> None:
+    #     self.lessons[course_id] += num_lessons
+    #
+    # def book_lesson(self, course_id: int, timeslot: str) -> None:
+    #     pass
+    #
+    # def buy_lessons(self, course_id: int, num_lessons: int) -> None:
+    #     pass
+    #
+    # def reschedule_lesson(
+    #     self, course_id: int, old_timeslot: str, new_timeslot: str
+    # ) -> None:
+    #     pass
 
-    def book_lesson(self, course_id: int, timeslot: str) -> None:
-        pass
+@dataclass
+class InMemoryStudentRepository:
+    data: Dict[str, Student] = field(default_factory=dict)
 
-    def buy_lessons(self, course_id: int, num_lessons: int) -> None:
-        pass
+    def create_student(
+            self, first_name: str, last_name: str, email: str, password: str, balance: int
+    ) -> Student:
+        student = Student(first_name, last_name, email, password, balance)
+        self.data[email] = student
+        return student
 
-    def reschedule_lesson(
-        self, course_id: int, old_timeslot: str, new_timeslot: str
-    ) -> None:
-        pass
+    def get_student(self, email: str) -> Optional[Student]:
+        if email in self.data.keys():
+            return self.data[email]
+        return None
+
+    def set_balance(self, student_mail: str, new_balance: int) -> None:
+        student = self.get_student(student_mail)
+        if student is not None:
+            student.set_balance(new_balance)
+
+    def get_balance(self, student_mail: str) -> Optional[int]:
+        student = self.get_student(student_mail)
+        if student is not None:
+            return student.get_balance()
+        return None
+
+    def increase_balance(self, student_mail: str, amount: int) -> None:
+        student = self.get_student(student_mail)
+        if student is not None:
+            return student.increase_balance(amount)
+
+    def decrease_balance(self, student_mail: str, amount: int) -> None:
+        student = self.get_student(student_mail)
+        if student is not None:
+            return student.decrease_balance(amount)
+
+    def change_first_name(self, student_mail: str, first_name: str) -> None:
+        student = self.get_student(student_mail)
+        if student is not None:
+            student.change_first_name(first_name)
+
+    def change_last_name(self, student_mail: str, last_name: str) -> None:
+        student = self.get_student(student_mail)
+        if student is not None:
+            student.change_last_name(last_name)
