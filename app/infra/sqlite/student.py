@@ -25,14 +25,14 @@ class SqlStudentRepository:
         self.conn.commit()
 
     def create_student(
-        self, first_name: str, last_name: str, email: str, password: str, balance: int
+        self, first_name: str, last_name: str, email: str, password: str, balance: int, profile_address: str = ""
     ) -> Student:
         self.conn.execute(
-            " INSERT INTO Students VALUES (?,?,?,?,?)",
-            (first_name, last_name, email, password, balance),
+            " INSERT INTO Students VALUES (?,?,?,?,?,?)",
+            (first_name, last_name, email, password, balance, profile_address),
         )
         self.conn.commit()
-        return Student(first_name, last_name, email, password, balance)
+        return Student(first_name, last_name, email, password, balance, profile_address)
 
     def get_student(self, email: str) -> Optional[Student]:
         for row in self.conn.execute(
