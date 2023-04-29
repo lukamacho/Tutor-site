@@ -14,11 +14,11 @@ def test_create_student() -> None:
     response = student_repository.create_student(first_name, last_name, email, password, balance)
 
     assert isinstance(response, Student)
-    assert response.first_name is first_name
-    assert response.last_name is last_name
-    assert response.email is email
-    assert response.password is password
-    assert response.balance is balance
+    assert response.first_name == first_name
+    assert response.last_name == last_name
+    assert response.email == email
+    assert response.password == password
+    assert response.balance == balance
 
 
 def test_get_student() -> None:
