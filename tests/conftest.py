@@ -2,12 +2,15 @@ import pytest
 from _pytest.config.argparsing import Parser
 
 from app.core.course.interactor import ICourseRepository
+from app.core.homework.interactor import IHomeworkRepository
 from app.core.student.interactor import IStudentRepository
 from app.core.tutor.interactor import ITutorRepository
 from app.infra.inmemory.course import InMemoryCourseRepository
+from app.infra.inmemory.homework import InMemoryHomeworkRepository
 from app.infra.inmemory.student import InMemoryStudentRepository
 from app.infra.inmemory.tutor import InMemoryTutorRepository
 from app.infra.sqlite.course import SqlCourseRepository
+from app.infra.sqlite.homework import SqlHomeworkRepository
 from app.infra.sqlite.student import SqlStudentRepository
 from app.infra.sqlite.tutors import SqlTutorRepository
 
@@ -44,3 +47,10 @@ def course_repository(request: pytest.FixtureRequest) -> ICourseRepository:
     if use_sql(request):
         return SqlCourseRepository("")
     return InMemoryCourseRepository()
+
+
+@pytest.fixture(scope="function")
+def homework_repository(request: pytest.FixtureRequest) -> IHomeworkRepository:
+    if use_sql(request):
+        return SqlHomeworkRepository("")
+    return InMemoryHomeworkRepository()
