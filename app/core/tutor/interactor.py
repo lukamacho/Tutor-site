@@ -2,9 +2,10 @@ from typing import Protocol, Optional
 from app.core.tutor.entity import Tutor
 from dataclasses import dataclass
 
+
 class ITutorInteractor(Protocol):
     def create_tutor(
-        self, first_name: str, last_name: str, email: str, password: str, balance: int, biography: str
+            self, first_name: str, last_name: str, email: str, password: str, balance: int, biography: str
     ) -> Tutor:
         pass
 
@@ -37,10 +38,11 @@ class ITutorInteractor(Protocol):
 
     def change_biography(self, tutor_mail: str, biography: str) -> None:
         pass
+
 
 class ITutorRepository(Protocol):
     def create_tutor(
-        self, first_name: str, last_name: str, email: str, password: str, balance: int, biography: str
+            self, first_name: str, last_name: str, email: str, password: str, balance: int, biography: str
     ) -> Tutor:
         pass
 
@@ -73,6 +75,7 @@ class ITutorRepository(Protocol):
 
     def change_biography(self, tutor_mail: str, biography: str) -> None:
         pass
+
 
 @dataclass
 class TutorInteractor:
@@ -102,7 +105,7 @@ class TutorInteractor:
         self.tutor_repository.set_commission_pct(tutor_mail, new_commission_pct)
 
     def decrease_commission_pct(self, tutor_mail: str) -> None:
-        self.tutor_repository.decrease_balance(tutor_mail)
+        self.tutor_repository.decrease_commission_pct(tutor_mail)
 
     def change_first_name(self, tutor_mail: str, first_name: str) -> None:
         self.tutor_repository.change_first_name(tutor_mail, first_name)
