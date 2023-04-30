@@ -2,8 +2,11 @@ import pytest
 from _pytest.config.argparsing import Parser
 
 from app.core.student.interactor import IStudentRepository
+from app.core.tutor.interactor import ITutorRepository
 from app.infra.inmemory.student import InMemoryStudentRepository
+from app.infra.inmemory.tutor import InMemoryTutorRepository
 from app.infra.sqlite.student import SqlStudentRepository
+from app.infra.sqlite.tutors import SqlTutorRepository
 
 
 def pytest_addoption(parser: Parser) -> None:
@@ -24,3 +27,10 @@ def student_repository(request: pytest.FixtureRequest) -> IStudentRepository:
     if use_sql(request):
         return SqlStudentRepository("")
     return InMemoryStudentRepository()
+
+
+@pytest.fixture(scope="function")
+def tutor_repository(request: pytest.FixtureRequest) -> ITutorRepository:
+    if use_sql(request):
+        return SqlTutorRepository("")
+    return InMemoryTutorRepository()
