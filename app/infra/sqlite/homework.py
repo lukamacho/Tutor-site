@@ -44,7 +44,7 @@ class SqlHomeworkRepository:
         student_mail: str,
     ) -> Homework:
         self.conn.execute(
-            "UPDATE Homeworks SET homework_text = ? WHERE tutor_mail = ? and student_mail = ? homework_text = ?",
+            "UPDATE Homeworks SET homework_text = ? WHERE tutor_mail = ? and student_mail = ? and homework_text = ?",
             (
                 new_homework_text,
                 tutor_mail,
@@ -56,10 +56,12 @@ class SqlHomeworkRepository:
         return Homework(new_homework_text, tutor_mail, student_mail)
 
     def get_student_homework(self, student_mail: str) -> List[Homework]:
-        homeworks = List[Homework]
+        homeworks: List[Homework] = []
         for row in self.conn.execute(
             " SELECT * FROM Homeworks WHERE student_mail = ?",
-            (student_mail),
+                (
+                    student_mail,
+                )
         ):
             homeworks.append(Homework(*row))
 
@@ -69,7 +71,7 @@ class SqlHomeworkRepository:
         self, homework_text: str, tutor_mail: str, student_mail: str
     ) -> None:
         self.conn.execute(
-            "DELETE FROM TABLE Homeworks WHERE homework_text = ? and tutor_mail = ? and student_mail = ? ",
+            "DELETE FROM Homeworks WHERE homework_text = ? and tutor_mail = ? and student_mail = ? ",
             (
                 homework_text,
                 tutor_mail,
