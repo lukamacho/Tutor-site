@@ -41,10 +41,10 @@ class SqlCourseRepository:
         return None
 
     def get_courses(self, tutor_mail: str) -> Optional[List[Course]]:
-        courses = List
+        courses: List[Course] = []
         for row in self.conn.execute(
             " SELECT * FROM Courses WHERE tutor_mail = ?", (tutor_mail,)
         ):
-            courses.add(Course(*row))
+            courses.append(Course(*row))
 
         return courses
