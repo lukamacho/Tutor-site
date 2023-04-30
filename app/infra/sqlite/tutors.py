@@ -19,7 +19,7 @@ class SqlTutorRepository:
                 password TEXT NOT NULL,
                 commission_pct REAL NOT NULL,
                 balance INTEGER,
-                biography TEXT,
+                biography TEXT
             );
             """
         )
