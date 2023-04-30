@@ -5,10 +5,12 @@ from app.core.tutor.interactor import ITutorRepository, TutorInteractor
 def test_create_tutor(tutor_repository: ITutorRepository) -> None:
     interactor = TutorInteractor(tutor_repository)
 
-    response = interactor.create_tutor("John", "Doe", "johndoe@gmail.com", "johndoe", 0, "I'm John.")
+    mail = "johndoe@gmail.com"
+
+    response = interactor.create_tutor("John", "Doe", mail, "johndoe", 0, "I'm John.")
 
     assert isinstance(response, Tutor)
-    assert tutor_repository.get_tutor("johndoe@gmail.com") is not None
+    assert tutor_repository.get_tutor(mail) is not None
     assert tutor_repository.get_tutor("") is None
 
 
