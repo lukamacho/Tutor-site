@@ -1,9 +1,9 @@
+from app.core.tutor.interactor import ITutorRepository
 from app.infra.sqlite.tutors import SqlTutorRepository
 from app.core.tutor.entity import Tutor
 
-def test_create_tutor() -> None:
-    tutor_repository = SqlTutorRepository("")
 
+def test_create_tutor(tutor_repository: ITutorRepository) -> None:
     first_name = "Lara"
     last_name = "Croft"
     email = "laracroft@gmail.com"
@@ -11,21 +11,19 @@ def test_create_tutor() -> None:
     balance = 150
     biography = "I am an archeologist."
 
-    response = tutor_repository.create_tutor(first_name, last_name, email, password, balance, biography);
+    response = tutor_repository.create_tutor(first_name, last_name, email, password, balance, biography)
 
     assert isinstance(response, Tutor)
-    assert response.first_name is first_name
-    assert response.first_name is "Eva"
-    assert response.last_name is last_name
-    assert response.email is email
-    assert response.password is password
-    assert response.balance is balance
-    assert response.biography is biography
-    assert response.commission_pct is 0.25
+    assert response.first_name == first_name
+    assert response.last_name == last_name
+    assert response.email == email
+    assert response.password == password
+    assert response.balance == balance
+    assert response.biography == biography
+    assert response.commission_pct == 0.25
 
-def test_get_tutor() -> None:
-    tutor_repository = SqlTutorRepository("")
 
+def test_get_tutor(tutor_repository: ITutorRepository) -> None:
     first_name = "Emma"
     last_name = "Stone"
     email = "emmastone@gmail.com"
@@ -37,14 +35,13 @@ def test_get_tutor() -> None:
     get_response = tutor_repository.get_tutor(email)
 
     assert isinstance(get_response, Tutor)
-    assert get_response.first_name is first_name
-    assert get_response.first_name is "Eva"
-    assert get_response.last_name is last_name
-    assert get_response.email is email
-    assert get_response.password is password
-    assert get_response.balance is balance
-    assert get_response.biography is biography
-    assert get_response.commission_pct is 0.25
+    assert get_response.first_name == first_name
+    assert get_response.last_name == last_name
+    assert get_response.email == email
+    assert get_response.password == password
+    assert get_response.balance == balance
+    assert get_response.biography == biography
+    assert get_response.commission_pct == 0.25
 
     new_email = "idontexist@gmail.com"
 
@@ -52,9 +49,8 @@ def test_get_tutor() -> None:
 
     assert get_response is None
 
-def test_set_balance() -> None:
-    tutor_repository = SqlTutorRepository("")
 
+def test_set_balance(tutor_repository: ITutorRepository) -> None:
     first_name = "John"
     last_name = "Doe"
     email = "johndoe@gmail.com"
@@ -69,7 +65,7 @@ def test_set_balance() -> None:
     get_response = tutor_repository.get_balance(email)
 
     assert isinstance(get_response, int)
-    assert get_response is new_balance
+    assert get_response == new_balance
 
     new_balance = 6000
 
@@ -77,11 +73,10 @@ def test_set_balance() -> None:
     get_response = tutor_repository.get_balance(email)
 
     assert isinstance(get_response, int)
-    assert get_response is new_balance
+    assert get_response == new_balance
 
-def test_change_balance() -> None:
-    tutor_repository = SqlTutorRepository("")
 
+def test_change_balance(tutor_repository: ITutorRepository) -> None:
     first_name = "Han"
     last_name = "Solo"
     email = "hansolo@gmail.com"
@@ -98,7 +93,7 @@ def test_change_balance() -> None:
     new_balance = balance + increment
 
     assert isinstance(get_response, int)
-    assert get_response is new_balance
+    assert get_response == new_balance
 
     decrement = 5999
 
@@ -106,11 +101,10 @@ def test_change_balance() -> None:
     get_response = tutor_repository.get_balance(email)
 
     assert isinstance(get_response, int)
-    assert get_response is new_balance - decrement
+    assert get_response == new_balance - decrement
 
-def test_change_commission_pct() -> None:
-    tutor_repository = SqlTutorRepository("")
 
+def test_change_commission_pct(tutor_repository: ITutorRepository) -> None:
     first_name = "Han"
     last_name = "Solo"
     email = "hansolo@gmail.com"
@@ -125,7 +119,7 @@ def test_change_commission_pct() -> None:
     get_response = tutor_repository.get_tutor(email)
 
     assert isinstance(get_response, Tutor)
-    assert get_response.commission_pct is commission_pct
+    assert get_response.commission_pct == commission_pct
 
     new_commission_pct = 0.3
 
@@ -133,7 +127,7 @@ def test_change_commission_pct() -> None:
     get_response = tutor_repository.get_tutor(email)
 
     assert isinstance(get_response, Tutor)
-    assert get_response.commission_pct is new_commission_pct
+    assert get_response.commission_pct == new_commission_pct
 
     decrement = 0.01
 
@@ -141,11 +135,10 @@ def test_change_commission_pct() -> None:
     get_response = tutor_repository.get_tutor(email)
 
     assert isinstance(get_response, Tutor)
-    assert get_response.commission_pct is new_commission_pct - decrement
+    assert get_response.commission_pct == new_commission_pct - decrement
 
-def test_change_information() -> None:
-    tutor_repository = SqlTutorRepository("")
 
+def test_change_information(tutor_repository: ITutorRepository) -> None:
     first_name = "John"
     last_name = "Doe"
     email = "johndoe@gmail.com"
@@ -165,6 +158,6 @@ def test_change_information() -> None:
     get_response = tutor_repository.get_tutor(email)
 
     assert isinstance(get_response, Tutor)
-    assert get_response.first_name is new_first_name
-    assert get_response.last_name is new_last_name
-    assert get_response.biography is new_biography
+    assert get_response.first_name == new_first_name
+    assert get_response.last_name == new_last_name
+    assert get_response.biography == new_biography
