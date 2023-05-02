@@ -39,7 +39,7 @@ def setup_lesson_repository() -> SqlLessonRepository:
 
 def setup() -> FastAPI:
     student_repository = setup_student_repository()
-    #tutor_repository = setup_tutor_repository()
+    tutor_repository = setup_tutor_repository()
     course_repository = setup_course_repository()
     lesson_repository = setup_lesson_repository()
     review_repository = setup_review_repository()
@@ -50,5 +50,6 @@ def setup() -> FastAPI:
             review_interactor=review_repository,
             lesson_interactor=lesson_repository,
             student_interactor=student_repository,
+            tutor_interactor=tutor_repository,
         )
     )

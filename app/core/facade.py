@@ -9,6 +9,8 @@ from app.core.review.entity import Review
 from app.core.review.interactor import ReviewInteractor, IReviewInteractor
 from app.core.student.entity import Student
 from app.core.student.interactor import IStudentInteractor, StudentInteractor
+from app.core.tutor.entity import Tutor
+from app.core.tutor.interactor import TutorInteractor, ITutorInteractor
 
 
 @dataclass
@@ -18,6 +20,7 @@ class OlympianTutorService:
     review_interactor: ReviewInteractor
     lesson_interactor: LessonInteractor
     student_interactor: StudentInteractor
+    tutor_interactor: TutorInteractor
 
     def send_hello(self):
         self.admin_interactor.send_hello()
@@ -97,29 +100,76 @@ class OlympianTutorService:
             tutor_mail, student_mail, subject, new_price
         )
 
-    def create_student(self, email: str, password: str) -> Student:
-        return self.student_repository.create_student(email, password)
+    def create_student(
+        self, first_name: str, last_name: str, email: str, password: str, balance: int
+    ) -> Student:
+        return self.student_repository.create_student(
+            first_name, last_name, email, password, balance
+        )
 
     def get_student(self, email: str) -> Optional[Student]:
         return self.student_repository.get_student(email)
 
-    def set_balance(self, student_mail: str, new_balance: int) -> None:
+    def set_student_balance(self, student_mail: str, new_balance: int) -> None:
         self.student_repository.set_balance(student_mail, new_balance)
 
-    def get_balance(self, student_mail: str) -> int:
+    def get_student_balance(self, student_mail: str) -> int:
         return self.student_repository.get_balance(student_mail)
 
-    def increase_balance(self, student_mail: str, amount: int) -> None:
+    def increase_student_balance(self, student_mail: str, amount: int) -> None:
         self.student_repository.increase_balance(student_mail, amount)
 
-    def decrease_balance(self, student_mail: str, amount: int) -> None:
+    def decrease_student_balance(self, student_mail: str, amount: int) -> None:
         self.student_repository.decrease_balance(student_mail, amount)
 
-    def change_first_name(self, student_mail: str, first_name: str) -> None:
+    def change_student_first_name(self, student_mail: str, first_name: str) -> None:
         self.student_repository.change_first_name(student_mail, first_name)
 
-    def change_last_name(self, student_mail: str, last_name: str) -> None:
+    def change_student_last_name(self, student_mail: str, last_name: str) -> None:
         self.student_repository.change_last_name(student_mail, last_name)
+
+    def create_tutor(
+        self,
+        first_name: str,
+        last_name: str,
+        email: str,
+        password: str,
+        balance: int,
+        biography: str,
+    ) -> Tutor:
+        return self.tutor_repository.create_tutor(
+            first_name, last_name, email, password, balance, biography
+        )
+
+    def get_tutor(self, email: str) -> Optional[Tutor]:
+        return self.tutor_repository.get_tutor(email)
+
+    def set_tutor_balance(self, tutor_mail: str, new_balance: int) -> None:
+        self.tutor_repository.set_balance(tutor_mail, new_balance)
+
+    def get_tutor_balance(self, tutor_mail: str) -> int:
+        return self.tutor_repository.get_balance(tutor_mail)
+
+    def increase_tutor_balance(self, tutor_mail: str, amount: int) -> None:
+        self.tutor_repository.increase_balance(tutor_mail, amount)
+
+    def decrease_tutor_balance(self, tutor_mail: str, amount: int) -> None:
+        self.tutor_repository.decrease_balance(tutor_mail, amount)
+
+    def set_commission_pct(self, tutor_mail: str, new_commission_pct: float):
+        self.tutor_repository.set_commission_pct(tutor_mail, new_commission_pct)
+
+    def decrease_commission_pct(self, tutor_mail: str) -> None:
+        self.tutor_repository.decrease_balance(tutor_mail)
+
+    def change_tutor_first_name(self, tutor_mail: str, first_name: str) -> None:
+        self.tutor_repository.change_first_name(tutor_mail, first_name)
+
+    def change_tutor_last_name(self, tutor_mail: str, last_name: str) -> None:
+        self.tutor_repository.change_last_name(tutor_mail, last_name)
+
+    def change_tutor_biography(self, tutor_mail: str, biography: str) -> None:
+        self.tutor_repository.change_biography(tutor_mail, biography)
 
     @classmethod
     def create(
@@ -129,6 +179,7 @@ class OlympianTutorService:
         review_interactor: IReviewInteractor,
         lesson_interactor: ILessonInteractor,
         student_interactor: IStudentInteractor,
+        tutor_interactor: ITutorInteractor,
     ) -> "OlympianTutorService":
         return cls(
             admin_interactor=AdminInteractor(emailer),
@@ -136,4 +187,5 @@ class OlympianTutorService:
             review_interactor=ReviewInteractor(review_interactor),
             lesson_interactor=LessonInteractor(lesson_interactor),
             student_interactor=StudentInteractor(student_interactor),
+            tutor_interactor=TutorInteractor(tutor_interactor),
         )
