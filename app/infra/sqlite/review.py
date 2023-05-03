@@ -49,7 +49,7 @@ class SqlReviewRepository:
         return None
 
     def get_tutor_reviews(self, tutor_mail: str) -> List[Review]:
-        reviews = List[Review]
+        reviews: List[Review] = []
         for row in self.conn.execute(
             " SELECT * FROM Reviews WHERE tutor_mail = ?",
             (tutor_mail,),
