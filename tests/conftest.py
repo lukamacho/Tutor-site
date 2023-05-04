@@ -4,18 +4,21 @@ from _pytest.config.argparsing import Parser
 from app.core.course.interactor import ICourseRepository
 from app.core.homework.interactor import IHomeworkRepository
 from app.core.lesson.interactor import ILessonRepository
+from app.core.message.interactor import IMessageRepository
 from app.core.review.interactor import IReviewRepository
 from app.core.student.interactor import IStudentRepository
 from app.core.tutor.interactor import ITutorRepository
 from app.infra.inmemory.course import InMemoryCourseRepository
 from app.infra.inmemory.homework import InMemoryHomeworkRepository
 from app.infra.inmemory.lesson import InMemoryLessonRepository
+from app.infra.inmemory.message import InMemoryMessageRepository
 from app.infra.inmemory.review import InMemoryReviewRepository
 from app.infra.inmemory.student import InMemoryStudentRepository
 from app.infra.inmemory.tutor import InMemoryTutorRepository
 from app.infra.sqlite.course import SqlCourseRepository
 from app.infra.sqlite.homework import SqlHomeworkRepository
 from app.infra.sqlite.lesson import SqlLessonRepository
+from app.infra.sqlite.message import SqlMessageRepository
 from app.infra.sqlite.review import SqlReviewRepository
 from app.infra.sqlite.student import SqlStudentRepository
 from app.infra.sqlite.tutors import SqlTutorRepository
@@ -74,3 +77,10 @@ def review_repository(request: pytest.FixtureRequest) -> IReviewRepository:
     if use_sql(request):
         return SqlReviewRepository("")
     return InMemoryReviewRepository()
+
+
+@pytest.fixture(scope="function")
+def message_repository(request: pytest.FixtureRequest) -> IMessageRepository:
+    if use_sql(request):
+        return SqlMessageRepository("")
+    return InMemoryMessageRepository()
