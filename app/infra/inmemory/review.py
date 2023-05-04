@@ -29,9 +29,16 @@ class InMemoryReviewRepository:
         return reviews
 
     def delete_review(self, tutor_mail: str, student_mail: str) -> None:
-        for review in self.data:
+        i = 0
+        length = len(self.data)
+
+        while i < length:
+            review = self.data[i]
             if review.tutor_mail == tutor_mail and review.student_mail == student_mail:
                 self.data.remove(review)
+                i -= 1
+                length -= 1
+            i += 1
 
     def change_review(
         self, new_review_text: str, tutor_mail: str, student_mail: str

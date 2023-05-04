@@ -34,9 +34,15 @@ class InMemoryHomeworkRepository:
     def delete_homework(
             self, homework_text: str, tutor_mail: str, student_mail: str
     ) -> None:
-        for homework in self.data:
+        i = 0
+        length = len(self.data)
+
+        while i < length:
+            homework = self.data[i]
             if homework.homework_text == homework_text and \
                     homework.tutor_mail == tutor_mail and \
                     homework.student_mail == student_mail:
                 self.data.remove(homework)
-
+                i -= 1
+                length -= 1
+            i += 1
