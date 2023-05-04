@@ -20,23 +20,23 @@ class InMemoryTutorRepository:
             return self.data[email]
         return None
 
-    def set_balance(self, tutor_mail: str, new_balance: int) -> None:
+    def set_tutor_balance(self, tutor_mail: str, new_balance: int) -> None:
         tutor = self.get_tutor(tutor_mail)
         if tutor is not None:
             tutor.set_balance(new_balance)
 
-    def get_balance(self, student_mail: str) -> int:
+    def get_tutor_balance(self, student_mail: str) -> int:
         tutor = self.get_tutor(student_mail)
         if tutor is not None:
             return tutor.get_balance()
         return 0
 
-    def increase_balance(self, tutor_mail: str, amount: int) -> None:
+    def increase_tutor_balance(self, tutor_mail: str, amount: int) -> None:
         tutor = self.get_tutor(tutor_mail)
         if tutor is not None:
             return tutor.increase_balance(amount)
 
-    def decrease_balance(self, tutor_mail: str, amount: int) -> None:
+    def decrease_tutor_balance(self, tutor_mail: str, amount: int) -> None:
         tutor = self.get_tutor(tutor_mail)
         if tutor is not None:
             return tutor.decrease_balance(amount)
@@ -51,17 +51,17 @@ class InMemoryTutorRepository:
         if tutor is not None:
             return tutor.decrease_commission_pct()
 
-    def change_first_name(self, tutor_mail: str, first_name: str) -> None:
+    def change_tutor_first_name(self, tutor_mail: str, first_name: str) -> None:
         tutor = self.get_tutor(tutor_mail)
         if tutor is not None:
             tutor.change_first_name(first_name)
 
-    def change_last_name(self, tutor_mail: str, last_name: str) -> None:
+    def change_tutor_last_name(self, tutor_mail: str, last_name: str) -> None:
         tutor = self.get_tutor(tutor_mail)
         if tutor is not None:
             tutor.change_last_name(last_name)
 
-    def change_biography(self, tutor_mail: str, biography: str) -> None:
+    def change_tutor_biography(self, tutor_mail: str, biography: str) -> None:
         tutor = self.get_tutor(tutor_mail)
         if tutor is not None:
             tutor.change_biography(biography)
