@@ -7,7 +7,6 @@ from app.core.student.entity import Student
 
 @dataclass
 class SqlStudentRepository:
-
     def __init__(self, filename: str) -> None:
         self.conn = sqlite3.connect(filename, check_same_thread=False)
         self.conn.executescript(
@@ -68,7 +67,7 @@ class SqlStudentRepository:
         new_balance = current_balance - amount
         self.set_balance(student_mail, new_balance)
 
-    def change_first_name(self, student_mail: str, first_name: str) -> None:
+    def change_student_first_name(self, student_mail: str, first_name: str) -> None:
         self.conn.execute(
             "UPDATE Students SET  first_name = ? WHERE email = ? ",
             (
@@ -78,7 +77,7 @@ class SqlStudentRepository:
         )
         self.conn.commit()
 
-    def change_last_name(self, student_mail: str, last_name: str) -> None:
+    def change_student_last_name(self, student_mail: str, last_name: str) -> None:
         self.conn.execute(
             "UPDATE Students SET  last_name = ? WHERE email = ? ",
             (

@@ -58,7 +58,7 @@ class SqlTutorRepository:
 
         return None
 
-    def set_balance(self, tutor_mail: str, new_balance: int) -> None:
+    def set_tutor_balance(self, tutor_mail: str, new_balance: int) -> None:
         self.conn.execute(
             "UPDATE Tutors SET balance = ? WHERE email = ? ",
             (
@@ -68,21 +68,21 @@ class SqlTutorRepository:
         )
         self.conn.commit()
 
-    def get_balance(self, student_mail: str) -> int:
+    def get_tutor_balance(self, student_mail: str) -> int:
         tutor = self.get_tutor(student_mail)
         if tutor is None:
             return 0
         return tutor.balance
 
-    def increase_balance(self, tutor_mail: str, amount: int) -> None:
-        current_balance = self.get_balance(tutor_mail)
+    def increase_tutor_balance(self, tutor_mail: str, amount: int) -> None:
+        current_balance = self.get_tutor_balance(tutor_mail)
         new_balance = current_balance + amount
-        self.set_balance(tutor_mail, new_balance)
+        self.set_tutor_balance(tutor_mail, new_balance)
 
-    def decrease_balance(self, tutor_mail: str, amount: int) -> None:
-        current_balance = self.get_balance(tutor_mail)
+    def decrease_tutor_balance(self, tutor_mail: str, amount: int) -> None:
+        current_balance = self.get_tutor_balance(tutor_mail)
         new_balance = current_balance - amount
-        self.set_balance(tutor_mail, new_balance)
+        self.set_tutor_balance(tutor_mail, new_balance)
 
     def set_commission_pct(self, tutor_mail: str, new_commission_pct: float):
         self.conn.execute(
@@ -100,7 +100,7 @@ class SqlTutorRepository:
         new_commission_pct = commission_pct - 0.01
         self.set_commission_pct(tutor_mail, new_commission_pct)
 
-    def change_first_name(self, tutor_mail: str, first_name: str) -> None:
+    def change_tutor_first_name(self, tutor_mail: str, first_name: str) -> None:
         self.conn.execute(
             "UPDATE Tutors SET  first_name = ? WHERE email = ? ",
             (
@@ -110,7 +110,7 @@ class SqlTutorRepository:
         )
         self.conn.commit()
 
-    def change_last_name(self, tutor_mail: str, last_name: str) -> None:
+    def change_tutor_last_name(self, tutor_mail: str, last_name: str) -> None:
         self.conn.execute(
             "UPDATE Tutors SET  last_name = ? WHERE email = ? ",
             (
@@ -120,7 +120,7 @@ class SqlTutorRepository:
         )
         self.conn.commit()
 
-    def change_biography(self, tutor_mail: str, biography: str) -> None:
+    def change_tutor_biography(self, tutor_mail: str, biography: str) -> None:
         self.conn.execute(
             "UPDATE Tutors SET  biography = ? WHERE email = ? ",
             (
