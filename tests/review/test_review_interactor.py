@@ -8,7 +8,7 @@ def test_create_review(review_repository: IReviewRepository) -> None:
     tutor_mail = "tutor@gmail.com"
     student_mail = "student@gmail.com"
 
-    response = review_repository.create_review("Great tutor.", tutor_mail, student_mail)
+    response = interactor.create_review("Great tutor.", tutor_mail, student_mail)
 
     assert isinstance(response, Review)
     assert review_repository.get_review(tutor_mail, student_mail) is not None
