@@ -75,19 +75,19 @@ class StudentInteractor:
         return self.student_repository.get_student(email)
 
     def set_student_balance(self, student_mail: str, new_balance: int) -> None:
-        self.student_repository.set_balance(student_mail, new_balance)
+        self.student_repository.set_student_balance(student_mail, new_balance)
 
     def get_student_balance(self, student_mail: str) -> int:
-        return self.student_repository.get_balance(student_mail)
+        return self.student_repository.get_student_balance(student_mail)
 
     def increase_student_balance(self, student_mail: str, amount: int) -> None:
-        self.student_repository.increase_balance(student_mail, amount)
+        self.student_repository.increase_student_balance(student_mail, amount)
 
     def decrease_student_balance(self, student_mail: str, amount: int) -> None:
-        self.student_repository.decrease_balance(student_mail, amount)
+        self.student_repository.decrease_student_balance(student_mail, amount)
 
     def change_student_first_name(self, student_mail: str, first_name: str) -> None:
-        self.student_repository.change_first_name(student_mail, first_name)
+        self.student_repository.change_student_first_name(student_mail, first_name)
 
     def change_student_last_name(self, student_mail: str, last_name: str) -> None:
-        self.student_repository.change_last_name(student_mail, last_name)
+        self.student_repository.change_student_last_name(student_mail, last_name)

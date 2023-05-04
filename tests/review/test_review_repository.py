@@ -1,10 +1,9 @@
+from app.core.review.interactor import IReviewRepository
 from app.infra.sqlite.review import SqlReviewRepository
 from app.core.review.entity import Review
 
 
-def test_create_review() -> None:
-    review_repository = SqlReviewRepository("")
-
+def test_create_review(review_repository: IReviewRepository) -> None:
     review_text = "Great tutor."
     tutor_mail = "tutor@gmail.com"
     student_mail = "student@gmail.com"
@@ -12,14 +11,12 @@ def test_create_review() -> None:
     response = review_repository.create_review(review_text, tutor_mail, student_mail)
 
     assert isinstance(response, Review)
-    assert response.review_text is review_text
-    assert response.tutor_mail is tutor_mail
-    assert response.student_mail is student_mail
+    assert response.review_text == review_text
+    assert response.tutor_mail == tutor_mail
+    assert response.student_mail == student_mail
 
 
-def test_get_review() -> None:
-    review_repository = SqlReviewRepository("")
-
+def test_get_review(review_repository: IReviewRepository) -> None:
     review_text = "Great tutor."
     tutor_mail = "tutor@gmail.com"
     student_mail = "student@gmail.com"
@@ -28,9 +25,9 @@ def test_get_review() -> None:
     get_response = review_repository.get_review(tutor_mail, student_mail)
 
     assert isinstance(get_response, Review)
-    assert get_response.review_text is review_text
-    assert get_response.tutor_mail is tutor_mail
-    assert get_response.student_mail is student_mail
+    assert get_response.review_text == review_text
+    assert get_response.tutor_mail == tutor_mail
+    assert get_response.student_mail == student_mail
 
     new_student_mail = "student2@gmail.com"
 
@@ -38,9 +35,8 @@ def test_get_review() -> None:
 
     assert get_response is None
 
-def test_delete_review() -> None:
-    review_repository = SqlReviewRepository("")
 
+def test_delete_review(review_repository: IReviewRepository) -> None:
     review_text = "Great tutor."
     tutor_mail = "tutor@gmail.com"
     student_mail = "student@gmail.com"
@@ -55,9 +51,8 @@ def test_delete_review() -> None:
 
     assert get_response is None
 
-def test_change_review() -> None:
-    review_repository = SqlReviewRepository("")
 
+def test_change_review(review_repository: IReviewRepository) -> None:
     review_text = "Great tutor."
     tutor_mail = "tutor@gmail.com"
     student_mail = "student@gmail.com"
@@ -66,7 +61,7 @@ def test_change_review() -> None:
     get_response = review_repository.get_review(tutor_mail, student_mail)
 
     assert isinstance(get_response, Review)
-    assert get_response.review_text is review_text
+    assert get_response.review_text == review_text
 
     new_review_text = "Very great tutor."
 
@@ -74,4 +69,4 @@ def test_change_review() -> None:
     get_response = review_repository.get_review(tutor_mail, student_mail)
 
     assert isinstance(get_response, Review)
-    assert get_response.review_text is new_review_text
+    assert get_response.review_text == new_review_text

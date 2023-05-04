@@ -37,7 +37,7 @@ class SqlMessageRepository:
         return Message(message_text, tutor_mail, student_mail)
 
     def get_messages(self, tutor_mail: str, student_mail: str) -> List[Message]:
-        messages = List[Message]
+        messages: List[Message] = []
         for row in self.conn.execute(
             " SELECT * FROM Messages WHERE tutor_mail = ? and student_mail = ?",
             (tutor_mail, student_mail),
@@ -48,14 +48,14 @@ class SqlMessageRepository:
 
     def delete_tutor_messages(self, tutor_mail: str) -> None:
         self.conn.execute(
-            "DELETE FROM TABLE Messages WHERE  tutor_mail = ?  ",
+            "DELETE FROM Messages WHERE  tutor_mail = ?  ",
             (tutor_mail,),
         )
         self.conn.commit()
 
     def delete_student_messages(self, student_mail: str) -> None:
         self.conn.execute(
-            "DELETE FROM TABLE Messages WHERE  student_mail = ?  ",
+            "DELETE FROM Messages WHERE  student_mail = ?  ",
             (student_mail,),
         )
         self.conn.commit()

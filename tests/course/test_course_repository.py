@@ -1,9 +1,9 @@
+from app.core.course.interactor import ICourseRepository
 from app.infra.sqlite.course import SqlCourseRepository
 from app.core.course.entity import Course
 
-def test_create_course() -> None:
-    course_repository = SqlCourseRepository("")
 
+def test_create_course(course_repository: ICourseRepository) -> None:
     subject = "Math"
     tutor_mail = "tutor@gmail.com"
     price = 50
@@ -15,9 +15,8 @@ def test_create_course() -> None:
     assert response.tutor_mail is tutor_mail
     assert response.price is price
 
-def test_get_course() -> None:
-    course_repository = SqlCourseRepository("")
 
+def test_get_course(course_repository: ICourseRepository) -> None:
     subject = "Physics"
     tutor_mail = "tutor@gmail.com"
     price = 50
@@ -26,19 +25,18 @@ def test_get_course() -> None:
     get_response = course_repository.get_course(subject, tutor_mail)
 
     assert isinstance(get_response, Course)
-    assert get_response.subject is subject
-    assert get_response.tutor_mail is tutor_mail
-    assert get_response.price is price
+    assert get_response.subject == subject
+    assert get_response.tutor_mail == tutor_mail
+    assert get_response.price == price
 
     subject = "Math"
 
-    get_response = course_repository.get_tutor(subject, tutor_mail)
+    get_response = course_repository.get_course(subject, tutor_mail)
 
     assert get_response is None
 
-def test_get_courses() -> None:
-    course_repository = SqlCourseRepository("")
 
+def test_get_courses(course_repository: ICourseRepository) -> None:
     subject_1 = "Chemistry"
     subject_2 = "Biology"
     num_subjects = 2
@@ -50,10 +48,10 @@ def test_get_courses() -> None:
     course_repository.create_course(subject_2, tutor_mail, price_2)
     get_response = course_repository.get_courses(tutor_mail)
 
-    assert get_response.count() is num_subjects
-    assert get_response[0].subject is subject_1
-    assert get_response[1].subject is subject_2
-    assert get_response[0].tutor_mail is tutor_mail
-    assert get_response[1].tutor_mail is tutor_mail
-    assert get_response[0].price is price_1
-    assert get_response[1].price is price_2
+    assert len(get_response) == num_subjects
+    assert get_response[0].subject == subject_1
+    assert get_response[1].subject == subject_2
+    assert get_response[0].tutor_mail == tutor_mail
+    assert get_response[1].tutor_mail == tutor_mail
+    assert get_response[0].price == price_1
+    assert get_response[1].price == price_2

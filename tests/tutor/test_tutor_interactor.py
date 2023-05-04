@@ -1,29 +1,32 @@
-from app.core.tutor.interactor import ITutorRepository
-from app.infra.sqlite.tutors import SqlTutorRepository
 from app.core.tutor.entity import Tutor
+from app.core.tutor.interactor import ITutorRepository, TutorInteractor
 
 
 def test_create_tutor(tutor_repository: ITutorRepository) -> None:
-    first_name = "Lara"
-    last_name = "Croft"
-    email = "laracroft@gmail.com"
-    password = "trinity"
-    balance = 150
-    biography = "I am an archeologist."
+    interactor = TutorInteractor(tutor_repository)
 
-    response = tutor_repository.create_tutor(first_name, last_name, email, password, balance, biography)
+    mail = "johndoe@gmail.com"
+
+    response = interactor.create_tutor("John", "Doe", mail, "johndoe", 0, "I'm John.")
 
     assert isinstance(response, Tutor)
-    assert response.first_name == first_name
-    assert response.last_name == last_name
-    assert response.email == email
-    assert response.password == password
-    assert response.balance == balance
-    assert response.biography == biography
-    assert response.commission_pct == 0.25
+    assert tutor_repository.get_tutor(mail) is not None
+    assert tutor_repository.get_tutor("") is None
+
+
+def test_create_tutors(tutor_repository: ITutorRepository) -> None:
+    interactor = TutorInteractor(tutor_repository)
+
+    for i in range(10000):
+        mail = "johndoe{i}@gmail.com".format(i=i)
+        response = interactor.create_tutor("John", "Doe", mail, "johndoe", 0, "I'm John.")
+        assert isinstance(response, Tutor)
+        assert tutor_repository.get_tutor(mail) is not None
 
 
 def test_get_tutor(tutor_repository: ITutorRepository) -> None:
+    interactor = TutorInteractor(tutor_repository)
+
     first_name = "Emma"
     last_name = "Stone"
     email = "emmastone@gmail.com"
@@ -31,8 +34,8 @@ def test_get_tutor(tutor_repository: ITutorRepository) -> None:
     balance = 80
     biography = "I am an actress."
 
-    tutor_repository.create_tutor(first_name, last_name, email, password, balance, biography)
-    get_response = tutor_repository.get_tutor(email)
+    interactor.create_tutor(first_name, last_name, email, password, balance, biography)
+    get_response = interactor.get_tutor(email)
 
     assert isinstance(get_response, Tutor)
     assert get_response.first_name == first_name
@@ -45,12 +48,14 @@ def test_get_tutor(tutor_repository: ITutorRepository) -> None:
 
     new_email = "idontexist@gmail.com"
 
-    get_response = tutor_repository.get_tutor(new_email)
+    get_response = interactor.get_tutor(new_email)
 
     assert get_response is None
 
 
 def test_set_balance(tutor_repository: ITutorRepository) -> None:
+    interactor = TutorInteractor(tutor_repository)
+
     first_name = "John"
     last_name = "Doe"
     email = "johndoe@gmail.com"
@@ -60,23 +65,25 @@ def test_set_balance(tutor_repository: ITutorRepository) -> None:
 
     new_balance = 200
 
-    tutor_repository.create_tutor(first_name, last_name, email, password, balance, biography)
-    tutor_repository.set_tutor_balance(email, new_balance)
-    get_response = tutor_repository.get_tutor_balance(email)
+    interactor.create_tutor(first_name, last_name, email, password, balance, biography)
+    interactor.set_tutor_balance(email, new_balance)
+    get_response = interactor.get_tutor_balance(email)
 
     assert isinstance(get_response, int)
     assert get_response == new_balance
 
     new_balance = 6000
 
-    tutor_repository.set_tutor_balance(email, new_balance)
-    get_response = tutor_repository.get_tutor_balance(email)
+    interactor.set_tutor_balance(email, new_balance)
+    get_response = interactor.get_tutor_balance(email)
 
     assert isinstance(get_response, int)
     assert get_response == new_balance
 
 
 def test_change_balance(tutor_repository: ITutorRepository) -> None:
+    interactor = TutorInteractor(tutor_repository)
+
     first_name = "Han"
     last_name = "Solo"
     email = "hansolo@gmail.com"
@@ -86,9 +93,9 @@ def test_change_balance(tutor_repository: ITutorRepository) -> None:
 
     increment = 2000
 
-    tutor_repository.create_tutor(first_name, last_name, email, password, balance, biography)
-    tutor_repository.increase_tutor_balance(email, increment)
-    get_response = tutor_repository.get_tutor_balance(email)
+    interactor.create_tutor(first_name, last_name, email, password, balance, biography)
+    interactor.increase_tutor_balance(email, increment)
+    get_response = interactor.get_tutor_balance(email)
 
     new_balance = balance + increment
 
@@ -97,14 +104,16 @@ def test_change_balance(tutor_repository: ITutorRepository) -> None:
 
     decrement = 5999
 
-    tutor_repository.decrease_tutor_balance(email, decrement)
-    get_response = tutor_repository.get_tutor_balance(email)
+    interactor.decrease_tutor_balance(email, decrement)
+    get_response = interactor.get_tutor_balance(email)
 
     assert isinstance(get_response, int)
     assert get_response == new_balance - decrement
 
 
 def test_change_commission_pct(tutor_repository: ITutorRepository) -> None:
+    interactor = TutorInteractor(tutor_repository)
+
     first_name = "Han"
     last_name = "Solo"
     email = "hansolo@gmail.com"
@@ -114,31 +123,33 @@ def test_change_commission_pct(tutor_repository: ITutorRepository) -> None:
 
     commission_pct = 0.25
 
-    tutor_repository.create_tutor(first_name, last_name, email, password, balance, biography)
+    interactor.create_tutor(first_name, last_name, email, password, balance, biography)
 
-    get_response = tutor_repository.get_tutor(email)
+    get_response = interactor.get_tutor(email)
 
     assert isinstance(get_response, Tutor)
     assert get_response.commission_pct == commission_pct
 
     new_commission_pct = 0.3
 
-    tutor_repository.set_commission_pct(email, new_commission_pct)
-    get_response = tutor_repository.get_tutor(email)
+    interactor.set_commission_pct(email, new_commission_pct)
+    get_response = interactor.get_tutor(email)
 
     assert isinstance(get_response, Tutor)
     assert get_response.commission_pct == new_commission_pct
 
     decrement = 0.01
 
-    tutor_repository.decrease_commission_pct(email)
-    get_response = tutor_repository.get_tutor(email)
+    interactor.decrease_commission_pct(email)
+    get_response = interactor.get_tutor(email)
 
     assert isinstance(get_response, Tutor)
     assert get_response.commission_pct == new_commission_pct - decrement
 
 
 def test_change_information(tutor_repository: ITutorRepository) -> None:
+    interactor = TutorInteractor(tutor_repository)
+
     first_name = "John"
     last_name = "Doe"
     email = "johndoe@gmail.com"
@@ -150,12 +161,12 @@ def test_change_information(tutor_repository: ITutorRepository) -> None:
     new_last_name = "Dove"
     new_biography = "Who am I?"
 
-    tutor_repository.create_tutor(first_name, last_name, email, password, balance, biography)
-    tutor_repository.change_tutor_first_name(email, new_first_name)
-    tutor_repository.change_tutor_last_name(email, new_last_name)
-    tutor_repository.change_tutor_biography(email, new_biography)
+    interactor.create_tutor(first_name, last_name, email, password, balance, biography)
+    interactor.change_tutor_first_name(email, new_first_name)
+    interactor.change_tutor_last_name(email, new_last_name)
+    interactor.change_tutor_biography(email, new_biography)
 
-    get_response = tutor_repository.get_tutor(email)
+    get_response = interactor.get_tutor(email)
 
     assert isinstance(get_response, Tutor)
     assert get_response.first_name == new_first_name

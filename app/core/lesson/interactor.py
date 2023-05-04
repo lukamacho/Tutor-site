@@ -96,7 +96,7 @@ class LessonInteractor:
         number_of_lessons: int,
         lesson_price: int,
     ) -> Lesson:
-        return self.lesson_interactor.get_lesson(
+        return self.lesson_interactor.create_lesson(
             subject, tutor_mail, student_mail, number_of_lessons, lesson_price
         )
 
