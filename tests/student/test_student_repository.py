@@ -53,16 +53,16 @@ def test_set_balance(student_repository: IStudentRepository) -> None:
     new_balance = 100
 
     student_repository.create_student(first_name, last_name, email, password, balance)
-    student_repository.set_balance(email, new_balance)
-    get_response = student_repository.get_balance(email)
+    student_repository.set_student_balance(email, new_balance)
+    get_response = student_repository.get_student_balance(email)
 
     assert isinstance(get_response, int)
     assert get_response == new_balance
 
     new_balance = 150
 
-    student_repository.set_balance(email, new_balance)
-    get_response = student_repository.get_balance(email)
+    student_repository.set_student_balance(email, new_balance)
+    get_response = student_repository.get_student_balance(email)
 
     assert isinstance(get_response, int)
     assert get_response == new_balance
@@ -78,8 +78,8 @@ def test_change_balance(student_repository: IStudentRepository) -> None:
     increment = 60
 
     student_repository.create_student(first_name, last_name, email, password, balance)
-    student_repository.increase_balance(email, increment)
-    get_response = student_repository.get_balance(email)
+    student_repository.increase_student_balance(email, increment)
+    get_response = student_repository.get_student_balance(email)
 
     new_balance = balance + increment
 
@@ -88,8 +88,8 @@ def test_change_balance(student_repository: IStudentRepository) -> None:
 
     decrement = 50
 
-    student_repository.decrease_balance(email, decrement)
-    get_response = student_repository.get_balance(email)
+    student_repository.decrease_student_balance(email, decrement)
+    get_response = student_repository.get_student_balance(email)
 
     assert isinstance(get_response, int)
     assert get_response == new_balance - decrement
@@ -106,8 +106,8 @@ def test_change_information(student_repository: IStudentRepository) -> None:
     new_last_name = "Murphy"
 
     student_repository.create_student(first_name, last_name, email, password, balance)
-    student_repository.change_first_name(email, new_first_name)
-    student_repository.change_last_name(email, new_last_name)
+    student_repository.change_student_first_name(email, new_first_name)
+    student_repository.change_student_last_name(email, new_last_name)
 
     get_response = student_repository.get_student(email)
 

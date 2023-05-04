@@ -62,16 +62,16 @@ def test_set_balance(student_repository: IStudentRepository) -> None:
     new_balance = 100
 
     interactor.create_student(first_name, last_name, email, password, balance)
-    interactor.set_balance(email, new_balance)
-    get_response = interactor.get_balance(email)
+    interactor.set_student_balance(email, new_balance)
+    get_response = interactor.get_student_balance(email)
 
     assert isinstance(get_response, int)
     assert get_response == new_balance
 
     new_balance = 150
 
-    interactor.set_balance(email, new_balance)
-    get_response = interactor.get_balance(email)
+    interactor.set_student_balance(email, new_balance)
+    get_response = interactor.get_student_balance(email)
 
     assert isinstance(get_response, int)
     assert get_response == new_balance
@@ -89,8 +89,8 @@ def test_change_balance(student_repository: IStudentRepository) -> None:
     increment = 60
 
     interactor.create_student(first_name, last_name, email, password, balance)
-    interactor.increase_balance(email, increment)
-    get_response = interactor.get_balance(email)
+    interactor.increase_student_balance(email, increment)
+    get_response = interactor.get_student_balance(email)
 
     new_balance = balance + increment
 
@@ -99,8 +99,8 @@ def test_change_balance(student_repository: IStudentRepository) -> None:
 
     decrement = 50
 
-    interactor.decrease_balance(email, decrement)
-    get_response = interactor.get_balance(email)
+    interactor.decrease_student_balance(email, decrement)
+    get_response = interactor.get_student_balance(email)
 
     assert isinstance(get_response, int)
     assert get_response == new_balance - decrement
@@ -119,8 +119,8 @@ def test_change_information(student_repository: IStudentRepository) -> None:
     new_last_name = "Murphy"
 
     interactor.create_student(first_name, last_name, email, password, balance)
-    interactor.change_first_name(email, new_first_name)
-    interactor.change_last_name(email, new_last_name)
+    interactor.change_student_first_name(email, new_first_name)
+    interactor.change_student_last_name(email, new_last_name)
 
     get_response = interactor.get_student(email)
 

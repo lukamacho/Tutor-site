@@ -19,33 +19,33 @@ class InMemoryStudentRepository:
             return self.data[email]
         return None
 
-    def set_balance(self, student_mail: str, new_balance: int) -> None:
+    def set_student_balance(self, student_mail: str, new_balance: int) -> None:
         student = self.get_student(student_mail)
         if student is not None:
             student.set_balance(new_balance)
 
-    def get_balance(self, student_mail: str) -> Optional[int]:
+    def get_student_balance(self, student_mail: str) -> Optional[int]:
         student = self.get_student(student_mail)
         if student is not None:
             return student.get_balance()
         return None
 
-    def increase_balance(self, student_mail: str, amount: int) -> None:
+    def increase_student_balance(self, student_mail: str, amount: int) -> None:
         student = self.get_student(student_mail)
         if student is not None:
             return student.increase_balance(amount)
 
-    def decrease_balance(self, student_mail: str, amount: int) -> None:
+    def decrease_student_balance(self, student_mail: str, amount: int) -> None:
         student = self.get_student(student_mail)
         if student is not None:
             return student.decrease_balance(amount)
 
-    def change_first_name(self, student_mail: str, first_name: str) -> None:
+    def change_student_first_name(self, student_mail: str, first_name: str) -> None:
         student = self.get_student(student_mail)
         if student is not None:
             student.change_first_name(first_name)
 
-    def change_last_name(self, student_mail: str, last_name: str) -> None:
+    def change_student_last_name(self, student_mail: str, last_name: str) -> None:
         student = self.get_student(student_mail)
         if student is not None:
             student.change_last_name(last_name)

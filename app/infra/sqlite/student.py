@@ -41,7 +41,7 @@ class SqlStudentRepository:
 
         return None
 
-    def set_balance(self, student_mail: str, new_balance: int) -> None:
+    def set_student_balance(self, student_mail: str, new_balance: int) -> None:
         self.conn.execute(
             "UPDATE Students SET balance = ? WHERE email = ? ",
             (
@@ -51,21 +51,21 @@ class SqlStudentRepository:
         )
         self.conn.commit()
 
-    def get_balance(self, student_mail: str) -> int:
+    def get_student_balance(self, student_mail: str) -> int:
         student = self.get_student(student_mail)
         if student is None:
             return 0
         return student.balance
 
-    def increase_balance(self, student_mail: str, amount: int) -> None:
-        current_balance = self.get_balance(student_mail)
+    def increase_student_balance(self, student_mail: str, amount: int) -> None:
+        current_balance = self.get_student_balance(student_mail)
         new_balance = current_balance + amount
-        self.set_balance(student_mail, new_balance)
+        self.set_student_balance(student_mail, new_balance)
 
-    def decrease_balance(self, student_mail: str, amount: int) -> None:
-        current_balance = self.get_balance(student_mail)
+    def decrease_student_balance(self, student_mail: str, amount: int) -> None:
+        current_balance = self.get_student_balance(student_mail)
         new_balance = current_balance - amount
-        self.set_balance(student_mail, new_balance)
+        self.set_student_balance(student_mail, new_balance)
 
     def change_student_first_name(self, student_mail: str, first_name: str) -> None:
         self.conn.execute(
