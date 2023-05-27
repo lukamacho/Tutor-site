@@ -1,12 +1,10 @@
 import * as React from "react"
 import { useState } from "react"
+import { Link } from "react-router-dom"
 import AppBar from "@mui/material/AppBar"
 import Box from "@mui/material/Box"
 import Toolbar from "@mui/material/Toolbar"
-import Typography from "@mui/material/Typography"
 import Button from "@mui/material/Button"
-import IconButton from "@mui/material/IconButton"
-import MenuIcon from "@mui/icons-material/Menu"
 import ModalDialog from "../Components/ModalDialog"
 
 export default function Homepage() {
@@ -17,6 +15,11 @@ export default function Homepage() {
 
     return (
         <Box sx={{ flexGrow: 1 }}>
+            <ul>
+                <li><Link to="/">Homepage</Link></li>
+                <li><Link to="/registration">Registration</Link></li>
+                <li><Link to="/login">Login</Link></li>
+            </ul>
             <AppBar position="static" style={{ background: '#CFCFCF' }}>
                 <Toolbar>
                     <Button variant="text" sx={{ m: 0.5 }}>Homepage</Button>
