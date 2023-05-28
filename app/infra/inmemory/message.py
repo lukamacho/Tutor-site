@@ -9,7 +9,7 @@ class InMemoryMessageRepository:
     data: List[Message] = field(default_factory=list)
 
     def create_message(
-            self, message_text: str, tutor_mail: str, student_mail: str
+        self, message_text: str, tutor_mail: str, student_mail: str
     ) -> Message:
         message = Message(message_text, tutor_mail, student_mail)
         self.data.append(message)
@@ -18,7 +18,10 @@ class InMemoryMessageRepository:
     def get_messages(self, tutor_mail: str, student_mail: str) -> List[Message]:
         messages: List[Message] = []
         for message in self.data:
-            if message.tutor_mail == tutor_mail and message.student_mail == student_mail:
+            if (
+                message.tutor_mail == tutor_mail
+                and message.student_mail == student_mail
+            ):
                 messages.append(message)
         return messages
 
