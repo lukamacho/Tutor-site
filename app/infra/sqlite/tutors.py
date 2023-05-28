@@ -48,6 +48,7 @@ class SqlTutorRepository:
             ),
         )
         self.conn.commit()
+        print("Tutor has been created.")
         return Tutor(
             first_name, last_name, email, password, commission_pct, balance, biography
         )
