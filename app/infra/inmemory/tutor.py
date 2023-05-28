@@ -9,7 +9,13 @@ class InMemoryTutorRepository:
     data: Dict[str, Tutor] = field(default_factory=dict)
 
     def create_tutor(
-            self, first_name: str, last_name: str, email: str, password: str, balance: int, biography: str
+        self,
+        first_name: str,
+        last_name: str,
+        email: str,
+        password: str,
+        balance: int,
+        biography: str,
     ) -> Tutor:
         tutor = Tutor(first_name, last_name, email, password, 0.25, balance, biography)
         self.data[email] = tutor

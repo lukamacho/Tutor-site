@@ -8,7 +8,7 @@ class InMemoryStudentRepository:
     data: Dict[str, Student] = field(default_factory=dict)
 
     def create_student(
-            self, first_name: str, last_name: str, email: str, password: str, balance: int
+        self, first_name: str, last_name: str, email: str, password: str, balance: int
     ) -> Student:
         student = Student(first_name, last_name, email, password, balance)
         self.data[email] = student

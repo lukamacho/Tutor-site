@@ -58,10 +58,7 @@ class SqlHomeworkRepository:
     def get_student_homework(self, student_mail: str) -> List[Homework]:
         homeworks: List[Homework] = []
         for row in self.conn.execute(
-            " SELECT * FROM Homeworks WHERE student_mail = ?",
-                (
-                    student_mail,
-                )
+            " SELECT * FROM Homeworks WHERE student_mail = ?", (student_mail,)
         ):
             homeworks.append(Homework(*row))
 

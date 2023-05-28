@@ -15,6 +15,9 @@ export default function Homepage() {
     const handleRegisterOpen = () => { setRegisterOpen(true); };
     const handleRegisterClose = () => { setRegisterOpen(false); };
 
+
+
+
     return (
         <Box sx={{ flexGrow: 1 }}>
             <AppBar position="static" style={{ background: '#CFCFCF' }}>

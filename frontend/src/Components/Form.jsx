@@ -13,8 +13,15 @@ const Form = ({ handleClose }) => {
         handleClose();
     };
 
+    const testClick = e => {
+
+      console.log(firstName)
+       console.log(lastName)
+        console.log(password)
+         console.log(email)
+    };
     return (
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={testClick}>
             <TextField
                 label="First Name"
                 variant="filled"
@@ -38,7 +45,7 @@ const Form = ({ handleClose }) => {
                 value={password}
                 onChange={e => setPassword(e.target.value)} />
             <div>
-                <Button variant="contained" onClick={handleClose}>Cancel</Button>
+                <Button variant="contained" onClick={testClick}>Cancel</Button>
                 <Button type="submit" variant="contained" color="primary">Signup</Button>
             </div>
         </form>

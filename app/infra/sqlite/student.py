@@ -24,7 +24,13 @@ class SqlStudentRepository:
         self.conn.commit()
 
     def create_student(
-        self, first_name: str, last_name: str, email: str, password: str, balance: int, profile_address: str = ""
+        self,
+        first_name: str,
+        last_name: str,
+        email: str,
+        password: str,
+        balance: int,
+        profile_address: str = "",
     ) -> Student:
         self.conn.execute(
             " INSERT INTO Students VALUES (?,?,?,?,?,?)",
@@ -84,5 +90,12 @@ class SqlStudentRepository:
                 last_name,
                 student_mail,
             ),
+        )
+        self.conn.commit()
+
+    def delete_student(self, student_mail: str) -> None:
+        self.conn.execute(
+            "DELETE FROM Students WHERE  email = ?  ",
+            (student_mail,),
         )
         self.conn.commit()
