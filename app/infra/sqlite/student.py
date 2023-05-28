@@ -33,10 +33,17 @@ class SqlStudentRepository:
         profile_address: str = "",
     ) -> Student:
         self.conn.execute(
-            " INSERT INTO Students VALUES (?,?,?,?,?,?)",
-            (first_name, last_name, email, password, balance, profile_address),
+            " INSERT INTO Students VALUES (?,?,?,?,?)",
+            (
+                first_name,
+                last_name,
+                email,
+                password,
+                balance,
+            ),
         )
         self.conn.commit()
+        print("Student has been created.")
         return Student(first_name, last_name, email, password, balance, profile_address)
 
     def get_student(self, email: str) -> Optional[Student]:
