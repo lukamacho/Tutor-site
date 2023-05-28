@@ -96,8 +96,12 @@ class SqlTutorRepository:
 
     def decrease_commission_pct(self, tutor_mail: str) -> None:
         tutor = self.get_tutor(tutor_mail)
+        if tutor is None:
+            print("bote")
+            return
         commission_pct = tutor.commission_pct
         new_commission_pct = commission_pct - 0.01
+        print(tutor_mail)
         self.set_commission_pct(tutor_mail, new_commission_pct)
 
     def change_tutor_first_name(self, tutor_mail: str, first_name: str) -> None:
@@ -127,5 +131,12 @@ class SqlTutorRepository:
                 biography,
                 tutor_mail,
             ),
+        )
+        self.conn.commit()
+
+    def delete_tutor(self, tutor_mail: str) -> None:
+        self.conn.execute(
+            "DELETE FROM tutors WHERE  email = ?  ",
+            (tutor_mail,),
         )
         self.conn.commit()
