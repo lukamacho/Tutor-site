@@ -129,7 +129,7 @@ class OlympianTutorService:
         self.student_repository.change_last_name(student_mail, last_name)
 
     def delete_student(self, student_mail: str) -> None:
-        self.student_repository.delete_student(student_mail)
+        self.student_interactor.delete_student(student_mail)
 
     def create_tutor(
         self,
@@ -145,25 +145,25 @@ class OlympianTutorService:
         )
 
     def get_tutor(self, email: str) -> Optional[Tutor]:
-        return self.tutor_repository.get_tutor(email)
+        return self.tutor_interactor.get_tutor(email)
 
     def set_tutor_balance(self, tutor_mail: str, new_balance: int) -> None:
-        self.tutor_repository.set_balance(tutor_mail, new_balance)
+        self.tutor_interactor.set_balance(tutor_mail, new_balance)
 
     def get_tutor_balance(self, tutor_mail: str) -> int:
-        return self.tutor_repository.get_balance(tutor_mail)
+        return self.tutor_interactor.get_balance(tutor_mail)
 
     def increase_tutor_balance(self, tutor_mail: str, amount: int) -> None:
-        self.tutor_repository.increase_balance(tutor_mail, amount)
+        self.tutor_interactor.increase_balance(tutor_mail, amount)
 
     def decrease_tutor_balance(self, tutor_mail: str, amount: int) -> None:
-        self.tutor_repository.decrease_balance(tutor_mail, amount)
+        self.tutor_interactor.decrease_balance(tutor_mail, amount)
 
     def set_commission_pct(self, tutor_mail: str, new_commission_pct: float):
-        self.tutor_repository.set_commission_pct(tutor_mail, new_commission_pct)
+        self.tutor_interactor.set_commission_pct(tutor_mail, new_commission_pct)
 
     def decrease_commission_pct(self, tutor_mail: str) -> None:
-        self.tutor_repository.decrease_balance(tutor_mail)
+        self.tutor_interactor.decrease_balance(tutor_mail)
 
     def change_tutor_first_name(self, tutor_mail: str, first_name: str) -> None:
         self.tutor_repository.change_first_name(tutor_mail, first_name)
@@ -175,7 +175,7 @@ class OlympianTutorService:
         self.tutor_repository.change_biography(tutor_mail, biography)
 
     def delete_tutor(self, tutor_mail: str) -> None:
-        self.tutor_repository.delete_tutor(tutor_mail)
+        self.tutor_interactor.delete_tutor(tutor_mail)
 
     @classmethod
     def create(
