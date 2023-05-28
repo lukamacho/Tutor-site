@@ -16,15 +16,7 @@ export default function Homepage() {
     const handleRegisterClose = () => { setRegisterOpen(false); };
 
 
-    const testClick = e => {
-//       try {
-//         const response = fetch('http://localhost:8000/admin/hello');
-//
-//       } catch (error) {
-//         console.error('Error fetching users:', error);
-//       }
-      console.log(registerOpen)
-    };
+
 
     return (
         <Box sx={{ flexGrow: 1 }}>
