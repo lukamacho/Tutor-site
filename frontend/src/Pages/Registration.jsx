@@ -1,5 +1,9 @@
+import Register from "./register"
+
 export default function Registration() {
     return (
-        <h2>Registration</h2>
+        <div>
+            <Register />
+        </div>
     );
 }
