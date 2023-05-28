@@ -29,8 +29,7 @@ def delete_student(student_mail: StudentDeleteRequest,core: OlympianTutorService
 @admin_api.delete("/admin/delete_tutor")
 def delete_tutor(tutor_mail: TutorDeleteRequest,core: OlympianTutorService = Depends(get_core)):
     print(tutor_mail)
-
-
+    core.tutor_interactor.delete_tutor(tutor_mail.tutor_mail)
     return {"message": "Tutor deleted successfully"}
 
 
