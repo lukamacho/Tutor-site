@@ -103,7 +103,7 @@ class OlympianTutorService:
     def create_student(
         self, first_name: str, last_name: str, email: str, password: str, balance: int
     ) -> Student:
-        return self.student_repository.create_student(
+        return self.student_interactor.create_student(
             first_name, last_name, email, password, balance
         )
 
@@ -140,7 +140,7 @@ class OlympianTutorService:
         balance: int,
         biography: str,
     ) -> Tutor:
-        return self.tutor_repository.create_tutor(
+        return self.tutor_interactor.create_tutor(
             first_name, last_name, email, password, balance, biography
         )
 
