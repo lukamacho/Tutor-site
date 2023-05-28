@@ -12,6 +12,30 @@ export default function Registration() {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
 
+    const handleSignUp = async (e, is_student) => {
+        e.preventDefault();
+
+        const data = {
+            "first_name": firstName,
+            "last_name": lastName,
+            "mail": email,
+            "password": password,
+            "is_student": is_student,
+        }
+
+        try {
+            const response = await fetch('http://localhost:8000/sign_up', {
+                method: 'POST',
+                body: JSON.stringify(data),
+                headers: { 'Content-Type': 'application/json' }
+            });
+            const result = await response.json();
+            console.log(result);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
     return (
         <Box
             sx={{
@@ -87,7 +111,6 @@ export default function Registration() {
                     type="password"
                     value={password}
                 />
-            </Box>
             <br />
             <Typography
                 component="h2"
@@ -98,6 +121,7 @@ export default function Registration() {
             </Typography>
             <div>
                 <Button
+                    onClick={(e) => handleSignUp(e, false)}
                     sx={{
                         margin: 1,
                     }}
@@ -106,6 +130,7 @@ export default function Registration() {
                     Tutor
                 </Button>
                 <Button
+                    onClick={(e) => handleSignUp(e, true)}
                     sx={{
                         margin: 1,
                     }}
@@ -114,6 +139,7 @@ export default function Registration() {
                     Student
                 </Button>
             </div>
+            </Box>
         </Box>
     );
 }
