@@ -5,7 +5,6 @@ import Typography from "@mui/material/Typography"
 import TextField from "@mui/material/TextField"
 import Button from "@mui/material/Button"
 import { useState } from "react"
-import Register from "./register"
 
 export default function Registration() {
     const [firstName, setFirstName] = useState("")
@@ -142,8 +141,5 @@ export default function Registration() {
             </div>
             </Box>
         </Box>
-        <div>
-            <Register />
-        </div>
     );
 }
