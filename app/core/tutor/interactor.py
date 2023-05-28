@@ -140,4 +140,4 @@ class TutorInteractor:
         self.tutor_repository.change_tutor_biography(tutor_mail, biography)
 
     def delete_tutor(self, tutor_mail: str) -> None:
-        pass
+        self.tutor_repository.delete_tutor(tutor_mail)
