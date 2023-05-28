@@ -44,7 +44,9 @@ class Tutor:
         self.commission_pct = new_commission_pct
 
     def decrease_commission_pct(self) -> None:
-        new_commission_pct = self.commission_pct - 0.01  # TODO: Save this value as const somewhere
+        new_commission_pct = (
+            self.commission_pct - 0.01
+        )  # TODO: Save this value as const somewhere
         if new_commission_pct > 0:
             self.commission_pct = new_commission_pct
         else:
