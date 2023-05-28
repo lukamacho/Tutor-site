@@ -96,4 +96,4 @@ class StudentInteractor:
         self.student_repository.change_student_last_name(student_mail, last_name)
 
     def delete_student(self, student_mail: str) -> None:
-        pass
+        self.student_repository.delete_student(student_mail)
