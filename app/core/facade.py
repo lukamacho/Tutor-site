@@ -128,6 +128,9 @@ class OlympianTutorService:
     def change_student_last_name(self, student_mail: str, last_name: str) -> None:
         self.student_repository.change_last_name(student_mail, last_name)
 
+    def delete_student(self, student_mail: str) -> None:
+        self.student_repository.delete_student(student_mail)
+
     def create_tutor(
         self,
         first_name: str,
@@ -170,6 +173,9 @@ class OlympianTutorService:
 
     def change_tutor_biography(self, tutor_mail: str, biography: str) -> None:
         self.tutor_repository.change_biography(tutor_mail, biography)
+
+    def delete_tutor(self, tutor_mail: str) -> None:
+        self.tutor_repository.delete_tutor(tutor_mail)
 
     @classmethod
     def create(

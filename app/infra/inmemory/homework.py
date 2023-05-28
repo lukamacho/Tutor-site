@@ -9,19 +9,25 @@ class InMemoryHomeworkRepository:
     data: List[Homework] = field(default_factory=list)
 
     def create_homework(
-            self, homework_text: str, tutor_mail: str, student_mail: str
+        self, homework_text: str, tutor_mail: str, student_mail: str
     ) -> Homework:
         homework = Homework(homework_text, tutor_mail, student_mail)
         self.data.append(homework)
         return homework
 
     def change_homework(
-            self, new_homework_text: str, old_homework_text: str, tutor_mail: str, student_mail: str
+        self,
+        new_homework_text: str,
+        old_homework_text: str,
+        tutor_mail: str,
+        student_mail: str,
     ) -> Homework:
         for homework in self.data:
-            if homework.homework_text == old_homework_text and \
-                    homework.tutor_mail == tutor_mail and \
-                    homework.student_mail == student_mail:
+            if (
+                homework.homework_text == old_homework_text
+                and homework.tutor_mail == tutor_mail
+                and homework.student_mail == student_mail
+            ):
                 homework.homework_text = new_homework_text
 
     def get_student_homework(self, student_mail: str) -> List[Homework]:
@@ -32,16 +38,18 @@ class InMemoryHomeworkRepository:
         return homeworks
 
     def delete_homework(
-            self, homework_text: str, tutor_mail: str, student_mail: str
+        self, homework_text: str, tutor_mail: str, student_mail: str
     ) -> None:
         i = 0
         length = len(self.data)
 
         while i < length:
             homework = self.data[i]
-            if homework.homework_text == homework_text and \
-                    homework.tutor_mail == tutor_mail and \
-                    homework.student_mail == student_mail:
+            if (
+                homework.homework_text == homework_text
+                and homework.tutor_mail == tutor_mail
+                and homework.student_mail == student_mail
+            ):
                 self.data.remove(homework)
                 i -= 1
                 length -= 1

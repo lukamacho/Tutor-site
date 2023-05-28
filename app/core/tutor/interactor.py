@@ -5,7 +5,13 @@ from dataclasses import dataclass
 
 class ITutorInteractor(Protocol):
     def create_tutor(
-        self, first_name: str, last_name: str, email: str, password: str, balance: int, biography: str
+        self,
+        first_name: str,
+        last_name: str,
+        email: str,
+        password: str,
+        balance: int,
+        biography: str,
     ) -> Tutor:
         pass
 
@@ -42,7 +48,13 @@ class ITutorInteractor(Protocol):
 
 class ITutorRepository(Protocol):
     def create_tutor(
-        self, first_name: str, last_name: str, email: str, password: str, balance: int, biography: str
+        self,
+        first_name: str,
+        last_name: str,
+        email: str,
+        password: str,
+        balance: int,
+        biography: str,
     ) -> Tutor:
         pass
 
@@ -74,6 +86,9 @@ class ITutorRepository(Protocol):
         pass
 
     def change_tutor_biography(self, tutor_mail: str, biography: str) -> None:
+        pass
+
+    def delete_tutor(self, tutor_mail: str) -> None:
         pass
 
 
@@ -123,3 +138,6 @@ class TutorInteractor:
 
     def change_tutor_biography(self, tutor_mail: str, biography: str) -> None:
         self.tutor_repository.change_tutor_biography(tutor_mail, biography)
+
+    def delete_tutor(self, tutor_mail: str) -> None:
+        pass
