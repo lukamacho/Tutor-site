@@ -136,7 +136,7 @@ class SqlTutorRepository:
         self.conn.commit()
 
     def delete_tutor(self, tutor_mail: str) -> None:
-        print(tutor_mail,"fdjlssdkjfa")
+        print(tutor_mail, "fdjlssdkjfa")
         self.conn.execute(
             "DELETE FROM tutors WHERE  email = ?  ",
             (tutor_mail,),
