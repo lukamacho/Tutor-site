@@ -22,6 +22,9 @@ def get_admin(core: OlympianTutorService = Depends(get_core)):
 @admin_api.delete("/admin/delete_student")
 def delete_student(student_mail: StudentDeleteRequest,core: OlympianTutorService = Depends(get_core)):
     print(student_mail)
+    student = core.tutor_interactor.get_tutor(student_mail.tutor_mail)
+    if student is None:
+        return {"message": "Student with this mail doesn't exist!"}
     core.student_interactor.delete_student(student_mail.student_mail)
     return {"message": "Student deleted successfully"}
 
@@ -29,6 +32,9 @@ def delete_student(student_mail: StudentDeleteRequest,core: OlympianTutorService
 @admin_api.delete("/admin/delete_tutor")
 def delete_tutor(tutor_mail: TutorDeleteRequest,core: OlympianTutorService = Depends(get_core)):
     print(tutor_mail)
+    tutor = core.tutor_interactor.get_tutor(tutor_mail.tutor_mail)
+    if tutor is None:
+        return {"message": "Tutor with this mail doesn't exist!"}
     core.tutor_interactor.delete_tutor(tutor_mail.tutor_mail)
     return {"message": "Tutor deleted successfully"}
 
@@ -36,6 +42,9 @@ def delete_tutor(tutor_mail: TutorDeleteRequest,core: OlympianTutorService = Dep
 @admin_api.delete("/admin/commission_pct")
 def commision_tutor(tutor_mail: TutorCommissionRequest,core: OlympianTutorService = Depends(get_core)):
     print(tutor_mail)
+    tutor = core.tutor_interactor.get_tutor(tutor_mail.tutor_mail)
+    if tutor is None:
+        return {"message": "Tutor with this mail doesn't exist!"}
     core.tutor_interactor.decrease_commission_pct(tutor_mail.tutor_mail)
 
     return {"message": "Commission_pct decreased successfully"}
