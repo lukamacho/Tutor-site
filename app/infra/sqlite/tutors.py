@@ -125,6 +125,16 @@ class SqlTutorRepository:
         )
         self.conn.commit()
 
+    def change_tutor_password(self, tutor_mail: str, password: str) -> None:
+        self.conn.execute(
+            "UPDATE Tutors SET  password = ? WHERE email = ? ",
+            (
+                password,
+                tutor_mail,
+            ),
+        )
+        self.conn.commit()
+
     def change_tutor_biography(self, tutor_mail: str, biography: str) -> None:
         self.conn.execute(
             "UPDATE Tutors SET  biography = ? WHERE email = ? ",
