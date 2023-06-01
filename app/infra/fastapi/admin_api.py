@@ -4,7 +4,9 @@ from random import choices
 from string import ascii_letters, digits
 
 from fastapi import APIRouter, Depends, HTTPException
+from fastapi.responses import RedirectResponse, JSONResponse
 from pydantic import BaseModel
+import requests
 
 from app.core.facade import OlympianTutorService
 from app.infra.fastapi.dependables import get_core
@@ -12,6 +14,9 @@ from app.infra.fastapi.homepage_api import hash_password
 
 admin_api = APIRouter()
 
+GOOGLE_CLIENT_ID = "your_client_id"
+GOOGLE_CLIENT_SECRET = "your_client_secret"
+GOOGLE_REDIRECT_URI = "your_redirect_uri"
 
 class PasswordResetRequest(BaseModel):
     user_mail: str
@@ -137,16 +142,67 @@ def sign_in(
     if is_student:
         student = core.student_interactor.get_student(user_mail)
         if student is None:
-            raise HTTPException(404, "No such student exists.")
+            raise HTTPException(502, "No such student exists.")
         if student.password != user_password:
             raise HTTPException(501, "Password is incorrect.")
         print(user_password)
     else:
         tutor = core.tutor_interactor.get_tutor(user_mail)
         if tutor is None:
-            raise HTTPException(404, "No such tutor exists.")
+            raise HTTPException(502, "No such tutor exists.")
         if tutor.password != user_password:
             raise HTTPException(501, "Password is incorrect")
 
         print(user_password)
     return {"message": "User sign in successfully."}
+
+@admin_api.get("/google_sign_in")
+def google_sign_in():
+    # Generate and return the Google OAuth2 authorization URL
+    authorization_url = generate_google_auth_url()
+    return {"authorization_url": authorization_url}
+
+@admin_api.get("/google_sign_in_callback")
+def google_sign_in_callback(code: str):
+    # Handle the Google sign-in callback here
+    try:
+        token_response = exchange_code_for_token(code)
+        user_info = get_user_info(token_response["access_token"])
+        # Process user_info as needed
+        # ...
+        # Redirect the user to the desired page after successful authentication
+        redirect_url = "http://localhost:3000/"  # Change this to the desired URL
+        return RedirectResponse(redirect_url)
+    except Exception as e:
+        return JSONResponse(status_code=400, content={"message": "Google sign-in failed."})
+def generate_google_auth_url():
+    # Construct the Google OAuth2 authorization URL
+    auth_endpoint = "https://accounts.google.com/o/oauth2/auth"
+    params = {
+        "client_id": GOOGLE_CLIENT_ID,
+        "redirect_uri": GOOGLE_REDIRECT_URI,
+        "response_type": "code",
+        "scope": "openid email profile",
+    }
+    auth_url = f"{auth_endpoint}?{'&'.join([f'{k}={v}' for k, v in params.items()])}"
+    return auth_url
+
+def exchange_code_for_token(code: str):
+    token_endpoint = "https://oauth2.googleapis.com/token"
+    data = {
+        "code": code,
+        "client_id": GOOGLE_CLIENT_ID,
+        "client_secret": GOOGLE_CLIENT_SECRET,
+        "redirect_uri": GOOGLE_REDIRECT_URI,
+        "grant_type": "authorization_code",
+    }
+    response = requests.post(token_endpoint, data=data)
+    response.raise_for_status()
+    return response.json()
+
+def get_user_info(access_token: str):
+    user_info_endpoint = "https://www.googleapis.com/oauth2/v2/userinfo"
+    headers = {"Authorization": f"Bearer {access_token}"}
+    response = requests.get(user_info_endpoint, headers=headers)
+    response.raise_for_status()
+    return response.json()
