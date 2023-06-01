@@ -1,10 +1,21 @@
-from fastapi import APIRouter, Depends
+import smtplib
+import ssl
+from random import choices
+from string import ascii_letters, digits
+
+from fastapi import APIRouter, Depends, HTTPException
+from pydantic import BaseModel
 
 from app.core.facade import OlympianTutorService
 from app.infra.fastapi.dependables import get_core
-from pydantic import BaseModel
+from app.infra.fastapi.homepage_api import hash_password
 
 admin_api = APIRouter()
+
+
+class PasswordResetRequest(BaseModel):
+    user_mail: str
+    is_student: bool
 
 
 class StudentDeleteRequest(BaseModel):
@@ -17,6 +28,34 @@ class TutorDeleteRequest(BaseModel):
 
 class TutorCommissionRequest(BaseModel):
     tutor_mail: str
+
+
+class SingInRequest(BaseModel):
+    user_mail: str
+    password: str
+    is_student: bool
+
+
+def generate_new_password() -> str:
+    # Generate a random password
+    password_length = 8
+    characters = ascii_letters + digits
+    new_password = "".join(choices(characters, k=password_length))
+    return new_password
+
+
+def send_new_password(receiver_mail: str) -> str:
+    port = 465
+    smtp_server = "smtp.gmail.com"
+    sender_email = "tutorsite727@gmail.com"
+    password = "fvqxtupjruxqcooo"
+
+    context = ssl.create_default_context()
+    new_password = generate_new_password()
+    with smtplib.SMTP_SSL(smtp_server, port, context=context) as server:
+        server.login(sender_email, password)
+        server.sendmail(sender_email, receiver_mail, new_password)
+    return new_password
 
 
 @admin_api.get("/admin/hello")
@@ -60,3 +99,54 @@ def commision_tutor(
     core.tutor_interactor.decrease_commission_pct(tutor_mail.tutor_mail)
 
     return {"message": "Commission_pct decreased successfully"}
+
+
+@admin_api.post("/admin/reset_password")
+def reset_password(
+    password_reset: PasswordResetRequest, core: OlympianTutorService = Depends(get_core)
+):
+    user_mail = password_reset.user_mail
+    is_student = password_reset.is_student
+    print(password_reset)
+    if is_student:
+        student = core.get_student(user_mail)
+        if student is None:
+            raise HTTPException(status_code=404, detail="Email not found")
+        new_password = send_new_password(user_mail)
+        new_password = hash_password(new_password)
+        core.student_interactor.change_student_password(user_mail, new_password)
+    else:
+        tutor = core.get_tutor(user_mail)
+        if tutor is None:
+            raise HTTPException(status_code=404, detail="Email not found")
+        new_password = send_new_password(user_mail)
+        new_password = hash_password(new_password)
+        core.tutor_interactor.change_tutor_password(user_mail, new_password)
+
+    return {"message": "Password resat successfully."}
+
+
+@admin_api.post("/sign_in")
+def sign_in(
+    sign_in_request: SingInRequest, core: OlympianTutorService = Depends(get_core)
+):
+    print(sign_in_request)
+    is_student = sign_in_request.is_student
+    user_mail = sign_in_request.user_mail
+    user_password = hash_password(sign_in_request.password)
+    if is_student:
+        student = core.student_interactor.get_student(user_mail)
+        if student is None:
+            raise HTTPException(404, "No such student exists.")
+        if student.password != user_password:
+            raise HTTPException(501, "Password is incorrect.")
+        print(user_password)
+    else:
+        tutor = core.tutor_interactor.get_tutor(user_mail)
+        if tutor is None:
+            raise HTTPException(404, "No such tutor exists.")
+        if tutor.password != user_password:
+            raise HTTPException(501, "Password is incorrect")
+
+        print(user_password)
+    return {"message": "User sign in successfully."}
