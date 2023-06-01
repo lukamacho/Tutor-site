@@ -90,6 +90,18 @@ export default function SignIn() {
     }
   };
 
+  const handleGoogleSignIn = async () => {
+  try {
+    const response = await fetch('http://localhost:8000/google_sign_in', {
+      method: 'GET',
+    });
+    const { authorization_url } = await response.json();
+    window.location.href = authorization_url;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
   return (
     <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="xs">
@@ -173,6 +185,14 @@ export default function SignIn() {
                     variant="outlined"
                 >
                     Student forgot password
+                </Button>
+                <Button
+                      fullWidth
+                      variant="contained"
+                      sx={{ mt: 3, mb: 2 }}
+                      onClick={handleGoogleSignIn}
+                >
+                  Sign In with Google
                 </Button>
             </div>
               <Grid item>
