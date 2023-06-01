@@ -1,8 +1,10 @@
-from fastapi import APIRouter, Depends
 import hashlib
+
+from fastapi import APIRouter, Depends
+from pydantic import BaseModel
+
 from app.core.facade import OlympianTutorService
 from app.infra.fastapi.dependables import get_core
-from pydantic import BaseModel
 
 
 class CreateUserRequest(BaseModel):
