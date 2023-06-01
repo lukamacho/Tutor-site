@@ -1,8 +1,8 @@
 import sqlite3
 from dataclasses import dataclass
+from typing import List, Optional
 
 from app.core.review.entity import Review
-from typing import Optional, List
 
 
 @dataclass
