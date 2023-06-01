@@ -100,6 +100,16 @@ class SqlStudentRepository:
         )
         self.conn.commit()
 
+    def change_student_password(self, student_mail: str, password: str) -> None:
+        self.conn.execute(
+            "UPDATE Students SET  password = ? WHERE email = ? ",
+            (
+                password,
+                student_mail,
+            ),
+        )
+        self.conn.commit()
+
     def delete_student(self, student_mail: str) -> None:
         self.conn.execute(
             "DELETE FROM Students WHERE  email = ?  ",
