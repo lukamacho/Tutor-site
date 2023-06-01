@@ -5,9 +5,16 @@ const Admin = () => {
   const [studentMail, setStudentMail] = useState('');
   const [tutorMail, setTutorMail] = useState('');
   const [tutorCommissionMail, setTutorCommissionMail] = useState('');
+  const [tutorDecreaseMail, setTutorDecreaseMail] = useState('');
+  const [studentIncreaseMail, setStudentIncreaseMail] = useState('');
+  const [studentIncreaseAmount, setStudentIncreaseAmount] = useState(0);
+  const [tutorDecreaseAmount, setTutorDecreaseAmount] = useState(0);
   const [studentDeleteRequested, setStudentDeleteRequested] = useState(false);
   const [tutorDeleteRequested, setTutorDeleteRequested] = useState(false);
   const [tutorCommissionRequested, setTutorCommissionRequested] = useState(false);
+  const [tutorDecreaseRequested, setTutorDecreaseRequested] = useState(false);
+  const [studentIncreaseRequested, setStudentIncreaseRequested] = useState(false);
+
 
   const handleDeleteStudent = async () => {
     try {
@@ -75,6 +82,53 @@ const Admin = () => {
       setTutorCommissionRequested(false); // Reset the deleteRequested flag
     }
   };
+  const handleTutorDecreaseBalance = async () => {
+
+        const data = {
+            "tutor_mail": tutorDecreaseMail,
+            "amount": tutorDecreaseAmount,
+        }
+
+        try {
+            const response = await fetch('http://localhost:8000/admin/decrease_tutor_balance', {
+                method: 'POST',
+                body: JSON.stringify(data),
+                headers: { 'Content-Type': 'application/json' }
+            });
+            const result = await response.json();
+        console.log(result);
+
+
+        } catch (error) {
+            console.error(error);
+        }
+        finally {
+            setTutorDecreaseRequested(false); // Reset the deleteRequested flag
+        }
+    };
+  const handleStudentIncreaseBalance = async () => {
+
+        const data = {
+            "student_mail": studentIncreaseMail,
+            "amount": studentIncreaseAmount,
+        }
+
+        try {
+            const response = await fetch('http://localhost:8000/admin/increase_student_balance', {
+                method: 'POST',
+                body: JSON.stringify(data),
+                headers: { 'Content-Type': 'application/json' }
+            });
+            const result = await response.json();
+        console.log(result);
+
+
+        } catch (error) {
+            console.error(error);
+        }finally {
+            setStudentIncreaseRequested(false); // Reset the deleteRequested flag
+        }
+    };
   useEffect(() => {
     if (studentDeleteRequested) {
       handleDeleteStudent();
@@ -92,6 +146,16 @@ const Admin = () => {
       handleCommissionTutor();
     }
   }, [tutorCommissionRequested]);
+  useEffect(() => {
+    if (tutorDecreaseRequested) {
+      handleTutorDecreaseBalance();
+    }
+  }, [tutorDecreaseRequested]);
+   useEffect(() => {
+    if (studentIncreaseRequested) {
+      handleStudentIncreaseBalance();
+    }
+  }, [studentIncreaseRequested]);
 
   const handleStudentMailChange = (event) => {
     setStudentMail(event.target.value);
@@ -102,7 +166,18 @@ const Admin = () => {
   const handleTutorCommissionMailChange = (event) => {
     setTutorCommissionMail(event.target.value);
   };
-
+  const handleTutorDecreaseMailChange = (event) => {
+    setTutorDecreaseMail(event.target.value)
+  }
+  const handleTutorDecreaseAmountChange = (event) => {
+    setTutorDecreaseAmount(event.target.value)
+  }
+  const handleStudentIncreaseMailChange = (event) => {
+    setStudentIncreaseMail(event.target.value)
+  }
+  const handleStudentIncreaseAmountChange = (event) => {
+    setStudentIncreaseAmount(event.target.value)
+  }
   const handleStudentDeleteButtonClick = () => {
     setStudentDeleteRequested(true);
   };
@@ -111,6 +186,12 @@ const Admin = () => {
   };
   const handleTutorCommissionButtonClick = () => {
     setTutorCommissionRequested(true);
+  };
+  const handleTutorDecreaseBalanceButtonClick = () => {
+    setTutorDecreaseRequested(true)
+  };
+  const handleStudentIncreaseButtonClick = () => {
+    setStudentIncreaseRequested(true)
   };
   return (
     <div className="admin-parts">
@@ -141,6 +222,36 @@ const Admin = () => {
           placeholder="Enter tutor email"
         />
         <button onClick={handleTutorCommissionButtonClick}>Change tutor commission_pct</button>
+      </div>
+      <div className="decrease_tutor_balance">
+        <input
+          type="text"
+          value={tutorDecreaseMail}
+          onChange={handleTutorDecreaseMailChange}
+          placeholder="Enter tutor email"
+        />
+        <input
+          type="text"
+          value={tutorDecreaseAmount}
+          onChange={handleTutorDecreaseAmountChange}
+          placeholder="Enter decrease amount"
+        />
+        <button onClick={handleTutorDecreaseBalanceButtonClick}>Decrease Tutor Balance</button>
+      </div>
+       <div className="decrease_tutor_balance">
+        <input
+          type="text"
+          value={studentIncreaseMail}
+          onChange={handleStudentIncreaseMailChange}
+          placeholder="Enter student email"
+        />
+        <input
+          type="text"
+          value={studentIncreaseAmount}
+          onChange={handleStudentIncreaseAmountChange}
+          placeholder="Enter increase amount"
+        />
+        <button onClick={handleStudentIncreaseButtonClick}>Increase Student balance</button>
       </div>
     </div>
   );
