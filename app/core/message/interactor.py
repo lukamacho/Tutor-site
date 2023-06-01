@@ -1,6 +1,7 @@
-from typing import Protocol, List
-from app.core.message.entity import Message
 from dataclasses import dataclass
+from typing import List, Protocol
+
+from app.core.message.entity import Message
 
 
 class IMessageInteractor(Protocol):

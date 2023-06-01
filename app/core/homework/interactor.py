@@ -1,6 +1,7 @@
-from typing import Protocol, List
-from app.core.homework.entity import Homework
 from dataclasses import dataclass
+from typing import List, Protocol
+
+from app.core.homework.entity import Homework
 
 
 class IHomeworkInteractor(Protocol):

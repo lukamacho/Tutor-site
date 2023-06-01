@@ -1,6 +1,7 @@
-from typing import Protocol, Optional
-from app.core.tutor.entity import Tutor
 from dataclasses import dataclass
+from typing import Optional, Protocol
+
+from app.core.tutor.entity import Tutor
 
 
 class ITutorInteractor(Protocol):
@@ -43,6 +44,9 @@ class ITutorInteractor(Protocol):
         pass
 
     def change_biography(self, tutor_mail: str, biography: str) -> None:
+        pass
+
+    def change_tutor_password(self, tutor_mail: str, password: str) -> None:
         pass
 
 
@@ -89,6 +93,9 @@ class ITutorRepository(Protocol):
         pass
 
     def delete_tutor(self, tutor_mail: str) -> None:
+        pass
+
+    def change_tutor_password(self, tutor_mail: str, password: str) -> None:
         pass
 
 
@@ -141,3 +148,6 @@ class TutorInteractor:
 
     def delete_tutor(self, tutor_mail: str) -> None:
         self.tutor_repository.delete_tutor(tutor_mail)
+
+    def change_tutor_password(self, tutor_mail: str, password: str) -> None:
+        self.tutor_repository.change_tutor_password(tutor_mail, password)
