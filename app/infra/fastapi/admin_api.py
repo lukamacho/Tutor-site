@@ -18,6 +18,7 @@ GOOGLE_CLIENT_ID = "your_client_id"
 GOOGLE_CLIENT_SECRET = "your_client_secret"
 GOOGLE_REDIRECT_URI = "your_redirect_uri"
 
+
 class PasswordResetRequest(BaseModel):
     user_mail: str
     is_student: bool
@@ -39,6 +40,16 @@ class SingInRequest(BaseModel):
     user_mail: str
     password: str
     is_student: bool
+
+
+class BalanceAdditionRequest(BaseModel):
+    student_mail: str
+    amount: int
+
+
+class DecreaseBalanceRequest(BaseModel):
+    tutor_mail: str
+    amount: int
 
 
 def generate_new_password() -> str:
@@ -94,7 +105,7 @@ def delete_tutor(
 
 
 @admin_api.delete("/admin/commission_pct")
-def commision_tutor(
+def commission_tutor(
     tutor_mail: TutorCommissionRequest, core: OlympianTutorService = Depends(get_core)
 ):
     print(tutor_mail)
@@ -156,11 +167,13 @@ def sign_in(
         print(user_password)
     return {"message": "User sign in successfully."}
 
+
 @admin_api.get("/google_sign_in")
 def google_sign_in():
     # Generate and return the Google OAuth2 authorization URL
     authorization_url = generate_google_auth_url()
     return {"authorization_url": authorization_url}
+
 
 @admin_api.get("/google_sign_in_callback")
 def google_sign_in_callback(code: str):
@@ -174,7 +187,11 @@ def google_sign_in_callback(code: str):
         redirect_url = "http://localhost:3000/"  # Change this to the desired URL
         return RedirectResponse(redirect_url)
     except Exception as e:
-        return JSONResponse(status_code=400, content={"message": "Google sign-in failed."})
+        return JSONResponse(
+            status_code=400, content={"message": "Google sign-in failed."}
+        )
+
+
 def generate_google_auth_url():
     # Construct the Google OAuth2 authorization URL
     auth_endpoint = "https://accounts.google.com/o/oauth2/auth"
@@ -186,6 +203,7 @@ def generate_google_auth_url():
     }
     auth_url = f"{auth_endpoint}?{'&'.join([f'{k}={v}' for k, v in params.items()])}"
     return auth_url
+
 
 def exchange_code_for_token(code: str):
     token_endpoint = "https://oauth2.googleapis.com/token"
@@ -200,9 +218,38 @@ def exchange_code_for_token(code: str):
     response.raise_for_status()
     return response.json()
 
+
 def get_user_info(access_token: str):
     user_info_endpoint = "https://www.googleapis.com/oauth2/v2/userinfo"
     headers = {"Authorization": f"Bearer {access_token}"}
     response = requests.get(user_info_endpoint, headers=headers)
     response.raise_for_status()
     return response.json()
+
+
+@admin_api.post("/admin/increase_student_balance")
+def add_balance(
+    add_balance: BalanceAdditionRequest, core: OlympianTutorService = Depends(get_core)
+):
+    student_mail = add_balance.student_mail
+    amount = add_balance.amount
+    student = core.student_interactor.get_student(student_mail)
+    if student is None:
+        return {"Message": "No such student exists."}
+    core.student_interactor.increase_student_balance(student_mail, amount)
+
+    return {"message": "Balance added successfully."}
+
+
+@admin_api.post("/admin/decrease_tutor_balance")
+def decrease_balance(
+    decrease_balance: DecreaseBalanceRequest,
+    core: OlympianTutorService = Depends(get_core),
+):
+    tutor_mail = decrease_balance.tutor_mail
+    amount = decrease_balance.amount
+    tutor = core.tutor_interactor.get_tutor(tutor_mail)
+    if tutor is None:
+        return {"Message": "No such tutor exists."}
+    core.tutor_interactor.decrease_tutor_balance(tutor_mail, amount)
+    return {"message": "Balance decreased successfully."}
