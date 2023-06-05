@@ -5,8 +5,12 @@ import Typography from "@mui/material/Typography"
 import TextField from "@mui/material/TextField"
 import Button from "@mui/material/Button"
 import { useState } from "react"
+import { useNavigate} from 'react-router-dom';
+
 
 export default function Registration() {
+    const navigate = useNavigate();
+
     const [firstName, setFirstName] = useState("")
     const [lastName, setLastName] = useState("")
     const [email, setEmail] = useState("")
@@ -30,7 +34,18 @@ export default function Registration() {
                 headers: { 'Content-Type': 'application/json' }
             });
             const result = await response.json();
-            console.log(result);
+      console.log(result);
+
+      if (response.ok) {
+        if (is_student){
+            navigate('/student_profile', { state: { email } });
+        } else{
+            navigate('/tutor_profile', { state: { email } });
+        }
+      } else {
+        // Handle sign-in failure
+        // ...
+      }
         } catch (error) {
             console.error(error);
         }

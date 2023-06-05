@@ -2,9 +2,9 @@ from typing import Protocol
 
 from fastapi import FastAPI
 
+from app.core.facade import OlympianTutorService
 from app.infra.emailer.smtp import SMTPEmailService
 from app.infra.fastapi.api_main import setup_fastapi
-from app.core.facade import OlympianTutorService
 from app.infra.sqlite.course import SqlCourseRepository
 from app.infra.sqlite.lesson import SqlLessonRepository
 from app.infra.sqlite.message import SqlMessageRepository

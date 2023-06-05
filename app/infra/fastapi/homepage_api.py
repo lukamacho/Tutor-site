@@ -1,8 +1,10 @@
-from fastapi import APIRouter, Depends
 import hashlib
+
+from fastapi import APIRouter, Depends
+from pydantic import BaseModel
+
 from app.core.facade import OlympianTutorService
 from app.infra.fastapi.dependables import get_core
-from pydantic import BaseModel
 
 
 class CreateUserRequest(BaseModel):
@@ -27,18 +29,25 @@ def hash_password(password: str) -> str:
 
 @homepage_api.post("/sign_up")
 async def create_user(
-        data: CreateUserRequest,
-        core: OlympianTutorService = Depends(get_core)
+    data: CreateUserRequest, core: OlympianTutorService = Depends(get_core)
 ):
     password_hash = hash_password(data.password)
 
     if data.is_student:
-        core.create_student(data.first_name, data.last_name, data.mail, password_hash, 0)
-        return {
-            "message": {"Student added successfully."}
-        }
+        student_mail = data.mail
+        student = core.student_interactor.get_student(student_mail)
+        if student is not None:
+            return {"message": "Student with this mail already exist!"}
+        core.create_student(
+            data.first_name, data.last_name, data.mail, password_hash, 0
+        )
+        return {"message": {"Student added successfully."}}
     else:
-        core.create_tutor(data.first_name, data.last_name, data.mail, password_hash, 0, "")
-        return {
-            "message": {"Tutor added successfully."}
-        }
+        tutor_mail = data.mail
+        tutor = core.tutor_interactor.get_tutor(tutor_mail)
+        if tutor is not None:
+            return {"message": "Tutor with this mail already exists!"}
+        core.create_tutor(
+            data.first_name, data.last_name, data.mail, password_hash, 0, ""
+        )
+        return {"message": {"Tutor added successfully."}}

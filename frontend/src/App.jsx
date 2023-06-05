@@ -4,7 +4,8 @@ import Homepage from "./Pages/Homepage"
 import Registration from "./Pages/Registration"
 import Login from "./Pages/Login"
 import Admin from "./Pages/Admin"
-
+import Student from "./Pages/Student"
+import Tutor from "./Pages/Tutor"
 export default function App() {
     return (
         <BrowserRouter>
@@ -13,6 +14,8 @@ export default function App() {
                 <Route path="registration" element={<Registration />} />
                 <Route path="login" element={<Login />} />
                 <Route path="admin" element={<Admin />}/>
+                <Route path="student_profile" element={<Student />}/>
+                <Route path="tutor_profile" element={<Tutor />}/>
             </Routes>
         </BrowserRouter>
     );

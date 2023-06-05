@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Protocol, Optional
+from typing import Optional, Protocol
 
 from app.core.student.entity import Student
 
@@ -31,6 +31,9 @@ class IStudentInteractor(Protocol):
     def change_student_last_name(self, student_mail: str, last_name: str) -> None:
         pass
 
+    def change_student_password(self, student_mail: str, password: str) -> None:
+        pass
+
 
 class IStudentRepository(Protocol):
     def create_student(
@@ -60,6 +63,9 @@ class IStudentRepository(Protocol):
         pass
 
     def delete_student(self, student_mail: str) -> None:
+        pass
+
+    def change_student_password(self, student_mail: str, password: str) -> None:
         pass
 
 
@@ -96,4 +102,7 @@ class StudentInteractor:
         self.student_repository.change_student_last_name(student_mail, last_name)
 
     def delete_student(self, student_mail: str) -> None:
-        pass
+        self.student_repository.delete_student(student_mail)
+
+    def change_student_password(self, student_mail: str, password: str) -> None:
+        self.student_repository.change_student_password(student_mail, password)

@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Protocol, Optional, List
+from typing import List, Optional, Protocol
 
 from app.core.review.entity import Review
 
