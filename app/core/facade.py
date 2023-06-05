@@ -161,7 +161,7 @@ class OlympianTutorService:
         self.tutor_interactor.set_commission_pct(tutor_mail, new_commission_pct)
 
     def decrease_commission_pct(self, tutor_mail: str) -> None:
-        self.tutor_interactor.decrease_tutor_balance(tutor_mail)
+        self.tutor_interactor.decrease_commission_pct(tutor_mail)
 
     def change_tutor_first_name(self, tutor_mail: str, first_name: str) -> None:
         self.tutor_interactor.change_tutor_first_name(tutor_mail, first_name)

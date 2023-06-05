@@ -92,7 +92,7 @@ class SqlStudentRepository:
 
     def change_student_last_name(self, student_mail: str, last_name: str) -> None:
         self.conn.execute(
-            "UPDATE Students SET  last_name = ? WHERE email = ? ",
+            "UPDATE Students SET last_name = ? WHERE email = ? ",
             (
                 last_name,
                 student_mail,

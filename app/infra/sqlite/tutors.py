@@ -127,7 +127,7 @@ class SqlTutorRepository:
 
     def change_tutor_password(self, tutor_mail: str, password: str) -> None:
         self.conn.execute(
-            "UPDATE Tutors SET  password = ? WHERE email = ? ",
+            "UPDATE Tutors SET password = ? WHERE email = ? ",
             (
                 password,
                 tutor_mail,
@@ -146,7 +146,7 @@ class SqlTutorRepository:
         self.conn.commit()
 
     def delete_tutor(self, tutor_mail: str) -> None:
-        print(tutor_mail, "fdjlssdkjfa")
+
         self.conn.execute(
             "DELETE FROM tutors WHERE  email = ?  ",
             (tutor_mail,),

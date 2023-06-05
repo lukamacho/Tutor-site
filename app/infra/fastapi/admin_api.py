@@ -139,7 +139,7 @@ def reset_password(
         new_password = hash_password(new_password)
         core.tutor_interactor.change_tutor_password(user_mail, new_password)
 
-    return {"message": "Password resat successfully."}
+    return {"message": "Password reset successfully."}
 
 
 @admin_api.post("/sign_in")

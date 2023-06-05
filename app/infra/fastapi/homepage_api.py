@@ -35,9 +35,9 @@ async def create_user(
 
     if data.is_student:
         student_mail = data.mail
-        student = core.tutor_interactor.get_tutor(student_mail)
-        if student is None:
-            return {"message": "Student with this mail doesn't exist!"}
+        student = core.student_interactor.get_student(student_mail)
+        if student is not None:
+            return {"message": "Student with this mail already exist!"}
         core.create_student(
             data.first_name, data.last_name, data.mail, password_hash, 0
         )
