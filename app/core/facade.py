@@ -126,6 +126,12 @@ class OlympianTutorService:
     def change_student_last_name(self, student_mail: str, last_name: str) -> None:
         self.student_interactor.change_student_last_name(student_mail, last_name)
 
+    def change_student_password(self, student_mail: str, password: str) -> None:
+        self.student_interactor.change_student_password(student_mail, password)
+
+    def change_student_profile_address(self, student_mail: str, profile_address: str) -> None:
+        self.student_interactor.change_student_profile_address(student_mail, profile_address)
+
     def delete_student(self, student_mail: str) -> None:
         self.student_interactor.delete_student(student_mail)
 
