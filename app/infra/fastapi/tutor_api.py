@@ -1,7 +1,5 @@
-import shutil
-
-import aiofiles as aiofiles
-from fastapi import APIRouter, Depends, File, Query, UploadFile
+import aiofiles
+from fastapi import APIRouter, Depends, File, UploadFile
 from pydantic import BaseModel
 
 from app.core.facade import OlympianTutorService
@@ -18,11 +16,6 @@ class ChangeBioRequest(BaseModel):
 class MoneyWithdrawalRequest(BaseModel):
     tutor_mail: str
     amount: int
-
-
-class UploadProfilePictureRequest(BaseModel):
-    file: UploadFile = File(...)
-
 
 @tutor_api.get("/tutor/{tutor_mail}")
 async def get_tutor_profile(
