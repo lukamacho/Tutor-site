@@ -19,7 +19,8 @@ class SqlTutorRepository:
                 password TEXT NOT NULL,
                 commission_pct REAL NOT NULL,
                 balance INTEGER,
-                biography TEXT
+                biography TEXT,
+                profile_address TEXT                
             );
             """
         )
@@ -33,10 +34,11 @@ class SqlTutorRepository:
         password: str,
         balance: int,
         biography: str,
+        profile_address: str,
     ) -> Tutor:
         commission_pct = 0.25
         self.conn.execute(
-            " INSERT INTO Tutors VALUES (?,?,?,?,?,?,?)",
+            " INSERT INTO Tutors VALUES (?,?,?,?,?,?,?,?)",
             (
                 first_name,
                 last_name,
@@ -45,12 +47,13 @@ class SqlTutorRepository:
                 commission_pct,
                 balance,
                 biography,
+                profile_address,
             ),
         )
         self.conn.commit()
         print("Tutor has been created.")
         return Tutor(
-            first_name, last_name, email, password, commission_pct, balance, biography
+            first_name, last_name, email, password, commission_pct, balance, biography,profile_address
         )
 
     def get_tutor(self, email: str) -> Optional[Tutor]:
@@ -140,6 +143,16 @@ class SqlTutorRepository:
             "UPDATE Tutors SET  biography = ? WHERE email = ? ",
             (
                 biography,
+                tutor_mail,
+            ),
+        )
+        self.conn.commit()
+
+    def change_tutor_profile_address(self, tutor_mail: str, profile_address: str) -> None:
+        self.conn.execute(
+            "UPDATE Tutors SET profile_address = ? WHERE email = ? ",
+            (
+                profile_address,
                 tutor_mail,
             ),
         )
