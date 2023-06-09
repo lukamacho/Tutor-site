@@ -61,6 +61,7 @@ function TutorProfile() {
       .then(data => {
         // Process the response as needed
         console.log('Withdrawal request response:', data);
+        setBalance(balance-withdrawalMoney)
       })
       .catch(error => console.error('Error requesting money withdrawal:', error));
   };
