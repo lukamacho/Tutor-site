@@ -48,6 +48,6 @@ async def create_user(
         if tutor is not None:
             return {"message": "Tutor with this mail already exists!"}
         core.create_tutor(
-            data.first_name, data.last_name, data.mail, password_hash, 0, ""
+            data.first_name, data.last_name, data.mail, password_hash, 0, "", ""
         )
         return {"message": {"Tutor added successfully."}}

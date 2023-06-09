@@ -11,6 +11,7 @@ class Tutor:
     commission_pct: float
     balance: 0
     biography: str
+    profile_address: str
     languages: List[str] = field(default_factory=list)
     profile_address: str = ""
     is_top_tutor: bool = False
