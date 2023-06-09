@@ -53,7 +53,14 @@ class SqlTutorRepository:
         self.conn.commit()
         print("Tutor has been created.")
         return Tutor(
-            first_name, last_name, email, password, commission_pct, balance, biography,profile_address
+            first_name,
+            last_name,
+            email,
+            password,
+            commission_pct,
+            balance,
+            biography,
+            profile_address,
         )
 
     def get_tutor(self, email: str) -> Optional[Tutor]:
@@ -148,7 +155,9 @@ class SqlTutorRepository:
         )
         self.conn.commit()
 
-    def change_tutor_profile_address(self, tutor_mail: str, profile_address: str) -> None:
+    def change_tutor_profile_address(
+        self, tutor_mail: str, profile_address: str
+    ) -> None:
         self.conn.execute(
             "UPDATE Tutors SET profile_address = ? WHERE email = ? ",
             (
@@ -159,7 +168,6 @@ class SqlTutorRepository:
         self.conn.commit()
 
     def delete_tutor(self, tutor_mail: str) -> None:
-
         self.conn.execute(
             "DELETE FROM tutors WHERE  email = ?  ",
             (tutor_mail,),

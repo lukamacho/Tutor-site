@@ -3,10 +3,10 @@ import ssl
 from random import choices
 from string import ascii_letters, digits
 
-from fastapi import APIRouter, Depends, HTTPException
-from fastapi.responses import RedirectResponse, JSONResponse
-from pydantic import BaseModel
 import requests
+from fastapi import APIRouter, Depends, HTTPException
+from fastapi.responses import JSONResponse, RedirectResponse
+from pydantic import BaseModel
 
 from app.core.facade import OlympianTutorService
 from app.infra.fastapi.dependables import get_core

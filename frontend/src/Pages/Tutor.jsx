@@ -136,7 +136,7 @@ function TutorProfile() {
           </Card>
         </Grid>
         <Grid item xs={12} sm={6}>
-          <img src={("../Storage/" + email)} style={{ width: 120, height: 140 }} />
+          <img src={require('../Storage/' + email)} style={{ width: 120, height: 140 }} />
           <form onSubmit={handleSubmit}>
             <input name="image" type="file" onChange={changeHandler} accept=".jpeg, .png, .jpg"/>
             <button type="submit">Save</button>

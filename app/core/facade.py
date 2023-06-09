@@ -140,7 +140,7 @@ class OlympianTutorService:
         profile_address: "",
     ) -> Tutor:
         return self.tutor_interactor.create_tutor(
-            first_name, last_name, email, password, balance, biography,profile_address
+            first_name, last_name, email, password, balance, biography, profile_address
         )
 
     def get_tutor(self, email: str) -> Optional[Tutor]:
@@ -173,8 +173,11 @@ class OlympianTutorService:
     def change_tutor_biography(self, tutor_mail: str, biography: str) -> None:
         self.tutor_interactor.change_tutor_biography(tutor_mail, biography)
 
-    def change_tutor_profile_address(self, tutor_mail: str, profile_address: str) -> None:
+    def change_tutor_profile_address(
+        self, tutor_mail: str, profile_address: str
+    ) -> None:
         self.tutor_interactor.change_tutor_profile_address(tutor_mail, profile_address)
+
     def delete_tutor(self, tutor_mail: str) -> None:
         self.tutor_interactor.delete_tutor(tutor_mail)
 
