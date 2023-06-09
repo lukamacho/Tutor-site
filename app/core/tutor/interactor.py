@@ -13,6 +13,7 @@ class ITutorInteractor(Protocol):
         password: str,
         balance: int,
         biography: str,
+        profile_address: "",
     ) -> Tutor:
         pass
 
@@ -49,6 +50,9 @@ class ITutorInteractor(Protocol):
     def change_tutor_password(self, tutor_mail: str, password: str) -> None:
         pass
 
+    def change_tutor_profile_address(self, tutor_mail: str, profile_address: str) -> None:
+        pass
+
 
 class ITutorRepository(Protocol):
     def create_tutor(
@@ -59,6 +63,7 @@ class ITutorRepository(Protocol):
         password: str,
         balance: int,
         biography: str,
+        profile_address: "",
     ) -> Tutor:
         pass
 
@@ -95,6 +100,8 @@ class ITutorRepository(Protocol):
     def delete_tutor(self, tutor_mail: str) -> None:
         pass
 
+    def change_tutor_profile_address(self, tutor_mail: str, profile_address: str) -> None:
+        pass
     def change_tutor_password(self, tutor_mail: str, password: str) -> None:
         pass
 
@@ -111,9 +118,10 @@ class TutorInteractor:
         password: str,
         balance: int,
         biography: str,
+        profile_address: ""
     ) -> Tutor:
         return self.tutor_repository.create_tutor(
-            first_name, last_name, email, password, balance, biography
+            first_name, last_name, email, password, balance, biography,profile_address
         )
 
     def get_tutor(self, email: str) -> Optional[Tutor]:
@@ -151,3 +159,6 @@ class TutorInteractor:
 
     def change_tutor_password(self, tutor_mail: str, password: str) -> None:
         self.tutor_repository.change_tutor_password(tutor_mail, password)
+
+    def change_tutor_profile_address(self, tutor_mail: str, profile_address: str) -> None:
+        self.tutor_repository.change_tutor_profile_address(tutor_mail,profile_address)
