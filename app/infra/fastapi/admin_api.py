@@ -85,7 +85,7 @@ def delete_student(
     student_mail: StudentDeleteRequest, core: OlympianTutorService = Depends(get_core)
 ):
     print(student_mail)
-    student = core.tutor_interactor.get_tutor(student_mail)
+    student = core.student_interactor.get_student(student_mail.student_mail)
     if student is None:
         return {"message": "Student with this mail doesn't exist!"}
     core.student_interactor.delete_student(student_mail.student_mail)
@@ -192,7 +192,7 @@ def google_sign_in_callback(code: str):
         )
 
 
-def generate_google_auth_url():
+def generate_google_auth_url() -> str:
     # Construct the Google OAuth2 authorization URL
     auth_endpoint = "https://accounts.google.com/o/oauth2/auth"
     params = {

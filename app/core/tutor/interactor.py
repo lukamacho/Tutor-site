@@ -13,7 +13,7 @@ class ITutorInteractor(Protocol):
         password: str,
         balance: int,
         biography: str,
-        profile_address: "",
+        profile_address: str = "",
     ) -> Tutor:
         pass
 
@@ -32,7 +32,7 @@ class ITutorInteractor(Protocol):
     def decrease_balance(self, tutor_mail: str, amount: int) -> None:
         pass
 
-    def set_commission_pct(self, tutor_mail: str, new_commission_pct: float):
+    def set_commission_pct(self, tutor_mail: str, new_commission_pct: float) -> None:
         pass
 
     def decrease_commission_pct(self, tutor_mail: str) -> None:
@@ -65,7 +65,7 @@ class ITutorRepository(Protocol):
         password: str,
         balance: int,
         biography: str,
-        profile_address: "",
+        profile_address: str = "",
     ) -> Tutor:
         pass
 
@@ -84,7 +84,7 @@ class ITutorRepository(Protocol):
     def decrease_tutor_balance(self, tutor_mail: str, amount: int) -> None:
         pass
 
-    def set_commission_pct(self, tutor_mail: str, new_commission_pct: float):
+    def set_commission_pct(self, tutor_mail: str, new_commission_pct: float) -> None:
         pass
 
     def decrease_commission_pct(self, tutor_mail: str) -> None:
@@ -123,7 +123,7 @@ class TutorInteractor:
         password: str,
         balance: int,
         biography: str,
-        profile_address: "",
+        profile_address: str = "",
     ) -> Tutor:
         return self.tutor_repository.create_tutor(
             first_name, last_name, email, password, balance, biography, profile_address
@@ -144,7 +144,7 @@ class TutorInteractor:
     def decrease_tutor_balance(self, tutor_mail: str, amount: int) -> None:
         self.tutor_repository.decrease_tutor_balance(tutor_mail, amount)
 
-    def set_commission_pct(self, tutor_mail: str, new_commission_pct: float):
+    def set_commission_pct(self, tutor_mail: str, new_commission_pct: float) -> None:
         self.tutor_repository.set_commission_pct(tutor_mail, new_commission_pct)
 
     def decrease_commission_pct(self, tutor_mail: str) -> None:

@@ -23,7 +23,7 @@ class OlympianTutorService:
     student_interactor: StudentInteractor
     tutor_interactor: TutorInteractor
 
-    def send_hello(self):
+    def send_hello(self) -> None:
         self.admin_interactor.send_hello()
 
     def get_course(self, subject: str, tutor_mail: str) -> Optional[Course]:
@@ -137,7 +137,7 @@ class OlympianTutorService:
         password: str,
         balance: int,
         biography: str,
-        profile_address: "",
+        profile_address: str = "",
     ) -> Tutor:
         return self.tutor_interactor.create_tutor(
             first_name, last_name, email, password, balance, biography, profile_address
@@ -158,7 +158,7 @@ class OlympianTutorService:
     def decrease_tutor_balance(self, tutor_mail: str, amount: int) -> None:
         self.tutor_interactor.decrease_tutor_balance(tutor_mail, amount)
 
-    def set_commission_pct(self, tutor_mail: str, new_commission_pct: float):
+    def set_commission_pct(self, tutor_mail: str, new_commission_pct: float) -> None:
         self.tutor_interactor.set_commission_pct(tutor_mail, new_commission_pct)
 
     def decrease_commission_pct(self, tutor_mail: str) -> None:

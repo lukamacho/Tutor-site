@@ -64,7 +64,7 @@ async def create_upload_file(
     tutor_mail: str,
     file: UploadFile = File(...),
     core: OlympianTutorService = Depends(get_core),
-):
+) -> None:
     dest_path = "../../frontend/src/Storage/" + tutor_mail
     async with aiofiles.open(dest_path, "wb") as dest_file:
         content = await file.read()

@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from typing import List
+from typing import List, Optional
 
 from app.core.lesson.entity import Lesson
 
@@ -22,7 +22,7 @@ class InMemoryLessonRepository:
         self.data.append(lesson)
         return lesson
 
-    def get_lesson(self, tutor_mail: str, student_mail: str, subject: str) -> Lesson:
+    def get_lesson(self, tutor_mail: str, student_mail: str, subject: str) -> Optional[Lesson]:
         for lesson in self.data:
             if (
                 lesson.subject == subject

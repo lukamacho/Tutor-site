@@ -1,5 +1,6 @@
 import sqlite3
 from dataclasses import dataclass
+from typing import Optional
 
 from app.core.lesson.entity import Lesson
 
@@ -40,7 +41,7 @@ class SqlLessonRepository:
             subject, tutor_mail, student_mail, number_of_lessons, lesson_price
         )
 
-    def get_lesson(self, tutor_mail: str, student_mail: str, subject: str) -> Lesson:
+    def get_lesson(self, tutor_mail: str, student_mail: str, subject: str) -> Optional[Lesson]:
         for row in self.conn.execute(
             " SELECT * FROM Lessons WHERE tutor_mail = ? and student_mail = ? and subject = ?",
             (tutor_mail, student_mail, subject),
@@ -53,7 +54,9 @@ class SqlLessonRepository:
         self, tutor_mail: str, student_mail: str, subject: str
     ) -> int:
         lesson = self.get_lesson(tutor_mail, student_mail, subject)
-        return lesson.number_of_lessons
+        if lesson is not None:
+            return lesson.number_of_lessons
+        return 0
 
     def set_number_of_lessons(
         self, tutor_mail: str, student_mail: str, new_number: int, subject: str

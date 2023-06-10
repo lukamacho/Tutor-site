@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from typing import List
+from typing import List, Optional
 
 from app.core.homework.entity import Homework
 
@@ -21,7 +21,7 @@ class InMemoryHomeworkRepository:
         old_homework_text: str,
         tutor_mail: str,
         student_mail: str,
-    ) -> Homework:
+    ) -> Optional[Homework]:
         for homework in self.data:
             if (
                 homework.homework_text == old_homework_text
@@ -29,6 +29,8 @@ class InMemoryHomeworkRepository:
                 and homework.student_mail == student_mail
             ):
                 homework.homework_text = new_homework_text
+                return homework
+        return None
 
     def get_student_homework(self, student_mail: str) -> List[Homework]:
         homeworks: List[Homework] = []

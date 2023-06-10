@@ -18,10 +18,10 @@ class AdminInteractor:
     def send_hello(
         self,
     ) -> None:
-        self.email_service.send_mail(self, "lmach19@freeuni.edu.ge", "hello")
+        self.email_service.send_mail("lmach19@freeuni.edu.ge", "hello")
 
     def send_verification(self) -> None:
-        random_integer = str(random.randint(1, 10000000))
+        random_integer = random.randint(1, 10000000)
         self.email_service.send_verification(
-            self, "lmach19@freeuni.edu.ge", random_integer
+            "lmach19@freeuni.edu.ge", random_integer
         )

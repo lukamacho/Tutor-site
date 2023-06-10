@@ -8,7 +8,7 @@ class Student:
     last_name: str
     email: str
     password: str
-    balance: 0
+    balance: int
     profile_address: str = ""
     lessons: Dict[int, int] = field(default_factory=dict)
 

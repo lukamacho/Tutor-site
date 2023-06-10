@@ -12,6 +12,7 @@ def get_student(
     core: OlympianTutorService = Depends(get_core),
 ):
     student = core.get_student(student_mail)
-    core.change_student_last_name(student_mail, student.last_name)
-    core.change_student_first_name(student_mail, student.first_name)
+    if student is not None:
+        core.change_student_last_name(student_mail, student.last_name)
+        core.change_student_first_name(student_mail, student.first_name)
     pass
