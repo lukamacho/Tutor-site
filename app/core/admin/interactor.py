@@ -22,6 +22,4 @@ class AdminInteractor:
 
     def send_verification(self) -> None:
         random_integer = random.randint(1, 10000000)
-        self.email_service.send_verification(
-            "lmach19@freeuni.edu.ge", random_integer
-        )
+        self.email_service.send_verification("lmach19@freeuni.edu.ge", random_integer)

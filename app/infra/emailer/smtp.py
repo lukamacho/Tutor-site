@@ -23,8 +23,9 @@ class SMTPEmailService:
         with smtplib.SMTP_SSL(smtp_server, port, context=context) as server:
             server.login(sender_email, password)
             server.sendmail(sender_email, receiver_email, message)
+        return None
 
-    def send_verification(self, receiver_mail: str, random_int: str) -> int:
+    def send_verification(self, receiver_mail: str, random_int: str) -> None:
         port = 465
         smtp_server = "smtp.gmail.com"
         sender_email = "tutorsite727@gmail.com"
@@ -35,7 +36,7 @@ class SMTPEmailService:
             server.login(sender_email, password)
             server.sendmail(sender_email, receiver_mail, random_int)
 
-    def send_new_password(self, receiver_mail: str) -> str:
+    def send_new_password(self, receiver_mail: str) -> None:
         port = 465
         smtp_server = "smtp.gmail.com"
         sender_email = "tutorsite727@gmail.com"

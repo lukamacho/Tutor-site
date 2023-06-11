@@ -1,8 +1,11 @@
+from typing import Dict, Optional
+
 import aiofiles
 from fastapi import APIRouter, Depends, File, UploadFile
 from pydantic import BaseModel
 
 from app.core.facade import OlympianTutorService
+from app.core.tutor.entity import Tutor
 from app.infra.fastapi.dependables import get_core
 
 tutor_api = APIRouter()
@@ -17,10 +20,11 @@ class MoneyWithdrawalRequest(BaseModel):
     tutor_mail: str
     amount: int
 
+
 @tutor_api.get("/tutor/{tutor_mail}")
 async def get_tutor_profile(
     tutor_mail: str, core: OlympianTutorService = Depends(get_core)
-):
+) -> Optional[Tutor]:
     # Fetch tutor profile logic here using the email parameter
     print(tutor_mail)
 
@@ -30,7 +34,7 @@ async def get_tutor_profile(
 @tutor_api.post("/tutor/change_bio")
 def tutor_change_bio(
     change_bio: ChangeBioRequest, core: OlympianTutorService = Depends(get_core)
-):
+) -> Dict[str, str]:
     tutor_mail = change_bio.tutor_mail
     new_bio = change_bio.new_bio
     print(change_bio)
@@ -45,7 +49,7 @@ def tutor_change_bio(
 def tutor_withdrawal_request(
     withdrawal_request: MoneyWithdrawalRequest,
     core: OlympianTutorService = Depends(get_core),
-):
+) -> Dict[str, str]:
     tutor_mail = withdrawal_request.tutor_mail
     amount = withdrawal_request.amount
     print(withdrawal_request)

@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Protocol
+from typing import Optional, Protocol
 
 from app.core.lesson.entity import Lesson
 
@@ -15,7 +15,9 @@ class ILessonRepository(Protocol):
     ) -> Lesson:
         pass
 
-    def get_lesson(self, tutor_mail: str, student_mail: str, subject: str) -> Lesson:
+    def get_lesson(
+        self, tutor_mail: str, student_mail: str, subject: str
+    ) -> Optional[Lesson]:
         pass
 
     def get_number_of_lessons(
@@ -55,7 +57,9 @@ class ILessonInteractor(Protocol):
     ) -> Lesson:
         pass
 
-    def get_lesson(self, tutor_mail: str, student_mail: str, subject: str) -> Lesson:
+    def get_lesson(
+        self, tutor_mail: str, student_mail: str, subject: str
+    ) -> Optional[Lesson]:
         pass
 
     def get_number_of_lessons(
@@ -100,7 +104,9 @@ class LessonInteractor:
             subject, tutor_mail, student_mail, number_of_lessons, lesson_price
         )
 
-    def get_lesson(self, tutor_mail: str, student_mail: str, subject: str) -> Lesson:
+    def get_lesson(
+        self, tutor_mail: str, student_mail: str, subject: str
+    ) -> Optional[Lesson]:
         return self.lesson_interactor.get_lesson(tutor_mail, student_mail, subject)
 
     def get_number_of_lessons(

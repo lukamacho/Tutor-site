@@ -1,4 +1,5 @@
 import hashlib
+from typing import Dict
 
 from fastapi import APIRouter, Depends
 from pydantic import BaseModel
@@ -30,7 +31,7 @@ def hash_password(password: str) -> str:
 @homepage_api.post("/sign_up")
 async def create_user(
     data: CreateUserRequest, core: OlympianTutorService = Depends(get_core)
-):
+) -> Dict[str, str]:
     password_hash = hash_password(data.password)
 
     if data.is_student:
@@ -41,7 +42,7 @@ async def create_user(
         core.create_student(
             data.first_name, data.last_name, data.mail, password_hash, 0
         )
-        return {"message": {"Student added successfully."}}
+        return {"message": "Student added successfully."}
     else:
         tutor_mail = data.mail
         tutor = core.tutor_interactor.get_tutor(tutor_mail)
@@ -50,4 +51,4 @@ async def create_user(
         core.create_tutor(
             data.first_name, data.last_name, data.mail, password_hash, 0, "", ""
         )
-        return {"message": {"Tutor added successfully."}}
+        return {"message": "Tutor added successfully."}

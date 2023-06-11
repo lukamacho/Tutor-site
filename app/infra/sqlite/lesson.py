@@ -41,7 +41,9 @@ class SqlLessonRepository:
             subject, tutor_mail, student_mail, number_of_lessons, lesson_price
         )
 
-    def get_lesson(self, tutor_mail: str, student_mail: str, subject: str) -> Optional[Lesson]:
+    def get_lesson(
+        self, tutor_mail: str, student_mail: str, subject: str
+    ) -> Optional[Lesson]:
         for row in self.conn.execute(
             " SELECT * FROM Lessons WHERE tutor_mail = ? and student_mail = ? and subject = ?",
             (tutor_mail, student_mail, subject),

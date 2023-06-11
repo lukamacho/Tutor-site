@@ -1,7 +1,6 @@
 from dataclasses import dataclass
 from typing import List, Optional
 
-from app.core.admin.interactor import AdminInteractor, IEmailService
 from app.core.course.entity import Course
 from app.core.course.interactor import CourseInteractor, ICourseInteractor
 from app.core.lesson.entity import Lesson
@@ -16,15 +15,11 @@ from app.core.tutor.interactor import ITutorInteractor, TutorInteractor
 
 @dataclass
 class OlympianTutorService:
-    admin_interactor: AdminInteractor
     course_interactor: CourseInteractor
     review_interactor: ReviewInteractor
     lesson_interactor: LessonInteractor
     student_interactor: StudentInteractor
     tutor_interactor: TutorInteractor
-
-    def send_hello(self) -> None:
-        self.admin_interactor.send_hello()
 
     def get_course(self, subject: str, tutor_mail: str) -> Optional[Course]:
         return self.course_interactor.get_course(subject, tutor_mail)
@@ -62,7 +57,9 @@ class OlympianTutorService:
             subject, tutor_mail, student_mail, number_of_lessons, lesson_price
         )
 
-    def get_lesson(self, tutor_mail: str, student_mail: str, subject: str) -> Lesson:
+    def get_lesson(
+        self, tutor_mail: str, student_mail: str, subject: str
+    ) -> Optional[Lesson]:
         return self.lesson_interactor.get_lesson(tutor_mail, student_mail, subject)
 
     def get_number_of_lessons(
@@ -184,7 +181,6 @@ class OlympianTutorService:
     @classmethod
     def create(
         cls,
-        emailer: IEmailService,
         course_interactor: ICourseInteractor,
         review_interactor: IReviewInteractor,
         lesson_interactor: ILessonInteractor,
@@ -192,7 +188,6 @@ class OlympianTutorService:
         tutor_interactor: ITutorInteractor,
     ) -> "OlympianTutorService":
         return cls(
-            admin_interactor=AdminInteractor(emailer),
             course_interactor=CourseInteractor(course_interactor),
             review_interactor=ReviewInteractor(review_interactor),
             lesson_interactor=LessonInteractor(lesson_interactor),

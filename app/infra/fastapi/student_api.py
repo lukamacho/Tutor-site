@@ -10,7 +10,7 @@ student_api = APIRouter()
 def get_student(
     student_mail: str,
     core: OlympianTutorService = Depends(get_core),
-):
+) -> None:
     student = core.get_student(student_mail)
     if student is not None:
         core.change_student_last_name(student_mail, student.last_name)

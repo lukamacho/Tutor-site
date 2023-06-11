@@ -2,10 +2,10 @@ import smtplib
 import ssl
 from random import choices
 from string import ascii_letters, digits
+from typing import Dict
 
-import requests
 from fastapi import APIRouter, Depends, HTTPException
-from fastapi.responses import JSONResponse, RedirectResponse
+
 from pydantic import BaseModel
 
 from app.core.facade import OlympianTutorService
@@ -74,16 +74,10 @@ def send_new_password(receiver_mail: str) -> str:
     return new_password
 
 
-@admin_api.get("/admin/hello")
-def get_admin(core: OlympianTutorService = Depends(get_core)):
-    print("hello sender")
-    core.admin_interactor.send_verification()
-
-
 @admin_api.delete("/admin/delete_student")
 def delete_student(
     student_mail: StudentDeleteRequest, core: OlympianTutorService = Depends(get_core)
-):
+) -> Dict[str, str]:
     print(student_mail)
     student = core.student_interactor.get_student(student_mail.student_mail)
     if student is None:
@@ -95,7 +89,7 @@ def delete_student(
 @admin_api.delete("/admin/delete_tutor")
 def delete_tutor(
     tutor_mail: TutorDeleteRequest, core: OlympianTutorService = Depends(get_core)
-):
+) -> Dict[str, str]:
     print(tutor_mail)
     tutor = core.tutor_interactor.get_tutor(tutor_mail.tutor_mail)
     if tutor is None:
@@ -107,7 +101,7 @@ def delete_tutor(
 @admin_api.delete("/admin/commission_pct")
 def commission_tutor(
     tutor_mail: TutorCommissionRequest, core: OlympianTutorService = Depends(get_core)
-):
+) -> Dict[str, str]:
     print(tutor_mail)
     tutor = core.tutor_interactor.get_tutor(tutor_mail.tutor_mail)
     if tutor is None:
@@ -120,7 +114,7 @@ def commission_tutor(
 @admin_api.post("/admin/reset_password")
 def reset_password(
     password_reset: PasswordResetRequest, core: OlympianTutorService = Depends(get_core)
-):
+) -> Dict[str, str]:
     user_mail = password_reset.user_mail
     is_student = password_reset.is_student
     print(password_reset)
@@ -145,7 +139,7 @@ def reset_password(
 @admin_api.post("/sign_in")
 def sign_in(
     sign_in_request: SingInRequest, core: OlympianTutorService = Depends(get_core)
-):
+) -> Dict[str, str]:
     print(sign_in_request)
     is_student = sign_in_request.is_student
     user_mail = sign_in_request.user_mail
@@ -168,69 +162,10 @@ def sign_in(
     return {"message": "User sign in successfully."}
 
 
-@admin_api.get("/google_sign_in")
-def google_sign_in():
-    # Generate and return the Google OAuth2 authorization URL
-    authorization_url = generate_google_auth_url()
-    return {"authorization_url": authorization_url}
-
-
-@admin_api.get("/google_sign_in_callback")
-def google_sign_in_callback(code: str):
-    # Handle the Google sign-in callback here
-    try:
-        token_response = exchange_code_for_token(code)
-        user_info = get_user_info(token_response["access_token"])
-        # Process user_info as needed
-        # ...
-        # Redirect the user to the desired page after successful authentication
-        redirect_url = "http://localhost:3000/"  # Change this to the desired URL
-        return RedirectResponse(redirect_url)
-    except Exception as e:
-        return JSONResponse(
-            status_code=400, content={"message": "Google sign-in failed."}
-        )
-
-
-def generate_google_auth_url() -> str:
-    # Construct the Google OAuth2 authorization URL
-    auth_endpoint = "https://accounts.google.com/o/oauth2/auth"
-    params = {
-        "client_id": GOOGLE_CLIENT_ID,
-        "redirect_uri": GOOGLE_REDIRECT_URI,
-        "response_type": "code",
-        "scope": "openid email profile",
-    }
-    auth_url = f"{auth_endpoint}?{'&'.join([f'{k}={v}' for k, v in params.items()])}"
-    return auth_url
-
-
-def exchange_code_for_token(code: str):
-    token_endpoint = "https://oauth2.googleapis.com/token"
-    data = {
-        "code": code,
-        "client_id": GOOGLE_CLIENT_ID,
-        "client_secret": GOOGLE_CLIENT_SECRET,
-        "redirect_uri": GOOGLE_REDIRECT_URI,
-        "grant_type": "authorization_code",
-    }
-    response = requests.post(token_endpoint, data=data)
-    response.raise_for_status()
-    return response.json()
-
-
-def get_user_info(access_token: str):
-    user_info_endpoint = "https://www.googleapis.com/oauth2/v2/userinfo"
-    headers = {"Authorization": f"Bearer {access_token}"}
-    response = requests.get(user_info_endpoint, headers=headers)
-    response.raise_for_status()
-    return response.json()
-
-
 @admin_api.post("/admin/increase_student_balance")
 def add_balance(
     add_balance: BalanceAdditionRequest, core: OlympianTutorService = Depends(get_core)
-):
+) -> Dict[str, str]:
     student_mail = add_balance.student_mail
     amount = add_balance.amount
     student = core.student_interactor.get_student(student_mail)
@@ -245,7 +180,7 @@ def add_balance(
 def decrease_balance(
     decrease_balance: DecreaseBalanceRequest,
     core: OlympianTutorService = Depends(get_core),
-):
+) -> Dict[str, str]:
     tutor_mail = decrease_balance.tutor_mail
     amount = decrease_balance.amount
     tutor = core.tutor_interactor.get_tutor(tutor_mail)
