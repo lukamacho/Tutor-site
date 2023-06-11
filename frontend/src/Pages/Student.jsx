@@ -132,7 +132,7 @@ export default function Student() {
       <img
         src={profileAddress === ''
           ? require("../Storage/default")
-          : require(profileAddress)}
+          : require("../Storage/" + email)}
         style={{ width: 120, height: 140 }} />
       <form onSubmit={handleSubmit}>
         <input name="image" type="file" onChange={changeHandler} accept=".jpeg, .png, .jpg"/>
