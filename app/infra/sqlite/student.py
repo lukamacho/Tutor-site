@@ -1,7 +1,8 @@
 import sqlite3
 from dataclasses import dataclass
-from typing import Optional
+from typing import Optional, List
 
+from app.core.lesson.entity import Lesson
 from app.core.student.entity import Student
 
 
@@ -54,6 +55,15 @@ class SqlStudentRepository:
             return Student(*row)
 
         return None
+
+    def get_student_lessons(self, student_mail: str) -> Optional[List[Lesson]]:
+        lessons: List[Lesson] = []
+        for row in self.conn.execute(
+            " SELECT * FROM Lessons WHERE student_mail = ?", (student_mail,)
+        ):
+            lessons.append(Lesson(*row))
+
+        return lessons
 
     def set_student_balance(self, student_mail: str, new_balance: int) -> None:
         self.conn.execute(
