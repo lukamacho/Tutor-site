@@ -15,6 +15,8 @@ export default function Student() {
   const [newLastName, setNewLastName] = useState('')
   const [newPassword, setNewPassword] = useState('')
 
+  const [lessons, setLessons] = useState([])
+
   useEffect(() => {
     const handleGetStudent = async () => {
       try {
@@ -38,6 +40,26 @@ export default function Student() {
     };
 
     handleGetStudent();
+  }, []);
+
+  useEffect(() => {
+    const handleGetLessons = async () => {
+      try {
+        const response = await fetch('http://localhost:8000/student/lessons/' + email, {
+          method: 'GET',
+          headers: {
+          'Content-Type': 'application/json',
+          },
+        });
+        const lessonsData = await response.json();
+        setLessons(lessonsData)
+        console.log(lessonsData)
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    handleGetLessons();
   }, []);
 
   const handleChangeFirstName = async () => {
@@ -167,6 +189,17 @@ export default function Student() {
         placeholder="new password"
       />
       <button onClick={handleChangePassword}>Change Password</button>
+      <h1>Lessons:</h1>
+      <ul>
+        {lessons.map((lesson) =>
+          <li>
+            Subject: {lesson["subject"]};
+            Tutor: {lesson["tutor_mail"]};
+            Number of lessons: {lesson["number_of_lessons"]};
+            Lesson price: {lesson["lesson_price"]};
+          </li>
+        )}
+      </ul>
     </div>
   );
 }

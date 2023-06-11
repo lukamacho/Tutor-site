@@ -14,6 +14,13 @@ class GetStudentResponse(BaseModel):
     profile_address: str
 
 
+class GetLessonResponse(BaseModel):
+    subject: str
+    tutor_mail: str
+    number_of_lessons: int
+    lesson_price: int
+
+
 class ChangeFirstNameRequest(BaseModel):
     new_first_name: str
 
@@ -49,6 +56,28 @@ async def get_student(
     )
 
     return response
+
+
+@student_api.get("/student/lessons/{student_mail}")
+async def get_student_lessons(
+        student_mail: str,
+        core: OlympianTutorService = Depends(get_core),
+):
+    print("/student/lessons/" + student_mail)
+
+    lessons = core.student_interactor.get_student_lessons(student_mail)
+    responses = []
+    for lesson in lessons:
+        print(lesson)
+        response = GetLessonResponse(
+            subject=lesson.subject,
+            tutor_mail=lesson.tutor_mail,
+            number_of_lessons=lesson.number_of_lessons,
+            lesson_price=lesson.lesson_price,
+        )
+        responses.append(response)
+
+    return responses
 
 
 @student_api.post("/student/change_first_name/{student_mail}")
