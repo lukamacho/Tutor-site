@@ -65,7 +65,7 @@ async def get_student(
 ):
     print("/student/" + student_mail)
 
-    student = core.get_student(student_mail)
+    student = core.student_interactor.get_student(student_mail)
     response = GetStudentResponse(
         first_name=student.first_name,
         last_name=student.last_name,
@@ -86,7 +86,6 @@ async def get_student_lessons(
     lessons = core.student_interactor.get_student_lessons(student_mail)
     responses = []
     for lesson in lessons:
-        print(lesson)
         response = GetLessonResponse(
             subject=lesson.subject,
             tutor_mail=lesson.tutor_mail,
@@ -106,8 +105,8 @@ async def change_first_name(
 ):
     print("/student/change_first_name/" + student_mail + " value: " + data.new_first_name)
 
-    student = core.get_student(student_mail)
-    core.change_student_first_name(student_mail, data.new_first_name)
+    student = core.student_interactor.get_student(student_mail)
+    core.student_interactor.change_student_first_name(student_mail, data.new_first_name)
 
     return {"message": "Changed student first name successfully."}
 
@@ -120,8 +119,8 @@ async def change_last_name(
 ):
     print("/student/change_last_name/" + student_mail + " value: " + data.new_last_name)
 
-    student = core.get_student(student_mail)
-    core.change_student_last_name(student_mail, data.new_last_name)
+    student = core.student_interactor.get_student(student_mail)
+    core.student_interactor.change_student_last_name(student_mail, data.new_last_name)
 
     return {"message": "Changed student last name successfully."}
 
@@ -134,8 +133,8 @@ async def change_password(
 ):
     print("/student/change_password/" + student_mail + " value: " + data.new_password)
 
-    student = core.get_student(student_mail)
-    core.change_student_password(student_mail, data.new_password)
+    student = core.student_interactor.get_student(student_mail)
+    core.student_interactor.change_student_password(student_mail, data.new_password)
 
     return {"message": "Changed student password successfully."}
 
@@ -151,7 +150,7 @@ async def create_upload_file(
         content = await file.read()
         await dest_file.write(content)
 
-    core.change_student_profile_address(student_mail, dest_path)
+    core.student_interactor.change_student_profile_address(student_mail, dest_path)
 
 
 @student_api.post("/student/report_to_admin/{student_mail}")
