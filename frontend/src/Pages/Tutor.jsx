@@ -93,21 +93,23 @@ function TutorProfile() {
     setSelectedImage(event.target.files[0]);
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const form_data = new FormData();
-    form_data.append('file', selectedImage, selectedImage.name);
+  const handleSubmit = event => {
+  event.preventDefault();
+  const form_data = new FormData();
+  form_data.append("file", selectedImage, selectedImage.name);
 
-    const requestOptions = {
-      method: 'POST',
-      body: form_data,
-    };
-    fetch(`http://localhost:8000/tutor/upload_profile_picture/${email}`, requestOptions)
-      .then(response => response.json())
-      .then(function (response) {
-        console.log(response);
-      });
+  const requestOptions = {
+    method: 'POST',
+    body: form_data
   };
+
+  fetch(`http://localhost:8000/tutor/upload_profile_picture/${email}`, requestOptions)
+    .then(response => response.json())
+    .then(function (response) {
+      console.log(response);
+    });
+};
+
 
   return (
     <div>

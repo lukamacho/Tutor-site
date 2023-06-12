@@ -61,13 +61,13 @@ def tutor_withdrawal_request(
 
 @tutor_api.post("/tutor/upload_profile_picture/{tutor_mail}")
 async def create_upload_file(
-    tutor_mail: str,
-    file: UploadFile = File(...),
-    core: OlympianTutorService = Depends(get_core),
+        tutor_mail: str,
+        file: UploadFile = File(...),
+        core: OlympianTutorService = Depends(get_core),
 ):
-    dest_path = "../../frontend/src/Storage/" + tutor_mail
-    async with aiofiles.open(dest_path, "wb") as dest_file:
+    dest_path = '../../frontend/src/Storage/' + tutor_mail
+    async with aiofiles.open(dest_path, 'wb') as dest_file:
         content = await file.read()
         await dest_file.write(content)
 
-    core.tutor_interactor.change_tutor_profile_address(tutor_mail, dest_path)
+    core.student_interactor.change_student_profile_address(tutor_mail, dest_path)
