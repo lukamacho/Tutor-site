@@ -17,6 +17,8 @@ export default function Student() {
 
   const [lessons, setLessons] = useState([])
 
+  const [report, setReport] = useState('')
+
   useEffect(() => {
     const handleGetStudent = async () => {
       try {
@@ -139,6 +141,9 @@ export default function Student() {
 
     const requestOptions = {
       method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
       body: form_data
     };
     fetch('http://localhost:8000/student/upload_profile_picture/' + email, requestOptions)
@@ -146,6 +151,27 @@ export default function Student() {
       .then(function (response) {
         console.log(response)
     });
+  }
+
+  const handleSendReportToAdmin = async () => {
+    if (report !== '')
+    {
+      console.log("Test")
+
+      const data = {
+        "report": report,
+      }
+
+      const response = await fetch('http://localhost:8000/student/report_to_admin/' + email, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+      const response2 = await response.json();
+      console.log(response2);
+    }
   }
 
   return (
@@ -200,6 +226,14 @@ export default function Student() {
           </li>
         )}
       </ul>
+      <h4>Report to Admin</h4>
+      <input
+        type="text"
+        value={report}
+        onChange={(e) => setReport(e.target.value)}
+        placeholder="my report"
+      />
+      <button onClick={handleSendReportToAdmin}>Send to Admin</button>
     </div>
   );
 }
