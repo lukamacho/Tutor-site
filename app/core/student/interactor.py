@@ -1,6 +1,7 @@
 from dataclasses import dataclass
-from typing import Optional, Protocol
+from typing import Optional, Protocol, List
 
+from app.core.lesson.entity import Lesson
 from app.core.student.entity import Student
 
 
@@ -11,6 +12,9 @@ class IStudentInteractor(Protocol):
         pass
 
     def get_student(self, email: str) -> Optional[Student]:
+        pass
+
+    def get_student_lessons(self, student_mail: str) -> Optional[List[Lesson]]:
         pass
 
     def set_student_balance(self, student_mail: str, new_balance: int) -> None:
@@ -34,6 +38,9 @@ class IStudentInteractor(Protocol):
     def change_student_password(self, student_mail: str, password: str) -> None:
         pass
 
+    def change_student_profile_address(self, student_mail: str, profile_address: str) -> None:
+        pass
+
 
 class IStudentRepository(Protocol):
     def create_student(
@@ -42,6 +49,9 @@ class IStudentRepository(Protocol):
         pass
 
     def get_student(self, email: str) -> Optional[Student]:
+        pass
+
+    def get_student_lessons(self, student_mail: str) -> Optional[List[Lesson]]:
         pass
 
     def set_student_balance(self, student_mail: str, new_balance: int) -> None:
@@ -68,6 +78,9 @@ class IStudentRepository(Protocol):
     def change_student_password(self, student_mail: str, password: str) -> None:
         pass
 
+    def change_student_profile_address(self, student_mail: str, profile_address: str) -> None:
+        pass
+
 
 @dataclass
 class StudentInteractor:
@@ -82,6 +95,9 @@ class StudentInteractor:
 
     def get_student(self, email: str) -> Optional[Student]:
         return self.student_repository.get_student(email)
+
+    def get_student_lessons(self, student_mail: str) -> Optional[List[Lesson]]:
+        return self.student_repository.get_student_lessons(student_mail)
 
     def set_student_balance(self, student_mail: str, new_balance: int) -> None:
         self.student_repository.set_student_balance(student_mail, new_balance)
@@ -100,6 +116,9 @@ class StudentInteractor:
 
     def change_student_last_name(self, student_mail: str, last_name: str) -> None:
         self.student_repository.change_student_last_name(student_mail, last_name)
+
+    def change_student_profile_address(self, student_mail: str, profile_address: str) -> None:
+        self.student_repository.change_student_profile_address(student_mail, profile_address)
 
     def delete_student(self, student_mail: str) -> None:
         self.student_repository.delete_student(student_mail)

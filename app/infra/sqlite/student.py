@@ -1,7 +1,8 @@
 import sqlite3
 from dataclasses import dataclass
-from typing import Optional
+from typing import Optional, List
 
+from app.core.lesson.entity import Lesson
 from app.core.student.entity import Student
 
 
@@ -33,13 +34,14 @@ class SqlStudentRepository:
         profile_address: str = "",
     ) -> Student:
         self.conn.execute(
-            " INSERT INTO Students VALUES (?,?,?,?,?)",
+            " INSERT INTO Students VALUES (?,?,?,?,?,?)",
             (
                 first_name,
                 last_name,
                 email,
                 password,
                 balance,
+                profile_address,
             ),
         )
         self.conn.commit()
@@ -53,6 +55,15 @@ class SqlStudentRepository:
             return Student(*row)
 
         return None
+
+    def get_student_lessons(self, student_mail: str) -> Optional[List[Lesson]]:
+        lessons: List[Lesson] = []
+        for row in self.conn.execute(
+            " SELECT * FROM Lessons WHERE student_mail = ?", (student_mail,)
+        ):
+            lessons.append(Lesson(*row))
+
+        return lessons
 
     def set_student_balance(self, student_mail: str, new_balance: int) -> None:
         self.conn.execute(
@@ -105,6 +116,16 @@ class SqlStudentRepository:
             "UPDATE Students SET  password = ? WHERE email = ? ",
             (
                 password,
+                student_mail,
+            ),
+        )
+        self.conn.commit()
+
+    def change_student_profile_address(self, student_mail: str, profile_address: str) -> None:
+        self.conn.execute(
+            "UPDATE Students SET profile_address = ? WHERE email = ? ",
+            (
+                profile_address,
                 student_mail,
             ),
         )
