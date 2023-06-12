@@ -132,27 +132,22 @@ export default function Student() {
   };
 
   const handleSubmit = event => {
-    event.preventDefault();
-    const form_data = new FormData();
-    form_data.append(
-      "file",
-      selectedImage,
-      selectedImage.name
-    );
+      event.preventDefault();
+      const form_data = new FormData();
+      form_data.append("file", selectedImage, selectedImage.name);
 
-    const requestOptions = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: form_data
+      const requestOptions = {
+        method: 'POST',
+        body: form_data
+      };
+
+      fetch(`http://localhost:8000/student/upload_profile_picture/${email}`, requestOptions)
+        .then(response => response.json())
+        .then(function (response) {
+          console.log(response);
+        });
     };
-    fetch('http://localhost:8000/student/upload_profile_picture/' + email, requestOptions)
-      .then(response => response.json())
-      .then(function (response) {
-        console.log(response)
-    });
-  }
+
 
   const handleSendReportToAdmin = async () => {
     if (report !== '')
