@@ -48,6 +48,13 @@ class AddBalanceRequest(BaseModel):
     amount: int
 
 
+class BuyLessonRequest(BaseModel):
+    subject: str
+    tutor_mail: str
+    number_of_lessons: int
+    lesson_price: int
+
+
 student_api = APIRouter()
 
 
@@ -185,3 +192,21 @@ async def add_balance(
         server.sendmail(student_mail, sender_email, message)
 
     return {"message": "Sent a balance increase message to admin."}
+
+
+@student_api.post("/student/buy_lesson/{student_mail}")
+async def buy_lesson(
+        student_mail: str,
+        data: BuyLessonRequest,
+        core: OlympianTutorService = Depends(get_core),
+):
+    student_balance = core.student_interactor.get_student_balance(student_mail)
+    if student_balance >= data.lesson_price:
+        core.lesson_interactor.set_number_of_lessons(
+            data.tutor_mail, student_mail, data.number_of_lessons + 1, data.subject)
+        core.student_interactor.set_student_balance(student_mail, student_balance - data.lesson_price)
+        print("Bought a lesson successfully")
+        return {"message": "Bought a lesson successfully."}
+    else:
+        print("Could not buy a lesson because of insufficient balance")
+        return {"message": "Could not buy a lesson because of insufficient balance."}

@@ -192,6 +192,29 @@ export default function Student() {
     }
   }
 
+  const buyLesson = async (index) => {
+    try {
+      const data = {
+        "subject": lessons[index].subject,
+        "tutor_mail": lessons[index].tutor_mail,
+        "number_of_lessons": lessons[index].number_of_lessons,
+        "lesson_price": lessons[index].lesson_price,
+      }
+
+      const response = await fetch('http://localhost:8000/student/buy_lesson/' + email, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+      response = await response.json();
+      console.log(response);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   return (
     <div>
       <h1>Student Profile</h1>
@@ -235,12 +258,13 @@ export default function Student() {
       <button onClick={handleChangePassword}>Change Password</button>
       <h1>Lessons:</h1>
       <ul>
-        {lessons.map((lesson) =>
-          <li>
+        {lessons.map((lesson, index) =>
+          <li key={index}>
             Subject: {lesson["subject"]};
             Tutor: {lesson["tutor_mail"]};
             Number of lessons: {lesson["number_of_lessons"]};
             Lesson price: {lesson["lesson_price"]};
+            <button onClick={e => buyLesson(index)}>Buy Lesson</button>
           </li>
         )}
       </ul>
