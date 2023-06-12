@@ -14,6 +14,7 @@ export default function Student() {
   const [newFirstName, setNewFirstName] = useState('')
   const [newLastName, setNewLastName] = useState('')
   const [newPassword, setNewPassword] = useState('')
+  const [newBalance, setNewBalance] = useState(0)
 
   const [lessons, setLessons] = useState([])
 
@@ -156,13 +157,30 @@ export default function Student() {
   const handleSendReportToAdmin = async () => {
     if (report !== '')
     {
-      console.log("Test")
-
       const data = {
         "report": report,
       }
 
       const response = await fetch('http://localhost:8000/student/report_to_admin/' + email, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+      const response2 = await response.json();
+      console.log(response2);
+    }
+  }
+
+  const handleAddBalance = async () => {
+    if (newBalance > 0)
+    {
+      const data = {
+        "amount": newBalance,
+      }
+
+      const response = await fetch('http://localhost:8000/student/add_balance/' + email, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -226,7 +244,7 @@ export default function Student() {
           </li>
         )}
       </ul>
-      <h4>Report to Admin</h4>
+      <h4>Contact Admin</h4>
       <input
         type="text"
         value={report}
@@ -234,6 +252,12 @@ export default function Student() {
         placeholder="my report"
       />
       <button onClick={handleSendReportToAdmin}>Send to Admin</button>
+      <input
+        type="number"
+        value={newBalance}
+        onChange={(e) => setNewBalance(e.target.value)}
+      />
+      <button onClick={handleAddBalance}>Add Balance</button>
     </div>
   );
 }

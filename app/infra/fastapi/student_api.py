@@ -44,6 +44,10 @@ class ReportToAdminRequest(BaseModel):
     report: str
 
 
+class AddBalanceRequest(BaseModel):
+    amount: int
+
+
 student_api = APIRouter()
 
 
@@ -161,3 +165,23 @@ async def report_to_admin(
         server.sendmail(student_mail, sender_email, message)
 
     return {"message": "Sent a report to admin."}
+
+
+@student_api.post("/student/add_balance/{student_mail}")
+async def add_balance(
+        student_mail: str,
+        data: AddBalanceRequest,
+):
+    print("/student/add_balance/" + student_mail)
+    port = 465
+    smtp_server = "smtp.gmail.com"
+    sender_email = "tutorsite727@gmail.com"
+    password = "fvqxtupjruxqcooo"
+    message = student_mail + " [add_balance] " + str(data.amount)
+
+    context = ssl.create_default_context()
+    with smtplib.SMTP_SSL(smtp_server, port, context=context) as server:
+        server.login(sender_email, password)
+        server.sendmail(student_mail, sender_email, message)
+
+    return {"message": "Sent a balance increase message to admin."}
