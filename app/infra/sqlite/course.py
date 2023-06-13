@@ -30,20 +30,29 @@ class SqlCourseRepository:
 
     def get_course(self, subject: str, tutor_mail: str) -> Optional[Course]:
         for row in self.conn.execute(
-            " SELECT * FROM Courses WHERE subject = ? and tutor_mail = ?",
-            (
-                subject,
-                tutor_mail,
-            ),
+                " SELECT * FROM Courses WHERE subject = ? and tutor_mail = ?",
+                (
+                        subject,
+                        tutor_mail,
+                ),
         ):
             return Course(*row)
 
         return None
 
-    def get_courses(self, tutor_mail: str) -> Optional[List[Course]]:
+    def get_tutor_courses(self, tutor_mail: str) -> Optional[List[Course]]:
         courses: List[Course] = []
         for row in self.conn.execute(
-            " SELECT * FROM Courses WHERE tutor_mail = ?", (tutor_mail,)
+                " SELECT * FROM Courses WHERE tutor_mail = ?", (tutor_mail,)
+        ):
+            courses.append(Course(*row))
+
+        return courses
+
+    def get_courses(self) -> Optional[List[Course]]:
+        courses: List[Course] = []
+        for row in self.conn.execute(
+                " SELECT * FROM Courses",
         ):
             courses.append(Course(*row))
 
