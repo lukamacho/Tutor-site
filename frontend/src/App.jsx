@@ -6,6 +6,8 @@ import Login from "./Pages/Login"
 import Admin from "./Pages/Admin"
 import Student from "./Pages/Student"
 import TutorProfile from "./Pages/Tutor"
+import Courses from "./Pages/Courses"
+import Tutors from "./Pages/Tutors"
 
 export default function App() {
     return (
@@ -17,6 +19,8 @@ export default function App() {
                 <Route path="admin" element={<Admin />}/>
                 <Route path="student_profile" element={<Student />}/>
                 <Route path="tutor_profile" element={<TutorProfile />}/>
+                <Route path="courses" element={<Courses />}/>
+                <Route path="tutors" element={<Tutors />}/>
             </Routes>
         </BrowserRouter>
     );

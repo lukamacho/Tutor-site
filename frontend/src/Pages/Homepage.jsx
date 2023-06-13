@@ -24,7 +24,7 @@ export default function Homepage() {
                 <Toolbar>
                     <Button variant="text" sx={{ m: 0.5 }}>Homepage</Button>
                     <Link to="/courses" sx={{ m: 0.5 }}>Find a Course</Link>
-                    <Button variant="text" sx={{ m: 0.5 }}>Find a Teacher</Button>
+                    <Link to="/tutors" sx={{ m: 0.5 }}>Find a Tutor</Link>
                     <Button variant="contained" sx={{ m: 0.5 }} onClick={handleRegisterOpen}>Register</Button>
                     <Button variant="contained" sx={{ m: 0.5 }}>Login</Button>
                     <ModalDialog open={registerOpen} handleClose={handleRegisterClose} />

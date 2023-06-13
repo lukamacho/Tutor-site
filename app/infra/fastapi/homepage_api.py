@@ -20,6 +20,13 @@ class GetCourseResponse(BaseModel):
     tutor_mail: str
     price: int
 
+class GetTutorResponse(BaseModel):
+    first_name: str
+    last_name: str
+    email: str
+    biography: str
+    profile_address: str
+
 
 homepage_api = APIRouter()
 
@@ -72,5 +79,24 @@ async def get_courses(
             subject=course.subject,
             tutor_mail=course.tutor_mail,
             price=course.price
+        ))
+    return response
+
+
+@homepage_api.get("/tutors")
+async def get_courses(
+        core: OlympianTutorService = Depends(get_core),
+):
+    print("/tutors")
+
+    tutors = core.tutor_interactor.get_tutors()
+    response = []
+    for tutor in tutors:
+        response.append(GetTutorResponse(
+            first_name=tutor.first_name,
+            last_name=tutor.last_name,
+            email=tutor.email,
+            biography=tutor.biography,
+            profile_address=tutor.profile_address,
         ))
     return response
