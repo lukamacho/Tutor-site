@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Link } from "react-router-dom"
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import Course from "../Components/Course"
 
 export default function Courses() {
   const [courses, setCourses] = useState([])
@@ -27,14 +29,15 @@ export default function Courses() {
   return (
     <div>
       <h1>Courses</h1>
-      <ul>
+      <List>
         {courses.map((course, index) =>
-          <li key={index}>
-            Subject: {course["subject"]};
-            Tutor: <Link to={"/tutor/" + course["tutor_mail"]}>{course["tutor_mail"]}</Link>;
-            Price: {course["price"]};
-          </li>)}
-      </ul>
+          <ListItem key={index}>
+            <Course
+              subject={course["subject"]}
+              tutor_mail={course["tutor_mail"]}
+              price={course["price"]}/>
+          </ListItem>)}
+      </List>
     </div>
   );
 }
