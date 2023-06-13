@@ -15,6 +15,12 @@ class CreateUserRequest(BaseModel):
     is_student: bool
 
 
+class GetCourseResponse(BaseModel):
+    subject: str
+    tutor_mail: str
+    price: int
+
+
 homepage_api = APIRouter()
 
 
@@ -29,7 +35,7 @@ def hash_password(password: str) -> str:
 
 @homepage_api.post("/sign_up")
 async def create_user(
-    data: CreateUserRequest, core: OlympianTutorService = Depends(get_core)
+        data: CreateUserRequest, core: OlympianTutorService = Depends(get_core)
 ):
     password_hash = hash_password(data.password)
 
@@ -51,3 +57,20 @@ async def create_user(
             data.first_name, data.last_name, data.mail, password_hash, 0, "", ""
         )
         return {"message": {"Tutor added successfully."}}
+
+
+@homepage_api.get("/courses")
+async def get_courses(
+        core: OlympianTutorService = Depends(get_core),
+):
+    print("/courses")
+
+    courses = core.course_interactor.get_courses()
+    response = []
+    for course in courses:
+        response.append(GetCourseResponse(
+            subject=course.subject,
+            tutor_mail=course.tutor_mail,
+            price=course.price
+        ))
+    return response
