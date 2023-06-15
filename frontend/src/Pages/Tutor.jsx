@@ -155,6 +155,24 @@ function TutorProfile() {
     });
 };
 
+const handleCourseDeletion = (course) => {
+    const courseData = {
+      tutor_mail: course.tutor_mail,
+      course_name: course.subject,
+    };
+  // Send DELETE request to delete the course
+  fetch(`http://localhost:8000/tutor/delete_course`, {
+    method: 'DELETE',
+    body: JSON.stringify(courseData),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+    .then(response => response.json())
+
+    .catch(error => console.error('Error deleting course:', error));
+};
+
 
   return (
     <div>
@@ -232,16 +250,23 @@ function TutorProfile() {
               </Button>
               <ul>
                 {courses.length > 0 ? (
-                  courses.map((course, index) => (
-                    <li key={index}>
-                      Subject: {course["subject"]}
-                      Tutor: {course["tutor_mail"]}
-                      Course price: {course["course_price"]}
-                    </li>
-                  ))
-                ) : (
-                  <li>No courses available</li>
-                )}
+                    courses.map(course => (
+                      <li key={course.id}>
+                        <span>Subject: {course.subject}</span>
+                        <span>Tutor: {course.tutor_mail}</span>
+                        <span>Course price: {course.price}</span>
+                        <Button
+                          variant="contained"
+                          color="secondary"
+                          onClick={() => handleCourseDeletion(course,course.id)}
+                        >
+                          Delete
+                        </Button>
+                      </li>
+                    ))
+                  ) : (
+                    <li>No courses available</li>
+                  )}
               </ul>
             </CardContent>
           </Card>
