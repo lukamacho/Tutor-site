@@ -60,8 +60,8 @@ student_api = APIRouter()
 
 @student_api.get("/student/{student_mail}")
 async def get_student(
-        student_mail: str,
-        core: OlympianTutorService = Depends(get_core),
+    student_mail: str,
+    core: OlympianTutorService = Depends(get_core),
 ):
     print("/student/" + student_mail)
 
@@ -78,8 +78,8 @@ async def get_student(
 
 @student_api.get("/student/lessons/{student_mail}")
 async def get_student_lessons(
-        student_mail: str,
-        core: OlympianTutorService = Depends(get_core),
+    student_mail: str,
+    core: OlympianTutorService = Depends(get_core),
 ):
     print("/student/lessons/" + student_mail)
 
@@ -99,11 +99,13 @@ async def get_student_lessons(
 
 @student_api.post("/student/change_first_name/{student_mail}")
 async def change_first_name(
-        data: ChangeFirstNameRequest,
-        student_mail: str,
-        core: OlympianTutorService = Depends(get_core),
+    data: ChangeFirstNameRequest,
+    student_mail: str,
+    core: OlympianTutorService = Depends(get_core),
 ):
-    print("/student/change_first_name/" + student_mail + " value: " + data.new_first_name)
+    print(
+        "/student/change_first_name/" + student_mail + " value: " + data.new_first_name
+    )
 
     student = core.student_interactor.get_student(student_mail)
     core.student_interactor.change_student_first_name(student_mail, data.new_first_name)
@@ -113,9 +115,9 @@ async def change_first_name(
 
 @student_api.post("/student/change_last_name/{student_mail}")
 async def change_last_name(
-        data: ChangeLastNameRequest,
-        student_mail: str,
-        core: OlympianTutorService = Depends(get_core),
+    data: ChangeLastNameRequest,
+    student_mail: str,
+    core: OlympianTutorService = Depends(get_core),
 ):
     print("/student/change_last_name/" + student_mail + " value: " + data.new_last_name)
 
@@ -127,9 +129,9 @@ async def change_last_name(
 
 @student_api.post("/student/change_password/{student_mail}")
 async def change_password(
-        data: ChangePasswordRequest,
-        student_mail: str,
-        core: OlympianTutorService = Depends(get_core),
+    data: ChangePasswordRequest,
+    student_mail: str,
+    core: OlympianTutorService = Depends(get_core),
 ):
     print("/student/change_password/" + student_mail + " value: " + data.new_password)
 
@@ -141,12 +143,12 @@ async def change_password(
 
 @student_api.post("/student/upload_profile_picture/{student_mail}")
 async def create_upload_file(
-        student_mail: str,
-        file: UploadFile = File(...),
-        core: OlympianTutorService = Depends(get_core),
+    student_mail: str,
+    file: UploadFile = File(...),
+    core: OlympianTutorService = Depends(get_core),
 ):
-    dest_path = '../../frontend/src/Storage/' + student_mail
-    async with aiofiles.open(dest_path, 'wb') as dest_file:
+    dest_path = "../../frontend/src/Storage/" + student_mail
+    async with aiofiles.open(dest_path, "wb") as dest_file:
         content = await file.read()
         await dest_file.write(content)
 
@@ -155,8 +157,8 @@ async def create_upload_file(
 
 @student_api.post("/student/report_to_admin/{student_mail}")
 async def report_to_admin(
-        student_mail: str,
-        data: ReportToAdminRequest,
+    student_mail: str,
+    data: ReportToAdminRequest,
 ):
     print("/student/report_to_admin/" + student_mail)
     port = 465
@@ -175,8 +177,8 @@ async def report_to_admin(
 
 @student_api.post("/student/add_balance/{student_mail}")
 async def add_balance(
-        student_mail: str,
-        data: AddBalanceRequest,
+    student_mail: str,
+    data: AddBalanceRequest,
 ):
     print("/student/add_balance/" + student_mail)
     port = 465
@@ -195,15 +197,18 @@ async def add_balance(
 
 @student_api.post("/student/buy_lesson/{student_mail}")
 async def buy_lesson(
-        student_mail: str,
-        data: BuyLessonRequest,
-        core: OlympianTutorService = Depends(get_core),
+    student_mail: str,
+    data: BuyLessonRequest,
+    core: OlympianTutorService = Depends(get_core),
 ):
     student_balance = core.student_interactor.get_student_balance(student_mail)
     if student_balance >= data.lesson_price:
         core.lesson_interactor.set_number_of_lessons(
-            data.tutor_mail, student_mail, data.number_of_lessons + 1, data.subject)
-        core.student_interactor.set_student_balance(student_mail, student_balance - data.lesson_price)
+            data.tutor_mail, student_mail, data.number_of_lessons + 1, data.subject
+        )
+        core.student_interactor.set_student_balance(
+            student_mail, student_balance - data.lesson_price
+        )
         print("Bought a lesson successfully")
         return {"message": "Bought a lesson successfully."}
     else:

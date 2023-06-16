@@ -29,6 +29,12 @@ class OlympianTutorService:
     def get_course(self, subject: str, tutor_mail: str) -> Optional[Course]:
         return self.course_interactor.get_course(subject, tutor_mail)
 
+    def delete_course(self, tutor_mail: str, subject: str) -> None:
+        return self.course_interactor.delete_course(tutor_mail, subject)
+
+    def change_price(self, tutor_mail: str, subject: str, course_price: int) -> None:
+        return self.course_interactor.change_price(tutor_mail, subject, course_price)
+
     def create_review(
         self, review_text: str, tutor_mail: str, student_mail: str
     ) -> Review:

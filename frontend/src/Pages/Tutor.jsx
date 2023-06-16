@@ -9,11 +9,16 @@ function TutorProfile() {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [biography, setBiography] = useState('');
+  const [courseName, setCourseName] = useState('')
+  const [coursePrice, setCoursePrice] = useState(0)
   const [balance, setBalance] = useState(0);
-  const [profileAddress, setProfileAddress] = useState('');
+  const [courses, setCourses] = useState([])
+
+   const [profileAddress, setProfileAddress] = useState('');
   const [withdrawalMoney, setWithdrawalMoney] = useState('');
   const [profilePicture, setProfilePicture] = useState(null);
   const [newBio, setNewBio] = useState('');
+
   const location = useLocation();
   const email = location.state?.email;
 
@@ -40,7 +45,25 @@ function TutorProfile() {
 
     handleGetTutor();
   }, []);
+ useEffect(() => {
+    const handleGetCourses = async () => {
+      try {
+        const response = await fetch('http://localhost:8000/tutor/courses/' + email, {
+          method: 'GET',
+          headers: {
+          'Content-Type': 'application/json',
+          },
+        });
+        const coursesData = await response.json();
+        setCourses(coursesData)
+        console.log(coursesData)
+      } catch (error) {
+        console.error(error);
+      }
+    };
 
+    handleGetCourses();
+  }, []);
 
 
   const handleWithdrawalRequest = () => {
@@ -87,6 +110,28 @@ function TutorProfile() {
       .catch(error => console.error('Error updating bio:', error));
   };
 
+  const handleCourseAddition = () => {
+    const courseData = {
+      tutor_mail: email,
+      course_name: courseName,
+      course_price: coursePrice
+    };
+
+    // Send POST request to update tutor's course information
+    fetch(`http://localhost:8000/tutor/add_course`, {
+      method: 'POST',
+      body: JSON.stringify(courseData),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then(response => response.json())
+      .then(data => {
+        setNewBio(''); // Clear the newBio state
+      })
+      .catch(error => console.error('Error course is not additted:', error));
+  };
+
   const [selectedImage, setSelectedImage] = useState(null);
 
   const changeHandler = (event) => {
@@ -108,6 +153,24 @@ function TutorProfile() {
     .then(function (response) {
       console.log(response);
     });
+};
+
+const handleCourseDeletion = (course) => {
+    const courseData = {
+      tutor_mail: course.tutor_mail,
+      course_name: course.subject,
+    };
+  // Send DELETE request to delete the course
+  fetch(`http://localhost:8000/tutor/delete_course`, {
+    method: 'DELETE',
+    body: JSON.stringify(courseData),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+    .then(response => response.json())
+
+    .catch(error => console.error('Error deleting course:', error));
 };
 
 
@@ -172,6 +235,43 @@ function TutorProfile() {
               <Button variant="contained" color="primary" onClick={handleWithdrawalRequest}>
                 Request Money Withdrawal
               </Button>
+              <TextField
+                label="Course name"
+                value={courseName}
+                onChange={event => setCourseName(event.target.value)}
+                variant="outlined"
+                fullWidth
+              />
+              <TextField
+                label="Course price"
+                value={coursePrice}
+                onChange={event => setCoursePrice(event.target.value)}
+                variant="outlined"
+                fullWidth
+              />
+              <Button variant="contained" color="primary" onClick={handleCourseAddition}>
+                Add course
+              </Button>
+              <ul>
+                {courses.length > 0 ? (
+                    courses.map(course => (
+                      <li key={course.id}>
+                        <span>Subject: {course.subject}</span>
+                        <span>Tutor: {course.tutor_mail}</span>
+                        <span>Course price: {course.price}</span>
+                        <Button
+                          variant="contained"
+                          color="secondary"
+                          onClick={() => handleCourseDeletion(course,course.id)}
+                        >
+                          Delete
+                        </Button>
+                      </li>
+                    ))
+                  ) : (
+                    <li>No courses available</li>
+                  )}
+              </ul>
             </CardContent>
           </Card>
         </Grid>
