@@ -11,7 +11,10 @@ class ICourseRepository(Protocol):
     def get_course(self, subject: str, tutor_mail: str) -> Optional[Course]:
         pass
 
-    def get_courses(self, tutor_mail: str) -> Optional[List[Course]]:
+    def get_tutor_courses(self, tutor_mail: str) -> Optional[List[Course]]:
+        pass
+
+    def get_courses(self) -> Optional[List[Course]]:
         pass
 
     def delete_course(self, tutor_mail: str, subject: str) -> None:
@@ -28,7 +31,10 @@ class ICourseInteractor(Protocol):
     def get_course(self, subject: str, tutor_mail: str) -> Optional[Course]:
         pass
 
-    def get_courses(self, tutor_mail: str) -> Optional[List[Course]]:
+    def get_tutor_courses(self, tutor_mail: str) -> Optional[List[Course]]:
+        pass
+
+    def get_courses(self) -> Optional[List[Course]]:
         pass
 
     def delete_course(self, tutor_mail: str, subject: str) -> None:
@@ -56,3 +62,8 @@ class CourseInteractor:
 
     def change_price(self, tutor_mail: str, subject: str, course_price: int) -> None:
         return self.course_repository.change_price(tutor_mail, subject, course_price)
+    def get_tutor_courses(self, tutor_mail: str) -> Optional[List[Course]]:
+        return self.course_repository.get_tutor_courses(tutor_mail)
+
+    def get_courses(self) -> Optional[List[Course]]:
+        return self.course_repository.get_courses()

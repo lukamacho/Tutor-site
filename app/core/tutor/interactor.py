@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Optional, Protocol
+from typing import Optional, Protocol, List
 
 from app.core.tutor.entity import Tutor
 
@@ -55,6 +55,9 @@ class ITutorInteractor(Protocol):
     ) -> None:
         pass
 
+    def get_tutors(self) -> Optional[List[Tutor]]:
+        pass
+
 
 class ITutorRepository(Protocol):
     def create_tutor(
@@ -108,6 +111,9 @@ class ITutorRepository(Protocol):
         pass
 
     def change_tutor_password(self, tutor_mail: str, password: str) -> None:
+        pass
+
+    def get_tutors(self) -> Optional[List[Tutor]]:
         pass
 
 
@@ -169,3 +175,6 @@ class TutorInteractor:
         self, tutor_mail: str, profile_address: str
     ) -> None:
         self.tutor_repository.change_tutor_profile_address(tutor_mail, profile_address)
+
+    def get_tutors(self) -> Optional[List[Tutor]]:
+        return self.tutor_repository.get_tutors()
