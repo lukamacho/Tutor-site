@@ -155,10 +155,10 @@ export default function Registration() {
             </div>
             </Box>
             {registeredUser && (
-        <Typography variant="body1" color="error">
-          User with this email is already registered.
-        </Typography>
-      )}
+            <Typography variant="body1" color="error">
+              User with this email is already registered.
+            </Typography>
+          )}
         </Box>
     );
 }
