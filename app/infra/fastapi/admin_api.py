@@ -152,15 +152,15 @@ def sign_in(
     tutor = core.tutor_interactor.get_tutor(user_mail)
     student = core.student_interactor.get_student(user_mail)
     if tutor is None and student is None:
-        raise HTTPException(status_code=505, detail="Email not found")
+        return {"message": "Email or password is incorrect."}
     if tutor is not None:
         if user_password != tutor.password:
-            raise HTTPException(status_code=506, detail="Incorrect password")
+            return {"message": "Email or password is incorrect."}
         else:
             return {"message": "Tutor signed in successfully."}
     else:
         if user_password != student.password:
-            raise HTTPException(status_code=506, detail="Incorrect password")
+            return {"message": "Email or password is incorrect."}
         else:
             return {"message": "Student signed in successfully."}
 

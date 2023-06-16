@@ -34,6 +34,7 @@ export default function SignIn() {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [incorrectUser, setIncorrectUser] = useState(false)
 
   const handleSubmit = async (e, is_student)=> {
     e.preventDefault();
@@ -53,7 +54,7 @@ export default function SignIn() {
       const result = await response.json();
       console.log(result);
 
-      if (response.ok) {
+      if (result.message !== "Email or password is incorrect.") {
             console.log(result);
 
         if (result.message === "Student signed in successfully."){
@@ -64,7 +65,7 @@ export default function SignIn() {
         }
       } else {
         // Handle sign-in failure
-        // ...
+        setIncorrectUser(true)
       }
     } catch (error) {
       console.error(error);
@@ -187,6 +188,11 @@ export default function SignIn() {
               </Grid>
           </Box>
         </Box>
+        {incorrectUser && (
+            <Typography variant="body1" color="error">
+              Email or password is incorrect.
+            </Typography>
+          )}
         <Copyright sx={{ mt: 8, mb: 4 }} />
       </Container>
     </ThemeProvider>
