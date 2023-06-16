@@ -124,20 +124,20 @@ def reset_password(
     user_mail = password_reset.user_mail
     is_student = password_reset.is_student
     print(password_reset)
-    if is_student:
-        student = core.get_student(user_mail)
-        if student is None:
-            raise HTTPException(status_code=404, detail="Email not found")
+    student = core.get_student(user_mail)
+    tutor = core.get_tutor(user_mail)
+    if student is None and tutor is None:
+        raise HTTPException(status_code=505, detail="Email not found")
+    if student is not None:
         new_password = send_new_password(user_mail)
         new_password = hash_password(new_password)
         core.student_interactor.change_student_password(user_mail, new_password)
-    else:
-        tutor = core.get_tutor(user_mail)
-        if tutor is None:
-            raise HTTPException(status_code=404, detail="Email not found")
+        return {"message": "Student password reset successfully."}
+    if tutor is not None:
         new_password = send_new_password(user_mail)
         new_password = hash_password(new_password)
         core.tutor_interactor.change_tutor_password(user_mail, new_password)
+        return {"message": "Tutor password reset successfully."}
 
     return {"message": "Password reset successfully."}
 
@@ -147,25 +147,24 @@ def sign_in(
     sign_in_request: SingInRequest, core: OlympianTutorService = Depends(get_core)
 ):
     print(sign_in_request)
-    is_student = sign_in_request.is_student
     user_mail = sign_in_request.user_mail
     user_password = hash_password(sign_in_request.password)
-    if is_student:
-        student = core.student_interactor.get_student(user_mail)
-        if student is None:
-            raise HTTPException(502, "No such student exists.")
-        if student.password != user_password:
-            raise HTTPException(501, "Password is incorrect.")
-        print(user_password)
+    tutor = core.tutor_interactor.get_tutor(user_mail)
+    student = core.student_interactor.get_student(user_mail)
+    if tutor is None and student is None:
+        raise HTTPException(status_code=505, detail="Email not found")
+    if tutor is not None:
+        if user_password != tutor.password:
+            raise HTTPException(status_code=506, detail="Incorrect password")
+        else:
+            return {"message": "Tutor signed in successfully."}
     else:
-        tutor = core.tutor_interactor.get_tutor(user_mail)
-        if tutor is None:
-            raise HTTPException(502, "No such tutor exists.")
-        if tutor.password != user_password:
-            raise HTTPException(501, "Password is incorrect")
+        if user_password != student.password:
+            raise HTTPException(status_code=506, detail="Incorrect password")
+        else:
+            return {"message": "Student signed in successfully."}
 
-        print(user_password)
-    return {"message": "User sign in successfully."}
+    return {"message": "Something unknown happened."}
 
 
 @admin_api.get("/google_sign_in")

@@ -54,7 +54,10 @@ export default function SignIn() {
       console.log(result);
 
       if (response.ok) {
-        if (is_student){
+            console.log(result);
+
+        if (result.message === "Student signed in successfully."){
+
             navigate('/student_profile', { state: { email } });
         } else{
             navigate('/tutor_profile', { state: { email } });
@@ -156,27 +159,11 @@ export default function SignIn() {
               sx={{ mt: 3, mb: 2 }}
               onClick={(e) => handleSubmit(e, true)}
             >
-              Student Sign In
+               Sign In
             </Button>
-            <Button
-               type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-              onClick={(e) => handleSubmit(e, false)}
-            >
-              Tutor Sign In
-            </Button>
+
             <div>
-                <Button
-                    onClick={(e) => handleResetPassword(e, false)}
-                    sx={{
-                        margin: 1,
-                    }}
-                    variant="outlined"
-                >
-                    Tutor forgot password
-                </Button>
+
                 <Button
                     onClick={(e) => handleResetPassword(e, true)}
                     sx={{
@@ -184,7 +171,7 @@ export default function SignIn() {
                     }}
                     variant="outlined"
                 >
-                    Student forgot password
+                    Forgot password
                 </Button>
                 <Button
                       fullWidth
