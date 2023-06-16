@@ -121,7 +121,9 @@ class SqlStudentRepository:
         )
         self.conn.commit()
 
-    def change_student_profile_address(self, student_mail: str, profile_address: str) -> None:
+    def change_student_profile_address(
+        self, student_mail: str, profile_address: str
+    ) -> None:
         self.conn.execute(
             "UPDATE Students SET profile_address = ? WHERE email = ? ",
             (

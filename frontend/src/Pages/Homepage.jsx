@@ -19,6 +19,8 @@ export default function Homepage() {
                 <li><Link to="/">Homepage</Link></li>
                 <li><Link to="/registration">Registration</Link></li>
                 <li><Link to="/login">Login</Link></li>
+                <li><Link to="/about">About</Link></li>
+
             </ul>
             <AppBar position="static" style={{ background: '#CFCFCF' }}>
                 <Toolbar>

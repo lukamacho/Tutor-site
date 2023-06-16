@@ -57,3 +57,17 @@ class SqlCourseRepository:
             courses.append(Course(*row))
 
         return courses
+
+    def delete_course(self, tutor_mail: str, subject: str) -> None:
+        self.conn.execute(
+            "DELETE FROM Courses WHERE  tutor_mail = ?  and subject =? ",
+            (tutor_mail, subject),
+        )
+        self.conn.commit()
+
+    def change_price(self, tutor_mail: str, subject: str, course_price: int) -> None:
+        self.conn.execute(
+            "UPDATE Courses SET price = ? WHERE tutor_mail = ? and subject = ? ",
+            (course_price, tutor_mail, subject),
+        )
+        self.conn.commit()
