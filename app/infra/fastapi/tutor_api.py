@@ -93,8 +93,8 @@ async def create_upload_file(
     async with aiofiles.open(dest_path, "wb") as dest_file:
         content = await file.read()
         await dest_file.write(content)
-
-    core.student_interactor.change_student_profile_address(tutor_mail, dest_path)
+    
+    core.tutor_interactor.change_tutor_profile_address(tutor_mail, dest_path)
 
 
 @tutor_api.post("/tutor/add_course")
