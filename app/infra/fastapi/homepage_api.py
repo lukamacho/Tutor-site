@@ -50,20 +50,22 @@ async def create_user(
         student_mail = data.mail
         student = core.student_interactor.get_student(student_mail)
         if student is not None:
-            return {"message": "Student with this mail already exist!"}
+            return {"message": "User with this mail already exist!"}
         core.create_student(
             data.first_name, data.last_name, data.mail, password_hash, 0
         )
-        return {"message": {"Student added successfully."}}
+        return {"message": "Student added successfully."}
     else:
         tutor_mail = data.mail
         tutor = core.tutor_interactor.get_tutor(tutor_mail)
         if tutor is not None:
-            return {"message": "Tutor with this mail already exists!"}
+            return {"message": "User with this mail already exist!"}
         core.create_tutor(
             data.first_name, data.last_name, data.mail, password_hash, 0, "", ""
         )
-        return {"message": {"Tutor added successfully."}}
+        return {"message": "Tutor added successfully."}
+
+    return {"message": "Something unknown happened."}
 
 
 @homepage_api.get("/courses")

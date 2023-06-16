@@ -161,9 +161,7 @@ export default function SignIn() {
             >
                Sign In
             </Button>
-
             <div>
-
                 <Button
                     onClick={(e) => handleResetPassword(e, true)}
                     sx={{
