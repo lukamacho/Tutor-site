@@ -36,11 +36,16 @@ export default function Registration() {
             const result = await response.json();
 
       if (result.message !== "User with this mail already exist!") {
-        if (result.message === "Student added successfully."){
-            navigate('/student_profile', { state: { email } });
-        } else{
-            navigate('/tutor_profile', { state: { email } });
-        }
+          navigate('/verification', {
+            state: {
+              email,
+              verificationCode: result.verificationCode,
+              is_student,
+              first_name: firstName,
+              last_name: lastName,
+              password
+            }
+          });
       } else {
         console.log(result)
         setRegisteredUser(true)
