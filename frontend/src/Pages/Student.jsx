@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
 
 export default function Student() {
   const location = useLocation();
@@ -256,7 +256,7 @@ export default function Student() {
         {lessons.map((lesson, index) =>
           <li key={index}>
             Subject: {lesson["subject"]};
-            Tutor: {lesson["tutor_mail"]};
+            Tutor: <Link to={'http://localhost:3000/tutors/tutor/' + lesson["tutor_mail"]}>{lesson["tutor_mail"]}</Link>
             Number of lessons: {lesson["number_of_lessons"]};
             Lesson price: {lesson["lesson_price"]};
             <button onClick={e => buyLesson(index)}>Buy Lesson</button>

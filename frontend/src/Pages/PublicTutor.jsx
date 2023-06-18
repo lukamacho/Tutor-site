@@ -70,7 +70,7 @@ const PublicTutor= () => {
         {courses.map((course, index) =>
           <li key={index}>
             Subject: {course["subject"]};
-            Lesson price: {course["lesson_price"]};
+            Lesson price: {course["price"]};
           </li>
         )}
       </ul>
