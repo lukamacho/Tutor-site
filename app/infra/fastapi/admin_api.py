@@ -85,9 +85,6 @@ def delete_student(
     student_mail: StudentDeleteRequest, core: OlympianTutorService = Depends(get_core)
 ):
     print(student_mail)
-    student = core.tutor_interactor.get_tutor(student_mail)
-    if student is None:
-        return {"message": "Student with this mail doesn't exist!"}
     core.student_interactor.delete_student(student_mail.student_mail)
     return {"message": "Student deleted successfully"}
 
