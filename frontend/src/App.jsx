@@ -12,7 +12,7 @@ import AboutUsPage from "./Pages/About"
 
 import Courses from "./Pages/Courses"
 import Tutors from "./Pages/Tutors"
-
+import Verification from "./Pages/Verification"
 export default function App() {
     return (
         <BrowserRouter>
@@ -27,6 +27,7 @@ export default function App() {
                 <Route path="courses" element={<Courses />}/>
                 <Route path="tutors" element={<Tutors />}/>
                 <Route path="tutors/tutor/:email" element={<PublicTutor />} />
+                <Route path="verification" element={<Verification />}/>
             </Routes>
         </BrowserRouter>
     );

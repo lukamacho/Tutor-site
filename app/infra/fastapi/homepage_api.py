@@ -1,4 +1,7 @@
 import hashlib
+import random
+import smtplib
+import ssl
 
 from fastapi import APIRouter, Depends
 from pydantic import BaseModel
@@ -39,6 +42,34 @@ def hash_password(password: str) -> str:
 
     return password_hash
 
+def send_verification(receiver_mail: str) -> str:
+    port = 465
+    smtp_server = "smtp.gmail.com"
+    sender_email = "tutorsite727@gmail.com"
+    password = "fvqxtupjruxqcooo"
+
+    context = ssl.create_default_context()
+    verification_text = str(random.randint(0,1000000))
+
+    with smtplib.SMTP_SSL(smtp_server, port, context=context) as server:
+        server.login(sender_email, password)
+        server.sendmail(sender_email, receiver_mail, verification_text)
+    return verification_text
+
+@homepage_api.post("/add_user")
+async def add_student(data: CreateUserRequest, core: OlympianTutorService = Depends(get_core)):
+    password_hash = hash_password(data.password)
+    if data.is_student:
+        student_mail = data.mail
+        core.student_interactor.create_student(data.first_name,data.last_name,student_mail,password_hash,0)
+        return {"message":"Student added successfully."}
+    else:
+        tutor_mail = data.mail
+        core.tutor_interactor.create_tutor(data.first_name, data.last_name,tutor_mail,password_hash,0,"","")
+        return {"message":"Tutor added successfully."}
+
+
+
 
 @homepage_api.post("/sign_up")
 async def create_user(
@@ -47,23 +78,24 @@ async def create_user(
     password_hash = hash_password(data.password)
 
     if data.is_student:
+        print("shemovida")
+        print(data.mail)
         student_mail = data.mail
         student = core.student_interactor.get_student(student_mail)
+        print(student)
         if student is not None:
-            return {"message": "Student with this mail already exist!"}
-        core.create_student(
-            data.first_name, data.last_name, data.mail, password_hash, 0
-        )
-        return {"message": {"Student added successfully."}}
+            return {"message": "User with this mail already exist!"}
+        verification_text = send_verification(student_mail)
+        return {"verificationCode": verification_text}
     else:
         tutor_mail = data.mail
         tutor = core.tutor_interactor.get_tutor(tutor_mail)
         if tutor is not None:
-            return {"message": "Tutor with this mail already exists!"}
-        core.create_tutor(
-            data.first_name, data.last_name, data.mail, password_hash, 0, "", ""
-        )
-        return {"message": {"Tutor added successfully."}}
+            return {"message": "User with this mail already exist!"}
+        verification_text = send_verification(tutor_mail)
+        return {"verificationCode": verification_text}
+
+    return {"message": "Something unknown happened."}
 
 
 @homepage_api.get("/courses")
