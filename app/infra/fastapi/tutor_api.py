@@ -35,8 +35,6 @@ async def get_tutor_profile(
 ):
     # Fetch tutor profile logic here using the email parameter
     print(tutor_mail)
-    tutor_courses = core.course_interactor.get_tutor_courses(tutor_mail)
-    print(tutor_courses)
     return core.tutor_interactor.get_tutor(tutor_mail)
 
 
