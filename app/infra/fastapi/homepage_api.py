@@ -78,8 +78,11 @@ async def create_user(
     password_hash = hash_password(data.password)
 
     if data.is_student:
+        print("shemovida")
+        print(data.mail)
         student_mail = data.mail
         student = core.student_interactor.get_student(student_mail)
+        print(student)
         if student is not None:
             return {"message": "User with this mail already exist!"}
         verification_text = send_verification(student_mail)
