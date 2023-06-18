@@ -34,6 +34,7 @@ export default function SignIn() {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [incorrectUser, setIncorrectUser] = useState(false)
 
   const handleSubmit = async (e, is_student)=> {
     e.preventDefault();
@@ -53,15 +54,18 @@ export default function SignIn() {
       const result = await response.json();
       console.log(result);
 
-      if (response.ok) {
-        if (is_student){
+      if (result.message !== "Email or password is incorrect.") {
+            console.log(result);
+
+        if (result.message === "Student signed in successfully."){
+
             navigate('/student_profile', { state: { email } });
         } else{
             navigate('/tutor_profile', { state: { email } });
         }
       } else {
         // Handle sign-in failure
-        // ...
+        setIncorrectUser(true)
       }
     } catch (error) {
       console.error(error);
@@ -156,27 +160,9 @@ export default function SignIn() {
               sx={{ mt: 3, mb: 2 }}
               onClick={(e) => handleSubmit(e, true)}
             >
-              Student Sign In
-            </Button>
-            <Button
-               type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-              onClick={(e) => handleSubmit(e, false)}
-            >
-              Tutor Sign In
+               Sign In
             </Button>
             <div>
-                <Button
-                    onClick={(e) => handleResetPassword(e, false)}
-                    sx={{
-                        margin: 1,
-                    }}
-                    variant="outlined"
-                >
-                    Tutor forgot password
-                </Button>
                 <Button
                     onClick={(e) => handleResetPassword(e, true)}
                     sx={{
@@ -184,7 +170,7 @@ export default function SignIn() {
                     }}
                     variant="outlined"
                 >
-                    Student forgot password
+                    Forgot password
                 </Button>
                 <Button
                       fullWidth
@@ -202,6 +188,11 @@ export default function SignIn() {
               </Grid>
           </Box>
         </Box>
+        {incorrectUser && (
+            <Typography variant="body1" color="error">
+              Email or password is incorrect.
+            </Typography>
+          )}
         <Copyright sx={{ mt: 8, mb: 4 }} />
       </Container>
     </ThemeProvider>

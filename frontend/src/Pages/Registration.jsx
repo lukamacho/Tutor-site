@@ -15,7 +15,7 @@ export default function Registration() {
     const [lastName, setLastName] = useState("")
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
-
+    const [registeredUser, setRegisteredUser] = useState(false)
     const handleSignUp = async (e, is_student) => {
         e.preventDefault();
 
@@ -34,17 +34,21 @@ export default function Registration() {
                 headers: { 'Content-Type': 'application/json' }
             });
             const result = await response.json();
-      console.log(result);
 
-      if (response.ok) {
-        if (is_student){
-            navigate('/student_profile', { state: { email } });
-        } else{
-            navigate('/tutor_profile', { state: { email } });
-        }
+      if (result.message !== "User with this mail already exist!") {
+          navigate('/verification', {
+            state: {
+              email,
+              verificationCode: result.verificationCode,
+              is_student,
+              first_name: firstName,
+              last_name: lastName,
+              password
+            }
+          });
       } else {
-        // Handle sign-in failure
-        // ...
+        console.log(result)
+        setRegisteredUser(true)
       }
         } catch (error) {
             console.error(error);
@@ -155,6 +159,11 @@ export default function Registration() {
                 </Button>
             </div>
             </Box>
+            {registeredUser && (
+            <Typography variant="body1" color="error">
+              User with this email is already registered.
+            </Typography>
+          )}
         </Box>
     );
 }
