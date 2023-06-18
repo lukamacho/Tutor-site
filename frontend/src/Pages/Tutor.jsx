@@ -14,7 +14,7 @@ function TutorProfile() {
   const [balance, setBalance] = useState(0);
   const [courses, setCourses] = useState([])
 
-   const [profileAddress, setProfileAddress] = useState('');
+  const [profileAddress, setProfileAddress] = useState('');
   const [withdrawalMoney, setWithdrawalMoney] = useState('');
   const [profilePicture, setProfilePicture] = useState(null);
   const [newBio, setNewBio] = useState('');
