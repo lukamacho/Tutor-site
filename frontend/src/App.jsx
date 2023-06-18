@@ -6,6 +6,7 @@ import Login from "./Pages/Login"
 import Admin from "./Pages/Admin"
 import Student from "./Pages/Student"
 import TutorProfile from "./Pages/Tutor"
+import PublicTutor from "./Pages/PublicTutor"
 
 import AboutUsPage from "./Pages/About"
 
@@ -25,6 +26,7 @@ export default function App() {
                 <Route path="tutor_profile" element={<TutorProfile />}/>
                 <Route path="courses" element={<Courses />}/>
                 <Route path="tutors" element={<Tutors />}/>
+                <Route path="tutors/tutor/:email" element={<PublicTutor />} />
             </Routes>
         </BrowserRouter>
     );

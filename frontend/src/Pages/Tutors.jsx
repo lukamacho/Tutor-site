@@ -32,7 +32,7 @@ export default function Tutors() {
           <li key={index}>
             First Name: {tutor["first_name"]};
             Last Name: {tutor["last_name"]};
-            Mail: <Link to={"/tutor/" + tutor["email"]}>{tutor["email"]}</Link>;
+            Mail: <Link to={`tutor/${tutor["email"]}`}>{tutor["email"]}</Link>;
             Biography: {tutor["biography"]};
             Profile Address: {tutor["profile_address"]};
           </li>)}
