@@ -11,6 +11,7 @@ class Tutor:
     commission_pct: float
     balance: 0
     biography: str
+    # TODO: Remove this field, it is unnecessary, based on the scheme of how we name the image files: {email}
     profile_address: str
     languages: List[str] = field(default_factory=list)
     profile_address: str = ""
@@ -46,7 +47,7 @@ class Tutor:
 
     def decrease_commission_pct(self) -> None:
         new_commission_pct = (
-            self.commission_pct - 0.01
+                self.commission_pct - 0.01
         )  # TODO: Save this value as const somewhere
         if new_commission_pct > 0:
             self.commission_pct = new_commission_pct
