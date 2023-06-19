@@ -76,22 +76,19 @@ async def create_user(
         data: CreateUserRequest, core: OlympianTutorService = Depends(get_core)
 ):
     password_hash = hash_password(data.password)
+    student_mail = data.mail
+    student = core.student_interactor.get_student(student_mail)
+    tutor_mail = data.mail
+    tutor = core.tutor_interactor.get_tutor(tutor_mail)
+    if student is not None or tutor is not None:
+        return {"message": "User with this mail already exist!"}
 
     if data.is_student:
         print("shemovida")
         print(data.mail)
-        student_mail = data.mail
-        student = core.student_interactor.get_student(student_mail)
-        print(student)
-        if student is not None:
-            return {"message": "User with this mail already exist!"}
         verification_text = send_verification(student_mail)
         return {"verificationCode": verification_text}
     else:
-        tutor_mail = data.mail
-        tutor = core.tutor_interactor.get_tutor(tutor_mail)
-        if tutor is not None:
-            return {"message": "User with this mail already exist!"}
         verification_text = send_verification(tutor_mail)
         return {"verificationCode": verification_text}
 
