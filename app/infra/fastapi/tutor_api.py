@@ -17,6 +17,11 @@ class MoneyWithdrawalRequest(BaseModel):
     tutor_mail: str
     amount: int
 
+class ReviewAdditionRequest(BaseModel):
+    review_text: str
+    tutor_mail: str
+    student_mail: str
+
 
 class CourseAdditionRequest(BaseModel):
     tutor_mail: str
@@ -27,6 +32,7 @@ class CourseAdditionRequest(BaseModel):
 class CourseDeletionRequest(BaseModel):
     tutor_mail: str
     course_name: str
+
 
 
 @tutor_api.get("/tutor/{tutor_mail}")
@@ -48,7 +54,44 @@ async def get_tutor_courses(
     print(tutor_courses)
     return tutor_courses
 
+@tutor_api.get("/tutor/reviews/{tutor_mail}")
+async def get_tutor_reviews(
+    tutor_mail: str, core: OlympianTutorService = Depends(get_core)
+):
+    # Fetch tutor profile logic here using the email parameter
+    print(tutor_mail)
+    tutor_reviews = core.review_interactor.get_tutor_reviews(tutor_mail)
+    return tutor_reviews
 
+@tutor_api.get("/tutor/students/{tutor_mail}")
+async def get_tutor_reviews(
+    tutor_mail: str, core: OlympianTutorService = Depends(get_core)
+):
+    # Fetch tutor profile logic here using the email parameter
+
+    return tutor_reviews
+
+@tutor_api.post("/tutor/add_review")
+async def add_review(
+    review_addition: ReviewAdditionRequest, core: OlympianTutorService = Depends(get_core)
+):
+    print(review_addition)
+    review_text = review_addition.review_text
+    tutor_mail = review_addition.tutor_mail
+    student_mail = review_addition.student_mail
+    core.review_interactor.create_review(review_text,tutor_mail,student_mail)
+    return review_addition
+
+@tutor_api.post("/tutor/is_student")
+async def add_review(
+    review_addition: ReviewAdditionRequest, core: OlympianTutorService = Depends(get_core)
+):
+    print(review_addition)
+    review_text = review_addition.review_text
+    tutor_mail = review_addition.tutor_mail
+    student_mail = review_addition.student_mail
+    core.review_interactor.create_review(review_text,tutor_mail,student_mail)
+    return review_addition
 @tutor_api.post("/tutor/change_bio")
 def tutor_change_bio(
     change_bio: ChangeBioRequest, core: OlympianTutorService = Depends(get_core)
