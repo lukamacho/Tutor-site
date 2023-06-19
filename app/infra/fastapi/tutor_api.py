@@ -68,8 +68,9 @@ async def get_tutor_reviews(
     tutor_mail: str, core: OlympianTutorService = Depends(get_core)
 ):
     # Fetch tutor profile logic here using the email parameter
-
-    return tutor_reviews
+    print(tutor_mail)
+    tutor_lessons = core.lesson_interactor.get_tutor_lessons(tutor_mail)
+    return tutor_lessons
 
 @tutor_api.post("/tutor/add_review")
 async def add_review(

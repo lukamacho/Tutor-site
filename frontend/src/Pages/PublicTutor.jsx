@@ -85,7 +85,9 @@ const PublicTutor = () => {
           },
         });
         const isStudentData = await response.json();
-        setIsTutorStudent(isStudentData)
+        const isStudent = isStudentData.some(lesson => lesson.student_mail === visitor_mail);
+
+      setIsTutorStudent(isStudent);
       } catch (error) {
         console.error(error);
       }
