@@ -21,6 +21,11 @@ export default function Student() {
   const [report, setReport] = useState('')
 
   useEffect(() => {
+    localStorage.setItem('email', JSON.stringify(email));
+    localStorage.setItem('isStudent', JSON.stringify(true));
+  }, [email]);
+
+  useEffect(() => {
     const handleGetStudent = async () => {
       try {
         const response = await fetch('http://localhost:8000/student/' + email, {
@@ -192,7 +197,6 @@ export default function Student() {
       const data = {
         "subject": lessons[index].subject,
         "tutor_mail": lessons[index].tutor_mail,
-        "number_of_lessons": lessons[index].number_of_lessons,
         "lesson_price": lessons[index].lesson_price,
       }
 
