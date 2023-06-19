@@ -21,6 +21,10 @@ export default function Student() {
   const [report, setReport] = useState('')
 
   useEffect(() => {
+    localStorage.setItem('email', JSON.stringify(email));
+  }, [email]);
+
+  useEffect(() => {
     const handleGetStudent = async () => {
       try {
         const response = await fetch('http://localhost:8000/student/' + email, {

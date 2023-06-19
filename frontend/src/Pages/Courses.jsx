@@ -4,6 +4,7 @@ import ListItem from '@mui/material/ListItem';
 import Course from "../Components/Course"
 
 export default function Courses() {
+  const email = localStorage.getItem("email")
   const [courses, setCourses] = useState([])
 
   useEffect(() => {
