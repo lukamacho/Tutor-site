@@ -43,6 +43,8 @@ def setup() -> FastAPI:
     course_repository = setup_course_repository()
     lesson_repository = setup_lesson_repository()
     review_repository = setup_review_repository()
+
+    lesson_repository.create_lesson("Music","lmach19@freeuni.edu.g","lmach19@freeuni.edu.ge",10,20)
     return setup_fastapi(
         OlympianTutorService.create(
             emailer=SMTPEmailService,
