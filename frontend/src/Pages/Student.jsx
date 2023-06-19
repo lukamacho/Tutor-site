@@ -22,6 +22,7 @@ export default function Student() {
 
   useEffect(() => {
     localStorage.setItem('email', JSON.stringify(email));
+    localStorage.setItem('isStudent', JSON.stringify(true));
   }, [email]);
 
   useEffect(() => {
@@ -196,7 +197,6 @@ export default function Student() {
       const data = {
         "subject": lessons[index].subject,
         "tutor_mail": lessons[index].tutor_mail,
-        "number_of_lessons": lessons[index].number_of_lessons,
         "lesson_price": lessons[index].lesson_price,
       }
 
