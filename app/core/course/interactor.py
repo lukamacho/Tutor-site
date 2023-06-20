@@ -62,6 +62,7 @@ class CourseInteractor:
 
     def change_price(self, tutor_mail: str, subject: str, course_price: int) -> None:
         return self.course_repository.change_price(tutor_mail, subject, course_price)
+
     def get_tutor_courses(self, tutor_mail: str) -> Optional[List[Course]]:
         return self.course_repository.get_tutor_courses(tutor_mail)
 

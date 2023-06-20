@@ -101,6 +101,7 @@ class SqlLessonRepository:
             ),
         )
         self.conn.commit()
+
     def get_tutor_lessons(self, tutor_mail: str) -> List[str]:
         lessons: List[str] = []
         for row in self.conn.execute(

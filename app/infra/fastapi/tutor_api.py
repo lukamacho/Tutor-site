@@ -17,6 +17,7 @@ class MoneyWithdrawalRequest(BaseModel):
     tutor_mail: str
     amount: int
 
+
 class ReviewAdditionRequest(BaseModel):
     review_text: str
     tutor_mail: str
@@ -34,13 +35,11 @@ class CourseDeletionRequest(BaseModel):
     course_name: str
 
 
-
 @tutor_api.get("/tutor/{tutor_mail}")
 async def get_tutor_profile(
     tutor_mail: str, core: OlympianTutorService = Depends(get_core)
 ):
-    # Fetch tutor profile logic here using the email parameter
-    print(tutor_mail)
+
     return core.tutor_interactor.get_tutor(tutor_mail)
 
 
@@ -48,51 +47,44 @@ async def get_tutor_profile(
 async def get_tutor_courses(
     tutor_mail: str, core: OlympianTutorService = Depends(get_core)
 ):
-    # Fetch tutor profile logic here using the email parameter
-    print(tutor_mail)
+
     tutor_courses = core.course_interactor.get_tutor_courses(tutor_mail)
     print(tutor_courses)
     return tutor_courses
+
 
 @tutor_api.get("/tutor/reviews/{tutor_mail}")
 async def get_tutor_reviews(
     tutor_mail: str, core: OlympianTutorService = Depends(get_core)
 ):
-    # Fetch tutor profile logic here using the email parameter
-    print(tutor_mail)
     tutor_reviews = core.review_interactor.get_tutor_reviews(tutor_mail)
     return tutor_reviews
 
+
 @tutor_api.get("/tutor/students/{tutor_mail}")
-async def get_tutor_reviews(
+async def get_tutor_lessons(
     tutor_mail: str, core: OlympianTutorService = Depends(get_core)
 ):
-    # Fetch tutor profile logic here using the email parameter
-    print(tutor_mail)
+
     tutor_lessons = core.lesson_interactor.get_tutor_lessons(tutor_mail)
     return tutor_lessons
 
+
 @tutor_api.post("/tutor/add_review")
 async def add_review(
-    review_addition: ReviewAdditionRequest, core: OlympianTutorService = Depends(get_core)
+    review_addition: ReviewAdditionRequest,
+    core: OlympianTutorService = Depends(get_core),
 ):
     print(review_addition)
     review_text = review_addition.review_text
     tutor_mail = review_addition.tutor_mail
     student_mail = review_addition.student_mail
-    core.review_interactor.create_review(review_text,tutor_mail,student_mail)
+    core.review_interactor.create_review(review_text, tutor_mail, student_mail)
     return review_addition
 
-@tutor_api.post("/tutor/is_student")
-async def add_review(
-    review_addition: ReviewAdditionRequest, core: OlympianTutorService = Depends(get_core)
-):
-    print(review_addition)
-    review_text = review_addition.review_text
-    tutor_mail = review_addition.tutor_mail
-    student_mail = review_addition.student_mail
-    core.review_interactor.create_review(review_text,tutor_mail,student_mail)
-    return review_addition
+
+
+
 @tutor_api.post("/tutor/change_bio")
 def tutor_change_bio(
     change_bio: ChangeBioRequest, core: OlympianTutorService = Depends(get_core)
@@ -135,7 +127,7 @@ async def create_upload_file(
     async with aiofiles.open(dest_path, "wb") as dest_file:
         content = await file.read()
         await dest_file.write(content)
-    
+
     core.tutor_interactor.change_tutor_profile_address(tutor_mail, dest_path)
 
 

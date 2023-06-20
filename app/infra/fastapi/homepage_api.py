@@ -23,6 +23,7 @@ class GetCourseResponse(BaseModel):
     tutor_mail: str
     price: int
 
+
 class GetTutorResponse(BaseModel):
     first_name: str
     last_name: str
@@ -42,6 +43,7 @@ def hash_password(password: str) -> str:
 
     return password_hash
 
+
 def send_verification(receiver_mail: str) -> str:
     port = 465
     smtp_server = "smtp.gmail.com"
@@ -49,31 +51,36 @@ def send_verification(receiver_mail: str) -> str:
     password = "fvqxtupjruxqcooo"
 
     context = ssl.create_default_context()
-    verification_text = str(random.randint(0,1000000))
+    verification_text = str(random.randint(0, 1000000))
 
     with smtplib.SMTP_SSL(smtp_server, port, context=context) as server:
         server.login(sender_email, password)
         server.sendmail(sender_email, receiver_mail, verification_text)
     return verification_text
 
+
 @homepage_api.post("/add_user")
-async def add_student(data: CreateUserRequest, core: OlympianTutorService = Depends(get_core)):
+async def add_student(
+    data: CreateUserRequest, core: OlympianTutorService = Depends(get_core)
+):
     password_hash = hash_password(data.password)
     if data.is_student:
         student_mail = data.mail
-        core.student_interactor.create_student(data.first_name,data.last_name,student_mail,password_hash,0)
-        return {"message":"Student added successfully."}
+        core.student_interactor.create_student(
+            data.first_name, data.last_name, student_mail, password_hash, 0
+        )
+        return {"message": "Student added successfully."}
     else:
         tutor_mail = data.mail
-        core.tutor_interactor.create_tutor(data.first_name, data.last_name,tutor_mail,password_hash,0,"","")
-        return {"message":"Tutor added successfully."}
-
-
+        core.tutor_interactor.create_tutor(
+            data.first_name, data.last_name, tutor_mail, password_hash, 0, "", ""
+        )
+        return {"message": "Tutor added successfully."}
 
 
 @homepage_api.post("/sign_up")
 async def create_user(
-        data: CreateUserRequest, core: OlympianTutorService = Depends(get_core)
+    data: CreateUserRequest, core: OlympianTutorService = Depends(get_core)
 ):
     password_hash = hash_password(data.password)
     student_mail = data.mail
@@ -84,8 +91,6 @@ async def create_user(
         return {"message": "User with this mail already exist!"}
 
     if data.is_student:
-        print("shemovida")
-        print(data.mail)
         verification_text = send_verification(student_mail)
         return {"verificationCode": verification_text}
     else:
@@ -97,35 +102,37 @@ async def create_user(
 
 @homepage_api.get("/courses")
 async def get_courses(
-        core: OlympianTutorService = Depends(get_core),
+    core: OlympianTutorService = Depends(get_core),
 ):
     print("/courses")
 
     courses = core.course_interactor.get_courses()
     response = []
     for course in courses:
-        response.append(GetCourseResponse(
-            subject=course.subject,
-            tutor_mail=course.tutor_mail,
-            price=course.price
-        ))
+        response.append(
+            GetCourseResponse(
+                subject=course.subject, tutor_mail=course.tutor_mail, price=course.price
+            )
+        )
     return response
 
 
 @homepage_api.get("/tutors")
 async def get_courses(
-        core: OlympianTutorService = Depends(get_core),
+    core: OlympianTutorService = Depends(get_core),
 ):
     print("/tutors")
 
     tutors = core.tutor_interactor.get_tutors()
     response = []
     for tutor in tutors:
-        response.append(GetTutorResponse(
-            first_name=tutor.first_name,
-            last_name=tutor.last_name,
-            email=tutor.email,
-            biography=tutor.biography,
-            profile_address=tutor.profile_address,
-        ))
+        response.append(
+            GetTutorResponse(
+                first_name=tutor.first_name,
+                last_name=tutor.last_name,
+                email=tutor.email,
+                biography=tutor.biography,
+                profile_address=tutor.profile_address,
+            )
+        )
     return response
