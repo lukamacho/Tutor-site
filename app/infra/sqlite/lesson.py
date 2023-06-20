@@ -1,5 +1,6 @@
 import sqlite3
 from dataclasses import dataclass
+from typing import List
 
 from app.core.lesson.entity import Lesson
 
@@ -100,3 +101,12 @@ class SqlLessonRepository:
             ),
         )
         self.conn.commit()
+
+    def get_tutor_lessons(self, tutor_mail: str) -> List[str]:
+        lessons: List[str] = []
+        for row in self.conn.execute(
+            " SELECT * FROM Lessons WHERE tutor_mail = ?",
+            (tutor_mail,),
+        ):
+            lessons.append(Lesson(*row))
+        return lessons

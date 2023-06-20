@@ -43,6 +43,7 @@ def setup() -> FastAPI:
     course_repository = setup_course_repository()
     lesson_repository = setup_lesson_repository()
     review_repository = setup_review_repository()
+
     return setup_fastapi(
         OlympianTutorService.create(
             emailer=SMTPEmailService,

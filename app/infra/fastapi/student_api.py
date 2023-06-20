@@ -202,13 +202,20 @@ async def buy_lesson(
 ):
     student_balance = core.student_interactor.get_student_balance(student_mail)
     if student_balance >= data.lesson_price:
-        lesson = core.lesson_interactor.get_lesson(data.tutor_mail, student_mail, data.subject)
+        lesson = core.lesson_interactor.get_lesson(
+            data.tutor_mail, student_mail, data.subject
+        )
         if lesson is None:
             core.lesson_interactor.create_lesson(
-                data.subject, data.tutor_mail, student_mail, 1, data.lesson_price)
+                data.subject, data.tutor_mail, student_mail, 1, data.lesson_price
+            )
         else:
             core.lesson_interactor.set_number_of_lessons(
-                data.tutor_mail, student_mail, lesson.number_of_lessons + 1, data.subject)
+                data.tutor_mail,
+                student_mail,
+                lesson.number_of_lessons + 1,
+                data.subject,
+            )
 
         core.student_interactor.set_student_balance(
             student_mail, student_balance - data.lesson_price
