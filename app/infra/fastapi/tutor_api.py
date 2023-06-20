@@ -39,7 +39,6 @@ class CourseDeletionRequest(BaseModel):
 async def get_tutor_profile(
     tutor_mail: str, core: OlympianTutorService = Depends(get_core)
 ):
-
     return core.tutor_interactor.get_tutor(tutor_mail)
 
 
@@ -47,7 +46,6 @@ async def get_tutor_profile(
 async def get_tutor_courses(
     tutor_mail: str, core: OlympianTutorService = Depends(get_core)
 ):
-
     tutor_courses = core.course_interactor.get_tutor_courses(tutor_mail)
     print(tutor_courses)
     return tutor_courses
@@ -65,7 +63,6 @@ async def get_tutor_reviews(
 async def get_tutor_lessons(
     tutor_mail: str, core: OlympianTutorService = Depends(get_core)
 ):
-
     tutor_lessons = core.lesson_interactor.get_tutor_lessons(tutor_mail)
     return tutor_lessons
 
@@ -81,8 +78,6 @@ async def add_review(
     student_mail = review_addition.student_mail
     core.review_interactor.create_review(review_text, tutor_mail, student_mail)
     return review_addition
-
-
 
 
 @tutor_api.post("/tutor/change_bio")

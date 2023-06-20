@@ -90,14 +90,8 @@ async def create_user(
     if student is not None or tutor is not None:
         return {"message": "User with this mail already exist!"}
 
-    if data.is_student:
-        verification_text = send_verification(student_mail)
-        return {"verificationCode": verification_text}
-    else:
-        verification_text = send_verification(tutor_mail)
-        return {"verificationCode": verification_text}
-
-    return {"message": "Something unknown happened."}
+    verification_text = send_verification(student_mail)
+    return {"verificationCode": verification_text}
 
 
 @homepage_api.get("/courses")
