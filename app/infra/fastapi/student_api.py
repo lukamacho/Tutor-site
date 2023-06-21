@@ -47,6 +47,10 @@ class ReportToAdminRequest(BaseModel):
 class AddBalanceRequest(BaseModel):
     amount: int
 
+class FinishHomeworkRequest(BaseModel):
+    homework_text: str
+    tutor_mail: str
+    student_mail: str
 
 class BuyLessonRequest(BaseModel):
     subject: str
@@ -73,6 +77,14 @@ async def get_student(
     )
 
     return response
+
+@student_api.get("/student/homeworks/{student_mail}")
+async def get_student(
+    student_mail: str,
+    core: OlympianTutorService = Depends(get_core),
+):
+    homeworks = core.homework_interactor.get_student_homework(student_mail)
+    return homeworks
 
 
 @student_api.get("/student/lessons/{student_mail}")
@@ -112,6 +124,17 @@ async def change_first_name(
     return {"message": "Changed student first name successfully."}
 
 
+@student_api.delete("/student/finish_homework")
+async def finish_homework(
+    finish_homework: FinishHomeworkRequest,
+    core: OlympianTutorService = Depends(get_core),
+):
+    print(finish_homework)
+    homework_text = finish_homework.homework_text
+    tutor_mail = finish_homework.tutor_mail
+    student_mail = finish_homework.student_mail
+    core.homework_interactor.delete_homework(homework_text,tutor_mail,student_mail)
+    return {"message": "Homework finished successfully."}
 @student_api.post("/student/change_last_name/{student_mail}")
 async def change_last_name(
     data: ChangeLastNameRequest,
