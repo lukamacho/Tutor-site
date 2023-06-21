@@ -37,6 +37,11 @@ class CourseDeletionRequest(BaseModel):
     tutor_mail: str
     course_name: str
 
+class HomeworkAdditionRequest(BaseModel):
+    tutor_mail: str
+    student_mail: str
+    homework: str
+
 
 @tutor_api.get("/tutor/{tutor_mail}")
 async def get_tutor_profile(
@@ -99,9 +104,14 @@ async def add_review(
 
 @tutor_api.post("/tutor/add_homework")
 async def add_homework(
-    review_addition: ReviewAdditionRequest,
+    homework_addition: HomeworkAdditionRequest,
     core: OlympianTutorService = Depends(get_core),
 ):
+    tutor_mail = homework_addition.tutor_mail
+    student_mail = homework_addition.student_mail
+    homework = homework_addition.homework
+    print(homework_addition)
+    core.homework_interactor.create_homework(homework,tutor_mail,student_mail)
 
 
 

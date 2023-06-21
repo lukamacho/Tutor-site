@@ -87,25 +87,36 @@ function TutorProfile() {
 
     handleGetTutorStudents();
   }, []);
-    const handleAddHomework = (studentId) => {
+
+    const handleAddHomework = (studentId, studentMail) => {
     // Get the homework data entered for the student
     const homework = homeworkData[studentId];
 
-    fetch(`http://localhost:8000/tutor/add_homework`, {
+    const requestData = {
+      tutor_mail: email,
+      student_mail: studentMail,
+      homework: homework,
+    };
+
+    fetch('http://localhost:8000/tutor/add_homework', {
       method: 'POST',
-      body: JSON.stringify(homework),
+      body: JSON.stringify(requestData),
       headers: {
         'Content-Type': 'application/json',
       },
     })
-    .then(response => response.json())
+      .then(response => response.json())
+      .then(data => {
+        // Process the response as needed
+        console.log('Add homework response:', data);
 
-
-    // Clear the homework data for the student
-    setHomeworkData(prevData => ({
-      ...prevData,
-      [studentId]: '',
-    }));
+        // Clear the homework data for the student
+        setHomeworkData(prevData => ({
+          ...prevData,
+          [studentId]: '',
+        }));
+      })
+      .catch(error => console.error('Error adding homework:', error));
   };
 
   const handleHomeworkChange = (studentId, value) => {
@@ -351,7 +362,7 @@ function TutorProfile() {
                       <Button
                         variant="contained"
                         color="primary"
-                        onClick={() => handleAddHomework(student.id)}
+                        onClick={() => handleAddHomework(student.id,student.email)}
                       >
                         Add Homework
                       </Button>
