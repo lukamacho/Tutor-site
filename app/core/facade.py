@@ -104,8 +104,11 @@ class OlympianTutorService:
             tutor_mail, student_mail, subject, new_price
         )
 
-    def get_tutor_lessons(self, tutor_mail: str) -> List[str]:
+    def get_tutor_lessons(self, tutor_mail: str) -> List[Lesson]:
         return self.lesson_interactor.get_tutor_lessons(tutor_mail)
+
+    def get_tutor_students(self, tutor_mail: str) -> List[str]:
+        return self.lesson_interactor.get_tutor_students(tutor_mail)
 
     def create_student(
         self, first_name: str, last_name: str, email: str, password: str, balance: int
