@@ -4,6 +4,8 @@ from typing import List, Optional
 from app.core.admin.interactor import AdminInteractor, IEmailService
 from app.core.course.entity import Course
 from app.core.course.interactor import CourseInteractor, ICourseInteractor
+from app.core.homework.entity import Homework
+from app.core.homework.interactor import IHomeworkInteractor, HomeworkInteractor
 from app.core.lesson.entity import Lesson
 from app.core.lesson.interactor import ILessonInteractor, LessonInteractor
 from app.core.review.entity import Review
@@ -22,7 +24,35 @@ class OlympianTutorService:
     lesson_interactor: LessonInteractor
     student_interactor: StudentInteractor
     tutor_interactor: TutorInteractor
+    homework_interactor: HomeworkInteractor
 
+    def create_homework(
+        self, homework_text: str, tutor_mail: str, student_mail: str
+    ) -> Homework:
+        return self.homework_interactor.create_homework(
+            homework_text, tutor_mail, student_mail
+        )
+
+    def change_homework(
+        self,
+        new_homework_text: str,
+        old_homework_text: str,
+        tutor_mail: str,
+        student_mail: str,
+    ) -> Homework:
+        return self.homework_interactor.change_homework(
+            new_homework_text, old_homework_text, tutor_mail, student_mail
+        )
+
+    def get_student_homework(self, student_mail: str) -> List[Homework]:
+        return self.homework_interactor.get_student_homework(student_mail)
+
+    def delete_homework(
+        self, homework_text: str, tutor_mail: str, student_mail: str
+    ) -> None:
+        self.homework_interactor.delete_homework(
+            homework_text, tutor_mail, student_mail
+        )
     def send_hello(self):
         self.admin_interactor.send_hello()
 
@@ -202,6 +232,7 @@ class OlympianTutorService:
         lesson_interactor: ILessonInteractor,
         student_interactor: IStudentInteractor,
         tutor_interactor: ITutorInteractor,
+        homework_interactor: IHomeworkInteractor,
     ) -> "OlympianTutorService":
         return cls(
             admin_interactor=AdminInteractor(emailer),
@@ -210,4 +241,5 @@ class OlympianTutorService:
             lesson_interactor=LessonInteractor(lesson_interactor),
             student_interactor=StudentInteractor(student_interactor),
             tutor_interactor=TutorInteractor(tutor_interactor),
+            homework_interactor=HomeworkInteractor(homework_interactor),
         )
