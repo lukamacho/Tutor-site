@@ -1,8 +1,11 @@
+from typing import List
+
 import aiofiles
 from fastapi import APIRouter, Depends, File, UploadFile
 from pydantic import BaseModel
 
 from app.core.facade import OlympianTutorService
+from app.core.student.entity import Student
 from app.infra.fastapi.dependables import get_core
 
 tutor_api = APIRouter()
@@ -59,12 +62,27 @@ async def get_tutor_reviews(
     return tutor_reviews
 
 
-@tutor_api.get("/tutor/students/{tutor_mail}")
+@tutor_api.get("/tutor/lessons/{tutor_mail}")
 async def get_tutor_lessons(
     tutor_mail: str, core: OlympianTutorService = Depends(get_core)
 ):
     tutor_lessons = core.lesson_interactor.get_tutor_lessons(tutor_mail)
     return tutor_lessons
+
+@tutor_api.get("/tutor/students/{tutor_mail}")
+async def get_tutor_lessons(
+    tutor_mail: str, core: OlympianTutorService = Depends(get_core)
+):
+    tutor_students: List[Student] = []
+    tutor_mails: set[str] = set()
+    tutor_lesson_students = core.lesson_interactor.get_tutor_students(tutor_mail)
+    for tutor_student_mail in tutor_lesson_students:
+        if tutor_student_mail not in tutor_mails:
+            student = core.student_interactor.get_student(tutor_student_mail)
+            tutor_students.append(student)
+            tutor_mails.add(tutor_student_mail)
+    print(tutor_students)
+    return tutor_students
 
 
 @tutor_api.post("/tutor/add_review")
@@ -78,6 +96,14 @@ async def add_review(
     student_mail = review_addition.student_mail
     core.review_interactor.create_review(review_text, tutor_mail, student_mail)
     return review_addition
+
+@tutor_api.post("/tutor/add_homework")
+async def add_homework(
+    review_addition: ReviewAdditionRequest,
+    core: OlympianTutorService = Depends(get_core),
+):
+
+
 
 
 @tutor_api.post("/tutor/change_bio")
