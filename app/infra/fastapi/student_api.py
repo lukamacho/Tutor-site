@@ -79,7 +79,7 @@ async def get_student(
     return response
 
 @student_api.get("/student/homeworks/{student_mail}")
-async def get_student(
+async def get_student_homeworks(
     student_mail: str,
     core: OlympianTutorService = Depends(get_core),
 ):
