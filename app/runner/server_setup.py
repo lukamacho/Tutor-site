@@ -6,6 +6,7 @@ from app.core.facade import OlympianTutorService
 from app.infra.emailer.smtp import SMTPEmailService
 from app.infra.fastapi.api_main import setup_fastapi
 from app.infra.sqlite.course import SqlCourseRepository
+from app.infra.sqlite.homework import SqlHomeworkRepository
 from app.infra.sqlite.lesson import SqlLessonRepository
 from app.infra.sqlite.message import SqlMessageRepository
 from app.infra.sqlite.review import SqlReviewRepository
@@ -37,13 +38,16 @@ def setup_lesson_repository() -> SqlLessonRepository:
     return SqlLessonRepository("db.db")
 
 
+def setup_homework_repository() -> SqlHomeworkRepository:
+    return SqlHomeworkRepository("db.db")
+
 def setup() -> FastAPI:
     student_repository = setup_student_repository()
     tutor_repository = setup_tutor_repository()
     course_repository = setup_course_repository()
     lesson_repository = setup_lesson_repository()
     review_repository = setup_review_repository()
-
+    homework_repository = setup_homework_repository()
     return setup_fastapi(
         OlympianTutorService.create(
             emailer=SMTPEmailService,
@@ -52,5 +56,6 @@ def setup() -> FastAPI:
             lesson_interactor=lesson_repository,
             student_interactor=student_repository,
             tutor_interactor=tutor_repository,
+            homework_interactor=homework_repository,
         )
     )

@@ -78,7 +78,7 @@ const PublicTutor = () => {
   useEffect(() => {
     const handleIsTutorStudent = async () => {
       try {
-        const response = await fetch('http://localhost:8000/tutor/students/' + email, {
+        const response = await fetch('http://localhost:8000/tutor/lessons/' + email, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
