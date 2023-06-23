@@ -177,24 +177,7 @@ async def create_upload_file(
     core.student_interactor.change_student_profile_address(student_mail, dest_path)
 
 
-@student_api.post("/student/report_to_admin/{student_mail}")
-async def report_to_admin(
-    student_mail: str,
-    data: ReportToAdminRequest,
-):
-    print("/student/report_to_admin/" + student_mail)
-    port = 465
-    smtp_server = "smtp.gmail.com"
-    sender_email = "tutorsite727@gmail.com"
-    password = "fvqxtupjruxqcooo"
-    message = student_mail + " [report] " + data.report
 
-    context = ssl.create_default_context()
-    with smtplib.SMTP_SSL(smtp_server, port, context=context) as server:
-        server.login(sender_email, password)
-        server.sendmail(student_mail, sender_email, message)
-
-    return {"message": "Sent a report to admin."}
 
 
 @student_api.post("/student/add_balance/{student_mail}")
