@@ -35,6 +35,9 @@ class TutorDeleteRequest(BaseModel):
 class TutorCommissionRequest(BaseModel):
     tutor_mail: str
 
+class ReportToAdminRequest(BaseModel):
+    report: str
+
 
 class SingInRequest(BaseModel):
     user_mail: str
@@ -79,6 +82,25 @@ def get_admin(core: OlympianTutorService = Depends(get_core)):
     print("hello sender")
     core.admin_interactor.send_verification()
 
+
+@admin_api.post("/admin/report_to_admin/{user_mail}")
+async def report_to_admin(
+    user_mail: str,
+    data: ReportToAdminRequest,
+):
+    print("/student/report_to_admin/" + user_mail)
+    port = 465
+    smtp_server = "smtp.gmail.com"
+    sender_email = "tutorsite727@gmail.com"
+    password = "fvqxtupjruxqcooo"
+    message = user_mail + " [report] " + data.report
+
+    context = ssl.create_default_context()
+    with smtplib.SMTP_SSL(smtp_server, port, context=context) as server:
+        server.login(sender_email, password)
+        server.sendmail(user_mail, sender_email, message)
+
+    return {"message": "Sent a report to admin."}
 
 @admin_api.delete("/admin/delete_student")
 def delete_student(
