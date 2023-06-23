@@ -179,7 +179,7 @@ export default function Student() {
         report: report,
       };
 
-      const response = await fetch('http://localhost:8000/student/report_to_admin/' + email, {
+      const response = await fetch('http://localhost:8000/admin/report_to_admin/' + email, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

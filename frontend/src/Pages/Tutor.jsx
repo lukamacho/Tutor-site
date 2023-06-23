@@ -15,6 +15,7 @@ function TutorProfile() {
   const [courses, setCourses] = useState([]);
   const [tutorStudents, setTutorStudents] = useState([]);
   const [homeworkData, setHomeworkData] = useState({});
+  const [report, setReport] = useState('');
 
   const [profileAddress, setProfileAddress] = useState('');
   const [withdrawalMoney, setWithdrawalMoney] = useState('');
@@ -147,6 +148,24 @@ function TutorProfile() {
         setBalance(balance - withdrawalMoney);
       })
       .catch(error => console.error('Error requesting money withdrawal:', error));
+  };
+
+   const handleSendReportToAdmin = async () => {
+    if (report !== '') {
+      const data = {
+        report: report,
+      };
+
+      const response = await fetch('http://localhost:8000/admin/report_to_admin/' + email, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+      const response2 = await response.json();
+      console.log(response2);
+    }
   };
 
   const handleBioChange = () => {
@@ -376,6 +395,14 @@ function TutorProfile() {
           </Card>
         </Grid>
       </Grid>
+      <h4>Contact Admin</h4>
+      <input
+        type="text"
+        value={report}
+        onChange={(e) => setReport(e.target.value)}
+        placeholder="my report"
+      />
+      <button onClick={handleSendReportToAdmin}>Send to Admin</button>
     </div>
   );
 }
