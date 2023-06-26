@@ -126,6 +126,17 @@ async def get_student_lessons(
     return responses
 
 
+@student_api.get("/student/messages/{student_mail}/{tutor_mail}")
+async def get_student_lessons(
+    student_mail: str,
+    tutor_mail: str,
+    core: OlympianTutorService = Depends(get_core),
+):
+    print("/student/lessons/" + student_mail)
+
+    messages = core.message_interactor.get_messages(tutor_mail,student_mail)
+    print(messages)
+    return messages
 @student_api.post("/student/change_first_name/{student_mail}")
 async def change_first_name(
     data: ChangeFirstNameRequest,
