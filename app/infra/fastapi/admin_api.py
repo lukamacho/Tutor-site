@@ -35,6 +35,7 @@ class TutorDeleteRequest(BaseModel):
 class TutorCommissionRequest(BaseModel):
     tutor_mail: str
 
+
 class ReportToAdminRequest(BaseModel):
     report: str
 
@@ -101,6 +102,7 @@ async def report_to_admin(
         server.sendmail(user_mail, sender_email, message)
 
     return {"message": "Sent a report to admin."}
+
 
 @admin_api.delete("/admin/delete_student")
 def delete_student(
