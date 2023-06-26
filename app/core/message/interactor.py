@@ -19,6 +19,12 @@ class IMessageInteractor(Protocol):
     def delete_student_messages(self, student_mail: str) -> None:
         pass
 
+    def get_student_messaged_tutors(self, student_mail: str) -> List[str]:
+        pass
+
+    def get_tutor_messaged_students(self, tutor_mail: str) -> List[str]:
+        pass
+
 
 class IMessageRepository(Protocol):
     def create_message(
@@ -33,6 +39,12 @@ class IMessageRepository(Protocol):
         pass
 
     def delete_student_messages(self, student_mail: str) -> None:
+        pass
+
+    def get_student_messaged_tutors(self, student_mail: str) -> List[str]:
+        pass
+
+    def get_tutor_messaged_students(self, tutor_mail: str) -> List[str]:
         pass
 
 
@@ -55,3 +67,9 @@ class MessageInteractor:
 
     def delete_student_messages(self, student_mail: str) -> None:
         self.message_repository.delete_student_messages(student_mail)
+
+    def get_student_messaged_tutors(self, student_mail: str) -> List[str]:
+        return self.message_repository.get_student_messaged_tutors(student_mail)
+
+    def get_tutor_messaged_students(self, tutor_mail: str) -> List[str]:
+        return self.message_repository.get_tutor_messaged_students(tutor_mail)

@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Optional, Protocol, List
+from typing import List, Optional, Protocol
 
 from app.core.lesson.entity import Lesson
 from app.core.student.entity import Student
