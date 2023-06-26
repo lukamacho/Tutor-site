@@ -15,6 +15,8 @@ const PublicTutor = () => {
   const [reviewText, setReviewText] = useState('');
   const [is_tutor_student, setIsTutorStudent] = useState(false);
 
+  const [messageToTutor, setMessageToTutor] = useState('');
+
   useEffect(() => {
     const handleGetTutor = async () => {
       try {
@@ -87,7 +89,7 @@ const PublicTutor = () => {
         const isStudentData = await response.json();
         const isStudent = isStudentData.some(lesson => lesson.student_mail === visitor_mail);
 
-      setIsTutorStudent(isStudent);
+        setIsTutorStudent(isStudent);
       } catch (error) {
         console.error(error);
       }
@@ -95,6 +97,7 @@ const PublicTutor = () => {
 
     handleIsTutorStudent();
   }, []);
+
   const handleReviewAddition = () => {
     const reviewData = {
       review_text: reviewText,
@@ -117,6 +120,29 @@ const PublicTutor = () => {
         setReviewText('');
       })
       .catch(error => console.error('Error adding review:', error));
+  };
+
+  const handleSendMessage = () => {
+    const messageData = {
+      message_text: messageToTutor,
+      tutor_mail: email,
+      student_mail: visitor_mail,
+    };
+
+    // Send POST request to send message to tutor
+    fetch('http://localhost:8000/student/message_to_tutor', {
+      method: 'POST',
+      body: JSON.stringify(messageData),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Message sent:', data);
+        setMessageToTutor('');
+      })
+      .catch(error => console.error('Error sending message:', error));
   };
 
   return (
@@ -160,7 +186,7 @@ const PublicTutor = () => {
       ) : (
         <p>No reviews</p>
       )}
-      {is_tutor_student && ( // Conditionally render the review addition part
+      {is_tutor_student && (
         <div>
           <h1>Add a Review</h1>
           <input
@@ -171,6 +197,15 @@ const PublicTutor = () => {
           <button onClick={handleReviewAddition}>Add Review</button>
         </div>
       )}
+      <div>
+        <h1>Send a Message to the Tutor</h1>
+        <input
+          type="text"
+          value={messageToTutor}
+          onChange={event => setMessageToTutor(event.target.value)}
+        />
+        <button onClick={handleSendMessage}>Send Message</button>
+      </div>
     </div>
   );
 };

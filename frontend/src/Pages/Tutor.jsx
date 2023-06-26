@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Link, useNavigate } from 'react-router-dom';
 import { Typography, TextField, Button, Card, CardContent, CardHeader, Grid } from '@mui/material';
 
 import './TutorProfile.css';
@@ -16,7 +16,7 @@ function TutorProfile() {
   const [tutorStudents, setTutorStudents] = useState([]);
   const [homeworkData, setHomeworkData] = useState({});
   const [report, setReport] = useState('');
-
+  const navigate = useNavigate();
   const [profileAddress, setProfileAddress] = useState('');
   const [withdrawalMoney, setWithdrawalMoney] = useState('');
   const [profilePicture, setProfilePicture] = useState(null);
@@ -118,6 +118,9 @@ function TutorProfile() {
         }));
       })
       .catch(error => console.error('Error adding homework:', error));
+  };
+  const handleNavigateToMessages = () => {
+    navigate('/tutor/messages', { state: { email } });
   };
 
   const handleHomeworkChange = (studentId, value) => {
@@ -338,6 +341,9 @@ function TutorProfile() {
               <Button variant="contained" color="primary" onClick={handleCourseAddition}>
                 Add course
               </Button>
+              <div>
+                 <button onClick={handleNavigateToMessages}>Go to Messages</button>
+              </div>
               <ul>
                 {courses.length > 0 ? (
                   courses.map(course => (
