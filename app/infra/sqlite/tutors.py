@@ -1,6 +1,6 @@
 import sqlite3
 from dataclasses import dataclass
-from typing import Optional, List
+from typing import List, Optional
 
 from app.core.tutor.entity import Tutor
 
