@@ -23,7 +23,7 @@ def setup_tutor_repository() -> SqlTutorRepository:
 
 
 def setup_message_repository() -> SqlMessageRepository:
-    pass
+    return SqlMessageRepository("db.db")
 
 
 def setup_course_repository() -> SqlCourseRepository:
@@ -41,6 +41,7 @@ def setup_lesson_repository() -> SqlLessonRepository:
 def setup_homework_repository() -> SqlHomeworkRepository:
     return SqlHomeworkRepository("db.db")
 
+
 def setup() -> FastAPI:
     student_repository = setup_student_repository()
     tutor_repository = setup_tutor_repository()
@@ -48,6 +49,7 @@ def setup() -> FastAPI:
     lesson_repository = setup_lesson_repository()
     review_repository = setup_review_repository()
     homework_repository = setup_homework_repository()
+    message_repository = setup_message_repository()
     return setup_fastapi(
         OlympianTutorService.create(
             emailer=SMTPEmailService,
@@ -57,5 +59,6 @@ def setup() -> FastAPI:
             student_interactor=student_repository,
             tutor_interactor=tutor_repository,
             homework_interactor=homework_repository,
+            message_interactor=message_repository,
         )
     )

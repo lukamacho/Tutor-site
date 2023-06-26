@@ -5,9 +5,11 @@ from app.core.admin.interactor import AdminInteractor, IEmailService
 from app.core.course.entity import Course
 from app.core.course.interactor import CourseInteractor, ICourseInteractor
 from app.core.homework.entity import Homework
-from app.core.homework.interactor import IHomeworkInteractor, HomeworkInteractor
+from app.core.homework.interactor import HomeworkInteractor, IHomeworkInteractor
 from app.core.lesson.entity import Lesson
 from app.core.lesson.interactor import ILessonInteractor, LessonInteractor
+from app.core.message.entity import Message
+from app.core.message.interactor import MessageInteractor, IMessageInteractor
 from app.core.review.entity import Review
 from app.core.review.interactor import IReviewInteractor, ReviewInteractor
 from app.core.student.entity import Student
@@ -25,6 +27,29 @@ class OlympianTutorService:
     student_interactor: StudentInteractor
     tutor_interactor: TutorInteractor
     homework_interactor: HomeworkInteractor
+    message_interactor: MessageInteractor
+
+    def create_message(
+        self, message_text: str, tutor_mail: str, student_mail: str
+    ) -> Message:
+        return self.message_interactor.create_message(
+            message_text, tutor_mail, student_mail
+        )
+
+    def get_messages(self, tutor_mail: str, student_mail: str) -> List[Message]:
+        return self.message_interactor.get_messages(tutor_mail, student_mail)
+
+    def delete_tutor_messages(self, tutor_mail: str) -> None:
+        self.message_interactor.delete_tutor_messages(tutor_mail)
+
+    def delete_student_messages(self, student_mail: str) -> None:
+        self.message_interactor.delete_student_messages(student_mail)
+
+    def get_student_messaged_tutors(self, student_mail: str) -> List[str]:
+        return self.message_interactor.get_student_messaged_tutors(student_mail)
+
+    def get_tutor_messaged_students(self, tutor_mail: str) -> List[str]:
+        return self.message_interactor.get_tutor_messaged_students(tutor_mail)
 
     def create_homework(
         self, homework_text: str, tutor_mail: str, student_mail: str
@@ -53,6 +78,7 @@ class OlympianTutorService:
         self.homework_interactor.delete_homework(
             homework_text, tutor_mail, student_mail
         )
+
     def send_hello(self):
         self.admin_interactor.send_hello()
 
@@ -233,6 +259,7 @@ class OlympianTutorService:
         student_interactor: IStudentInteractor,
         tutor_interactor: ITutorInteractor,
         homework_interactor: IHomeworkInteractor,
+        message_interactor: IMessageInteractor,
     ) -> "OlympianTutorService":
         return cls(
             admin_interactor=AdminInteractor(emailer),
@@ -242,4 +269,5 @@ class OlympianTutorService:
             student_interactor=StudentInteractor(student_interactor),
             tutor_interactor=TutorInteractor(tutor_interactor),
             homework_interactor=HomeworkInteractor(homework_interactor),
+            message_interactor=MessageInteractor(message_interactor),
         )
