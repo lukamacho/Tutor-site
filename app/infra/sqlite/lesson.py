@@ -119,4 +119,3 @@ class SqlLessonRepository:
         ):
             students.append(str(Lesson(*row).student_mail))
         return students
-
