@@ -22,10 +22,12 @@ class GetLessonResponse(BaseModel):
     number_of_lessons: int
     lesson_price: int
 
+
 class MessageToTutorRequest(BaseModel):
     message_text: str
     tutor_mail: str
     student_mail: str
+
 
 class ChangeFirstNameRequest(BaseModel):
     new_first_name: str
@@ -91,7 +93,9 @@ async def get_student_messaged_tutors(
 ):
     print("/student/" + student_mail)
 
-    student_messaged_tutors = core.message_interactor.get_student_messaged_tutors(student_mail)
+    student_messaged_tutors = core.message_interactor.get_student_messaged_tutors(
+        student_mail
+    )
     print(student_messaged_tutors)
     return student_messaged_tutors
 
@@ -134,9 +138,11 @@ async def get_student_lessons(
 ):
     print("/student/lessons/" + student_mail)
 
-    messages = core.message_interactor.get_messages(tutor_mail,student_mail)
+    messages = core.message_interactor.get_messages(tutor_mail, student_mail)
     print(messages)
     return messages
+
+
 @student_api.post("/student/change_first_name/{student_mail}")
 async def change_first_name(
     data: ChangeFirstNameRequest,
@@ -153,25 +159,21 @@ async def change_first_name(
     return {"message": "Changed student first name successfully."}
 
 
-
-
-
 @student_api.post("/student/message_to_tutor")
 async def change_first_name(
     data: MessageToTutorRequest,
     core: OlympianTutorService = Depends(get_core),
 ):
-
     message_text = data.message_text
     tutor_mail = data.tutor_mail
     student_mail = data.student_mail
     student = core.student_interactor.get_student(student_mail)
-    tutor =core.tutor_interactor.get_tutor(tutor_mail)
+    tutor = core.tutor_interactor.get_tutor(tutor_mail)
     if student is None:
-        return {"message":"Student with this visitor mail doesn't exits"}
+        return {"message": "Student with this visitor mail doesn't exits"}
     if tutor is None:
-        return {"message":"Tutor with this mail doesn't exist."}
-    core.message_interactor.create_message(message_text,tutor_mail,student_mail)
+        return {"message": "Tutor with this mail doesn't exist."}
+    core.message_interactor.create_message(message_text, tutor_mail, student_mail)
     return {"message": "Message sent successfully."}
 
 

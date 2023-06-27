@@ -44,6 +44,12 @@ class HomeworkAdditionRequest(BaseModel):
     homework: str
 
 
+class MessageToStudentRequest(BaseModel):
+    message_text: str
+    tutor_mail: str
+    student_mail: str
+
+
 @tutor_api.get("/tutor/{tutor_mail}")
 async def get_tutor_profile(
     tutor_mail: str, core: OlympianTutorService = Depends(get_core)
@@ -91,6 +97,7 @@ async def get_tutor_lessons(
     print(tutor_students)
     return tutor_students
 
+
 @tutor_api.get("/tutor/messaged_students/{tutor_mail}")
 async def get_student_messaged_tutors(
     tutor_mail: str,
@@ -98,10 +105,24 @@ async def get_student_messaged_tutors(
 ):
     print("/tutor/" + tutor_mail)
 
-    tutor_messaged_students = core.message_interactor.get_tutor_messaged_students(tutor_mail)
+    tutor_messaged_students = core.message_interactor.get_tutor_messaged_students(
+        tutor_mail
+    )
     print(tutor_messaged_students)
     return tutor_messaged_students
 
+
+@tutor_api.get("/tutor/messages/{tutor_mail}/{student_mail}")
+async def get_student_lessons(
+    tutor_mail: str,
+    student_mail: str,
+    core: OlympianTutorService = Depends(get_core),
+):
+    print("/student/lessons/" + student_mail)
+
+    messages = core.message_interactor.get_messages(tutor_mail, student_mail)
+    print(messages)
+    return messages
 
 
 @tutor_api.post("/tutor/add_review")
@@ -115,6 +136,25 @@ async def add_review(
     student_mail = review_addition.student_mail
     core.review_interactor.create_review(review_text, tutor_mail, student_mail)
     return review_addition
+
+
+@tutor_api.post("/tutor/message_to_student")
+async def message_to_student(
+    data: MessageToStudentRequest,
+    core: OlympianTutorService = Depends(get_core),
+):
+    message_text = data.message_text
+    tutor_mail = data.tutor_mail
+    student_mail = data.student_mail
+    student = core.student_interactor.get_student(student_mail)
+    tutor = core.tutor_interactor.get_tutor(tutor_mail)
+    if student is None:
+        return {"message": "Student with this visitor mail doesn't exits"}
+    if tutor is None:
+        return {"message": "Tutor with this mail doesn't exist."}
+    print(data)
+    core.message_interactor.create_message(message_text, tutor_mail, student_mail)
+    return {"message": "Message sent successfully."}
 
 
 @tutor_api.post("/tutor/add_homework")
