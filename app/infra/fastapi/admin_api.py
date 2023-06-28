@@ -6,7 +6,14 @@ from string import ascii_letters, digits
 import requests
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import JSONResponse, RedirectResponse
+from isort.profiles import google
 from pydantic import BaseModel
+
+from datetime import datetime
+import googleapiclient.discovery
+import google.auth
+
+from pydantic.datetime_parse import timedelta
 
 from app.core.facade import OlympianTutorService
 from app.infra.fastapi.dependables import get_core
@@ -273,3 +280,79 @@ def decrease_balance(
         return {"Message": "No such tutor exists."}
     core.tutor_interactor.decrease_tutor_balance(tutor_mail, amount)
     return {"message": "Balance decreased successfully."}
+
+
+class MeetingLinkRequest(BaseModel):
+    tutor_mail: str
+    student_mail: str
+    date_and_time: str
+
+
+@admin_api.post("/generate_meeting_link")
+async def generate_meeting_link(data: MeetingLinkRequest):
+    tutor_mail = data.tutor_mail
+    student_mail = data.student_mail
+    user_mails = [tutor_mail, student_mail]
+    date_time = data.date_and_time
+    print(date_time)
+    # Split the date and time components
+    date_parts = date_time.split("T")
+    if len(date_parts) != 2:
+        return {"error": "Invalid date and time format"}
+
+    date = date_parts[0]
+    time = date_parts[1]
+    print("amas")
+    # Split the time into hours and minutes
+    print(time)
+    time = date_parts[1].split(".")[0]
+    time_parts = time.split(":")
+    if len(time_parts) != 3:
+        return {"error": "Invalid time format"}
+
+    hour = int(time_parts[0])
+    minute = int(time_parts[1])
+    print(hour)
+    print(minute)
+    # Construct the start and end time objects
+    start_time = datetime.strptime(date, "%Y-%m-%d").replace(hour=hour, minute=minute)
+    end_time = start_time + timedelta(hours=1)  # Assuming a meeting duration of 1 hour
+
+    print("gacda")
+    # Construct the event payload
+    event = {
+        'summary': 'Meeting',
+        'start': {
+            'dateTime': start_time.isoformat(),
+            'timeZone': 'Your_Time_Zone',
+        },
+        'end': {
+            'dateTime': end_time.isoformat(),
+            'timeZone': 'Your_Time_Zone',
+        },
+        'attendees': [{'email': email} for email in user_mails],
+        'conferenceData': {
+            'createRequest': {
+                'requestId': 'random_id'
+            }
+        }
+    }
+
+    # Make a POST request to the Google Calendar API to create the event
+    response = requests.post(
+        'https://www.googleapis.com/calendar/v3/calendars/primary/events',
+        headers={'Authorization': 'Bearer YOUR_ACCESS_TOKEN'},
+        json=event
+    )
+
+    print(response.status_code)
+    print(response.content)
+
+    if response.status_code == 200:
+        # Extract the meeting link from the API response
+        print("saswauli")
+        meeting_link = response.json()['conferenceData']['entryPoints'][0]['uri']
+        return {'meeting_link': meeting_link}
+    else:
+        print("jandaba")
+        return {'message': 'Failed to create the meeting.'}
