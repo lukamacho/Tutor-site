@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation, Link } from 'react-router-dom';
+import { useLocation, Link, useNavigate } from 'react-router-dom';
 
 export default function Student() {
   const location = useLocation();
   const email = location.state?.email;
+  const navigate = useNavigate(); // Add navigate from react-router-dom
+
 
   const [data, setData] = useState([]);
   const [firstName, setFirstName] = useState('');
@@ -89,6 +91,10 @@ export default function Student() {
 
     handleGetHomeworks();
   }, []);
+
+ const handleNavigateToMessages = () => {
+    navigate('/student/messages', { state: { email } });
+  };
 
   const handleChangeFirstName = async () => {
     try {
@@ -179,7 +185,7 @@ export default function Student() {
         report: report,
       };
 
-      const response = await fetch('http://localhost:8000/student/report_to_admin/' + email, {
+      const response = await fetch('http://localhost:8000/admin/report_to_admin/' + email, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -288,6 +294,9 @@ const handleFinishHomework = async (homework_text, tutor_mail) => {
         placeholder="new password"
       />
       <button onClick={handleChangePassword}>Change Password</button>
+      <div>
+        <button onClick={handleNavigateToMessages}>Go to Messages</button>
+      </div>
       <h1>Lessons:</h1>
       <ul>
         {lessons.map((lesson, index) => (

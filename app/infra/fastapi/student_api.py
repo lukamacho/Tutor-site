@@ -1,13 +1,12 @@
 import smtplib
 import ssl
 
+import aiofiles
 from fastapi import APIRouter, Depends, File, UploadFile
 from pydantic import BaseModel
 
 from app.core.facade import OlympianTutorService
 from app.infra.fastapi.dependables import get_core
-
-import aiofiles
 
 
 class GetStudentResponse(BaseModel):
@@ -22,6 +21,12 @@ class GetLessonResponse(BaseModel):
     tutor_mail: str
     number_of_lessons: int
     lesson_price: int
+
+
+class MessageToTutorRequest(BaseModel):
+    message_text: str
+    tutor_mail: str
+    student_mail: str
 
 
 class ChangeFirstNameRequest(BaseModel):
@@ -47,10 +52,12 @@ class ReportToAdminRequest(BaseModel):
 class AddBalanceRequest(BaseModel):
     amount: int
 
+
 class FinishHomeworkRequest(BaseModel):
     homework_text: str
     tutor_mail: str
     student_mail: str
+
 
 class BuyLessonRequest(BaseModel):
     subject: str
@@ -77,6 +84,21 @@ async def get_student(
     )
 
     return response
+
+
+@student_api.get("/student/messaged_tutors/{student_mail}")
+async def get_student_messaged_tutors(
+    student_mail: str,
+    core: OlympianTutorService = Depends(get_core),
+):
+    print("/student/" + student_mail)
+
+    student_messaged_tutors = core.message_interactor.get_student_messaged_tutors(
+        student_mail
+    )
+    print(student_messaged_tutors)
+    return student_messaged_tutors
+
 
 @student_api.get("/student/homeworks/{student_mail}")
 async def get_student_homeworks(
@@ -108,6 +130,19 @@ async def get_student_lessons(
     return responses
 
 
+@student_api.get("/student/messages/{student_mail}/{tutor_mail}")
+async def get_student_messages(
+    student_mail: str,
+    tutor_mail: str,
+    core: OlympianTutorService = Depends(get_core),
+):
+    print("/student/lessons/" + student_mail)
+
+    messages = core.message_interactor.get_messages(tutor_mail, student_mail)
+    print(messages)
+    return messages
+
+
 @student_api.post("/student/change_first_name/{student_mail}")
 async def change_first_name(
     data: ChangeFirstNameRequest,
@@ -124,6 +159,24 @@ async def change_first_name(
     return {"message": "Changed student first name successfully."}
 
 
+@student_api.post("/student/message_to_tutor")
+async def message_to_tutor(
+    data: MessageToTutorRequest,
+    core: OlympianTutorService = Depends(get_core),
+):
+    message_text = data.message_text
+    tutor_mail = data.tutor_mail
+    student_mail = data.student_mail
+    student = core.student_interactor.get_student(student_mail)
+    tutor = core.tutor_interactor.get_tutor(tutor_mail)
+    if student is None:
+        return {"message": "Student with this visitor mail doesn't exits"}
+    if tutor is None:
+        return {"message": "Tutor with this mail doesn't exist."}
+    core.message_interactor.create_message(message_text, tutor_mail, student_mail)
+    return {"message": "Message sent successfully."}
+
+
 @student_api.delete("/student/finish_homework")
 async def finish_homework(
     finish_homework: FinishHomeworkRequest,
@@ -133,8 +186,10 @@ async def finish_homework(
     homework_text = finish_homework.homework_text
     tutor_mail = finish_homework.tutor_mail
     student_mail = finish_homework.student_mail
-    core.homework_interactor.delete_homework(homework_text,tutor_mail,student_mail)
+    core.homework_interactor.delete_homework(homework_text, tutor_mail, student_mail)
     return {"message": "Homework finished successfully."}
+
+
 @student_api.post("/student/change_last_name/{student_mail}")
 async def change_last_name(
     data: ChangeLastNameRequest,
@@ -175,26 +230,6 @@ async def create_upload_file(
         await dest_file.write(content)
 
     core.student_interactor.change_student_profile_address(student_mail, dest_path)
-
-
-@student_api.post("/student/report_to_admin/{student_mail}")
-async def report_to_admin(
-    student_mail: str,
-    data: ReportToAdminRequest,
-):
-    print("/student/report_to_admin/" + student_mail)
-    port = 465
-    smtp_server = "smtp.gmail.com"
-    sender_email = "tutorsite727@gmail.com"
-    password = "fvqxtupjruxqcooo"
-    message = student_mail + " [report] " + data.report
-
-    context = ssl.create_default_context()
-    with smtplib.SMTP_SSL(smtp_server, port, context=context) as server:
-        server.login(sender_email, password)
-        server.sendmail(student_mail, sender_email, message)
-
-    return {"message": "Sent a report to admin."}
 
 
 @student_api.post("/student/add_balance/{student_mail}")

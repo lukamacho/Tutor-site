@@ -11,6 +11,9 @@ import Courses from "../Pages/Courses"
 import Tutors from "../Pages/Tutors"
 import PublicTutor from "../Pages/PublicTutor"
 import Verification from "../Pages/Verification"
+import TutorMessages from "../Pages/TutorMessages"
+import StudentMessages from "../Pages/StudentMessages"
+
 
 export default function PageRouter() {
   return (
@@ -26,6 +29,9 @@ export default function PageRouter() {
       <Route path="tutors" element={<Tutors />}/>
       <Route path="tutors/tutor/:email" element={<PublicTutor />} />
       <Route path="verification" element={<Verification />}/>
+      <Route path="tutor/messages" element={<TutorMessages />}/>
+      <Route path="student/messages" element={<StudentMessages />}/>
+
     </Routes>
   );
 }
