@@ -113,7 +113,7 @@ async def get_student_messaged_tutors(
 
 
 @tutor_api.get("/tutor/messages/{tutor_mail}/{student_mail}")
-async def get_student_lessons(
+async def get_tutor_lessons(
     tutor_mail: str,
     student_mail: str,
     core: OlympianTutorService = Depends(get_core),
