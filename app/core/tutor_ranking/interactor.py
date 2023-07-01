@@ -146,16 +146,16 @@ class TutorRankingInteractor:
         return self.tutor_ranking_repository.get_admin_score(email)
 
     def add_review_score(self, email: str, review_score: int) -> None:
-        self.tutor_ranking_repository.add_review_score(email,review_score)
+        self.tutor_ranking_repository.add_review_score(email, review_score)
 
     def add_number_of_lessons(self, email: str, added_lesson_number: int) -> None:
-        self.tutor_ranking_repository.add_number_of_lessons(email,added_lesson_number)
+        self.tutor_ranking_repository.add_number_of_lessons(email, added_lesson_number)
 
     def set_minimum_lesson_price(self, email: str, new_price: int) -> None:
-        self.tutor_ranking_repository.set_minimum_lesson_price(email,new_price)
+        self.tutor_ranking_repository.set_minimum_lesson_price(email, new_price)
 
     def set_admin_score(self, email: str, admin_score: int) -> None:
-        self.tutor_ranking_repository.set_admin_score(email,admin_score)
+        self.tutor_ranking_repository.set_admin_score(email, admin_score)
 
     def sort_by_review_score_desc(self) -> List[str]:
         return self.tutor_ranking_repository.sort_by_review_score_desc()

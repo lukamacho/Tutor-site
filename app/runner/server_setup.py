@@ -42,8 +42,10 @@ def setup_lesson_repository() -> SqlLessonRepository:
 def setup_homework_repository() -> SqlHomeworkRepository:
     return SqlHomeworkRepository("db.db")
 
+
 def setup_tutor_ranking_repository() -> SqlTutorRankingRepository:
     return SqlTutorRankingRepository("db.db")
+
 
 def setup() -> FastAPI:
     student_repository = setup_student_repository()

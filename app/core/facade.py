@@ -16,7 +16,10 @@ from app.core.student.entity import Student
 from app.core.student.interactor import IStudentInteractor, StudentInteractor
 from app.core.tutor.entity import Tutor
 from app.core.tutor.interactor import ITutorInteractor, TutorInteractor
-from app.core.tutor_ranking.interactor import TutorRankingInteractor, ITutorRankingInteractor
+from app.core.tutor_ranking.interactor import (
+    TutorRankingInteractor,
+    ITutorRankingInteractor,
+)
 
 
 @dataclass
@@ -30,9 +33,10 @@ class OlympianTutorService:
     homework_interactor: HomeworkInteractor
     message_interactor: MessageInteractor
     tutor_ranking_interactor: TutorRankingInteractor
+
     def add_tutor_in_ranking(
-            self,
-            email: str,
+        self,
+        email: str,
     ) -> None:
         self.tutor_ranking_interactor.add_tutor_in_ranking(email)
 
@@ -329,5 +333,5 @@ class OlympianTutorService:
             tutor_interactor=TutorInteractor(tutor_interactor),
             homework_interactor=HomeworkInteractor(homework_interactor),
             message_interactor=MessageInteractor(message_interactor),
-            tutor_ranking_interactor=TutorRankingInteractor(tutor_ranking_interactor)
+            tutor_ranking_interactor=TutorRankingInteractor(tutor_ranking_interactor),
         )
