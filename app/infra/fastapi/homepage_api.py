@@ -75,6 +75,7 @@ async def add_student(
         core.tutor_interactor.create_tutor(
             data.first_name, data.last_name, tutor_mail, password_hash, 0, "", ""
         )
+        core.tutor_ranking_interactor.add_tutor_in_ranking(tutor_mail)
         return {"message": "Tutor added successfully."}
 
 
@@ -82,7 +83,6 @@ async def add_student(
 async def create_user(
     data: CreateUserRequest, core: OlympianTutorService = Depends(get_core)
 ):
-    password_hash = hash_password(data.password)
     first_name = data.first_name
     last_name = data.last_name
     student_mail = data.mail
