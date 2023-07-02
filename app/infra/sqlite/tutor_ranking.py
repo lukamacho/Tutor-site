@@ -48,7 +48,7 @@ class SqlTutorRankingRepository:
     def get_review_scores(self, email: str) -> int:
         for row in self.conn.execute(
             " SELECT review_scores FROM TutorRankings WHERE email = ?",
-            (email),
+            (email,),
         ):
             return int(*row)
 
@@ -57,7 +57,7 @@ class SqlTutorRankingRepository:
     def get_number_of_reviews(self, email: str) -> int:
         for row in self.conn.execute(
             " SELECT number_of_reviews FROM TutorRankings WHERE email = ?",
-            (email),
+            (email,),
         ):
             return int(*row)
 
@@ -66,7 +66,7 @@ class SqlTutorRankingRepository:
     def get_minimum_lesson_price(self, email: str) -> int:
         for row in self.conn.execute(
             " SELECT minimum_lesson_price FROM TutorRankings WHERE email = ?",
-            (email),
+            (email,),
         ):
             return int(*row)
 
@@ -75,7 +75,7 @@ class SqlTutorRankingRepository:
     def get_number_of_lessons(self, email: str) -> int:
         for row in self.conn.execute(
             " SELECT number_of_lessons FROM TutorRankings WHERE email = ?",
-            (email),
+            (email,),
         ):
             return int(*row)
 
@@ -84,7 +84,7 @@ class SqlTutorRankingRepository:
     def get_admin_score(self, email: str) -> int:
         for row in self.conn.execute(
             " SELECT admin_score FROM TutorRankings WHERE email = ?",
-            (email),
+            (email,),
         ):
             return int(*row)
 
