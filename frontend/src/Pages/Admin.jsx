@@ -14,7 +14,8 @@ const Admin = () => {
   const [tutorCommissionRequested, setTutorCommissionRequested] = useState(false);
   const [tutorDecreaseRequested, setTutorDecreaseRequested] = useState(false);
   const [studentIncreaseRequested, setStudentIncreaseRequested] = useState(false);
-
+  const [tutorScore, setTutorScore] = useState('');
+  const [tutorScoreOptions, setTutorScoreOptions] = useState([]);
 
   const handleDeleteStudent = async () => {
     try {
@@ -38,6 +39,7 @@ const Admin = () => {
       setStudentDeleteRequested(false); // Reset the deleteRequested flag
     }
   };
+
   const handleDeleteTutor = async () => {
     try {
       const response = await fetch('http://localhost:8000/admin/delete_tutor', {
@@ -60,6 +62,7 @@ const Admin = () => {
       setTutorDeleteRequested(false); // Reset the deleteRequested flag
     }
   };
+
   const handleCommissionTutor = async () => {
     try {
       const response = await fetch('http://localhost:8000/admin/commission_pct', {
@@ -82,53 +85,83 @@ const Admin = () => {
       setTutorCommissionRequested(false); // Reset the deleteRequested flag
     }
   };
+
   const handleTutorDecreaseBalance = async () => {
-
-        const data = {
-            "tutor_mail": tutorDecreaseMail,
-            "amount": tutorDecreaseAmount,
-        }
-
-        try {
-            const response = await fetch('http://localhost:8000/admin/decrease_tutor_balance', {
-                method: 'POST',
-                body: JSON.stringify(data),
-                headers: { 'Content-Type': 'application/json' }
-            });
-            const result = await response.json();
-        console.log(result);
-
-
-        } catch (error) {
-            console.error(error);
-        }
-        finally {
-            setTutorDecreaseRequested(false); // Reset the deleteRequested flag
-        }
+    const data = {
+      tutor_mail: tutorDecreaseMail,
+      amount: tutorDecreaseAmount,
     };
+
+    try {
+      const response = await fetch('http://localhost:8000/admin/decrease_tutor_balance', {
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      if (!response.ok) {
+        throw new Error('Tutor decrease balance request failed');
+      }
+
+      const result = await response.json();
+      console.log(result);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setTutorDecreaseRequested(false);
+    }
+  };
+
   const handleStudentIncreaseBalance = async () => {
-
-        const data = {
-            "student_mail": studentIncreaseMail,
-            "amount": studentIncreaseAmount,
-        }
-
-        try {
-            const response = await fetch('http://localhost:8000/admin/increase_student_balance', {
-                method: 'POST',
-                body: JSON.stringify(data),
-                headers: { 'Content-Type': 'application/json' }
-            });
-            const result = await response.json();
-        console.log(result);
-
-
-        } catch (error) {
-            console.error(error);
-        }finally {
-            setStudentIncreaseRequested(false); // Reset the deleteRequested flag
-        }
+    const data = {
+      student_mail: studentIncreaseMail,
+      amount: studentIncreaseAmount,
     };
+
+    try {
+      const response = await fetch('http://localhost:8000/admin/increase_student_balance', {
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      if (!response.ok) {
+        throw new Error('Student increase balance request failed');
+      }
+
+      const result = await response.json();
+      console.log(result);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setStudentIncreaseRequested(false);
+    }
+  };
+
+  const handleTutorScoreButtonClick = async () => {
+    const data = {
+      tutor_mail: tutorMail,
+      score: tutorScore,
+    };
+
+    try {
+      const response = await fetch('http://localhost:8000/admin/score_tutor', {
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      if (!response.ok) {
+        throw new Error('Tutor score request failed');
+      }
+
+      const result = await response.json();
+      console.log(result);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   useEffect(() => {
     if (studentDeleteRequested) {
       handleDeleteStudent();
@@ -141,17 +174,19 @@ const Admin = () => {
     }
   }, [tutorDeleteRequested]);
 
-   useEffect(() => {
+  useEffect(() => {
     if (tutorCommissionRequested) {
       handleCommissionTutor();
     }
   }, [tutorCommissionRequested]);
+
   useEffect(() => {
     if (tutorDecreaseRequested) {
       handleTutorDecreaseBalance();
     }
   }, [tutorDecreaseRequested]);
-   useEffect(() => {
+
+  useEffect(() => {
     if (studentIncreaseRequested) {
       handleStudentIncreaseBalance();
     }
@@ -160,39 +195,57 @@ const Admin = () => {
   const handleStudentMailChange = (event) => {
     setStudentMail(event.target.value);
   };
+
   const handleTutorMailChange = (event) => {
     setTutorMail(event.target.value);
   };
+
   const handleTutorCommissionMailChange = (event) => {
     setTutorCommissionMail(event.target.value);
   };
+
   const handleTutorDecreaseMailChange = (event) => {
-    setTutorDecreaseMail(event.target.value)
-  }
+    setTutorDecreaseMail(event.target.value);
+  };
+
   const handleTutorDecreaseAmountChange = (event) => {
-    setTutorDecreaseAmount(event.target.value)
-  }
+    setTutorDecreaseAmount(event.target.value);
+  };
+
   const handleStudentIncreaseMailChange = (event) => {
-    setStudentIncreaseMail(event.target.value)
-  }
+    setStudentIncreaseMail(event.target.value);
+  };
+
   const handleStudentIncreaseAmountChange = (event) => {
-    setStudentIncreaseAmount(event.target.value)
-  }
+    setStudentIncreaseAmount(event.target.value);
+  };
+
+  const handleTutorScoreChange = (event) => {
+    setTutorScore(event.target.value);
+  };
+
   const handleStudentDeleteButtonClick = () => {
     setStudentDeleteRequested(true);
   };
+
   const handleTutorDeleteButtonClick = () => {
     setTutorDeleteRequested(true);
   };
+
   const handleTutorCommissionButtonClick = () => {
     setTutorCommissionRequested(true);
   };
+
   const handleTutorDecreaseBalanceButtonClick = () => {
-    setTutorDecreaseRequested(true)
+    setTutorDecreaseRequested(true);
   };
+
   const handleStudentIncreaseButtonClick = () => {
-    setStudentIncreaseRequested(true)
+    setStudentIncreaseRequested(true);
   };
+
+
+
   return (
     <div className="admin-parts">
       <h1>Admin functionality</h1>
@@ -238,7 +291,7 @@ const Admin = () => {
         />
         <button onClick={handleTutorDecreaseBalanceButtonClick}>Decrease Tutor Balance</button>
       </div>
-       <div className="decrease_tutor_balance">
+      <div className="increase_student_balance">
         <input
           type="text"
           value={studentIncreaseMail}
@@ -252,6 +305,22 @@ const Admin = () => {
           placeholder="Enter increase amount"
         />
         <button onClick={handleStudentIncreaseButtonClick}>Increase Student balance</button>
+      </div>
+      <div className="evaluate_tutor">
+        <input
+          type="text"
+          value={tutorMail}
+          onChange={handleTutorMailChange}
+          placeholder="Enter tutor email"
+        />
+        <select value={tutorScore} onChange={handleTutorScoreChange}>
+          {Array.from(Array(101).keys()).map((score) => (
+            <option key={score} value={score}>
+              {score}
+            </option>
+          ))}
+        </select>
+        <button onClick={handleTutorScoreButtonClick}>Evaluate Tutor</button>
       </div>
     </div>
   );

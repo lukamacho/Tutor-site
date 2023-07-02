@@ -22,6 +22,7 @@ class MoneyWithdrawalRequest(BaseModel):
 
 
 class ReviewAdditionRequest(BaseModel):
+    rating: int
     review_text: str
     tutor_mail: str
     student_mail: str
@@ -130,11 +131,13 @@ async def add_review(
     review_addition: ReviewAdditionRequest,
     core: OlympianTutorService = Depends(get_core),
 ):
-    print(review_addition)
+    print(review_addition.rating)
+    review_score = review_addition.rating
     review_text = review_addition.review_text
     tutor_mail = review_addition.tutor_mail
     student_mail = review_addition.student_mail
     core.review_interactor.create_review(review_text, tutor_mail, student_mail)
+    core.tutor_ranking_interactor.add_review_score(tutor_mail,review_score)
     return review_addition
 
 
@@ -232,7 +235,8 @@ async def add_course(
         return {"message": "No such tutor exists!"}
 
     core.course_interactor.create_course(course_name, tutor_mail, course_price)
-
+    core.tutor_ranking_interactor.set_minimum_lesson_price(tutor_mail,course_price)
+    return {"message": "Course added successfully."}
 
 @tutor_api.delete("/tutor/delete_course")
 def delete_course(

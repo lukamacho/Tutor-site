@@ -321,28 +321,24 @@ async def generate_meeting_link(data: MeetingLinkRequest):
     print("gacda")
     # Construct the event payload
     event = {
-        'summary': 'Meeting',
-        'start': {
-            'dateTime': start_time.isoformat(),
-            'timeZone': 'Your_Time_Zone',
+        "summary": "Meeting",
+        "start": {
+            "dateTime": start_time.isoformat(),
+            "timeZone": "Your_Time_Zone",
         },
-        'end': {
-            'dateTime': end_time.isoformat(),
-            'timeZone': 'Your_Time_Zone',
+        "end": {
+            "dateTime": end_time.isoformat(),
+            "timeZone": "Your_Time_Zone",
         },
-        'attendees': [{'email': email} for email in user_mails],
-        'conferenceData': {
-            'createRequest': {
-                'requestId': 'random_id'
-            }
-        }
+        "attendees": [{"email": email} for email in user_mails],
+        "conferenceData": {"createRequest": {"requestId": "random_id"}},
     }
 
     # Make a POST request to the Google Calendar API to create the event
     response = requests.post(
-        'https://www.googleapis.com/calendar/v3/calendars/primary/events',
-        headers={'Authorization': 'Bearer YOUR_ACCESS_TOKEN'},
-        json=event
+        "https://www.googleapis.com/calendar/v3/calendars/primary/events",
+        headers={"Authorization": "Bearer YOUR_ACCESS_TOKEN"},
+        json=event,
     )
 
     print(response.status_code)
@@ -351,8 +347,27 @@ async def generate_meeting_link(data: MeetingLinkRequest):
     if response.status_code == 200:
         # Extract the meeting link from the API response
         print("saswauli")
-        meeting_link = response.json()['conferenceData']['entryPoints'][0]['uri']
-        return {'meeting_link': meeting_link}
+        meeting_link = response.json()["conferenceData"]["entryPoints"][0]["uri"]
+        return {"meeting_link": meeting_link}
     else:
         print("jandaba")
-        return {'message': 'Failed to create the meeting.'}
+        return {"message": "Failed to create the meeting."}
+
+
+class ScoreTutorRequest(BaseModel):
+    tutor_mail: str
+    score: int
+
+
+@admin_api.post("/admin/score_tutor")
+async def score_tutor(
+    data: ScoreTutorRequest, core: OlympianTutorService = Depends(get_core)
+):
+    tutor_mail = data.tutor_mail
+    score = data.score
+    tutor = core.tutor_interactor.get_tutor(tutor_mail)
+    if tutor is None:
+        return {"message": "Tutor with this mail doesn't exist"}
+    core.tutor_ranking_interactor.set_admin_score(tutor_mail, score)
+
+    return {"message": "Student evaluated successfully."}

@@ -1,5 +1,6 @@
 import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import './Styles.css'
 
 const PublicTutor = () => {
   const { email } = useParams();
@@ -14,6 +15,7 @@ const PublicTutor = () => {
   const [reviews, setReviews] = useState([]);
   const [reviewText, setReviewText] = useState('');
   const [is_tutor_student, setIsTutorStudent] = useState(false);
+  const [rating, setRating] = useState(0); // New state for star rating
 
   const [messageToTutor, setMessageToTutor] = useState('');
 
@@ -100,6 +102,7 @@ const PublicTutor = () => {
 
   const handleReviewAddition = () => {
     const reviewData = {
+      rating: rating,
       review_text: reviewText,
       tutor_mail: email,
       student_mail: visitor_mail,
@@ -145,6 +148,27 @@ const PublicTutor = () => {
       .catch(error => console.error('Error sending message:', error));
   };
 
+  const renderStarRating = () => {
+    const stars = [];
+    const maxRating = 5;
+
+    for (let i = 1; i <= maxRating; i++) {
+      const starClass = i <= rating ? 'star-filled' : 'star-unfilled';
+
+      stars.push(
+        <span
+          key={i}
+          className={starClass}
+          onClick={() => setRating(i)}
+        >
+          &#9733;
+        </span>
+      );
+    }
+
+    return stars;
+  };
+
   return (
     <div>
       <h1>Tutor's Public Profile</h1>
@@ -186,6 +210,10 @@ const PublicTutor = () => {
       ) : (
         <p>No reviews</p>
       )}
+      <div>
+        <h1>Rate the Tutor:</h1>
+        {renderStarRating()}
+      </div>
       {is_tutor_student && (
         <div>
           <h1>Add a Review</h1>
