@@ -370,4 +370,4 @@ async def score_tutor(
         return {"message": "Tutor with this mail doesn't exist"}
     core.tutor_ranking_interactor.set_admin_score(tutor_mail, score)
 
-    return {"message": "Student evaluated successfully."}
+    return {"message": "Tutor evaluated successfully."}
