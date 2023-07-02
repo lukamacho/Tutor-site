@@ -235,7 +235,8 @@ async def add_course(
         return {"message": "No such tutor exists!"}
 
     core.course_interactor.create_course(course_name, tutor_mail, course_price)
-
+    core.tutor_ranking_interactor.set_minimum_lesson_price(tutor_mail,course_price)
+    return {"message": "Course added successfully."}
 
 @tutor_api.delete("/tutor/delete_course")
 def delete_course(
