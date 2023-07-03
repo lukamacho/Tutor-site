@@ -1,5 +1,4 @@
 import backgroundImage from '../Images/SignUpBG.png';
-import PropTypes from 'prop-types';
 import { styled } from '@mui/system';
 import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
@@ -41,7 +40,7 @@ export const StyledBox = styled(Box)(({ theme }) => ({
   padding: 25,
 }));
 
-const SignUp = ({ setToken }) => {
+const SignUp = () => {
   const navigate = useNavigate();
 
   const [firstName, setFirstName] = useState('')
@@ -57,7 +56,7 @@ const SignUp = ({ setToken }) => {
     const data = {
       "first_name": firstName,
       "last_name": lastName,
-      "email": email,
+      "mail": email,
       "password": password,
       "is_student": isStudent,
     }
@@ -75,7 +74,7 @@ const SignUp = ({ setToken }) => {
           state: {
             email,
             verificationCode: result.verificationCode,
-            isStudent,
+            is_student: isStudent,
             first_name: firstName,
             last_name: lastName,
             password,
@@ -167,7 +166,7 @@ const SignUp = ({ setToken }) => {
         </FormControl>
         <Button
           onClick={(e) => handleSignUp(e)}
-          sx={{ margin: 1, }}
+          sx={{ margin: 1, backgroundColor: 'customColors.peachPuff', }}
           variant="outlined"
           size="large"
         >
@@ -182,9 +181,5 @@ const SignUp = ({ setToken }) => {
     </div>
   );
 }
-
-SignUp.propTypes = {
-  setToken: PropTypes.func.isRequired,
-};
 
 export default SignUp;
