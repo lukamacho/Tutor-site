@@ -22,9 +22,9 @@ export default function App() {
   return (
     <ThemeProvider theme={theme}>
       <BrowserRouter>
-        <HeaderMenu/>
+        <HeaderMenu token={token}/>
         <Routes>
-          <Route path="/" element={<Homepage />} />
+          <Route path="/" element={<Homepage/>} />
           <Route path="login" element={<LogIn setToken={setToken}/>} />
           <Route path="registration" element={<SignUp setToken={setToken}/>} />
           <Route path="verification" element={<Verification setToken={setToken}/>} />
