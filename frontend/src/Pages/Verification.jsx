@@ -44,9 +44,10 @@ const Verification = ({ setToken }) => {
   const [verificationCode, setVerificationCode] = useState('');
   const [verificationError, setVerificationError] = useState(false);
 
-  const handleVerification = async (e) => {
-    e.preventDefault();
+  console.log("is student")
+  console.log(is_student)
 
+  const handleVerification = async () => {
     const expectedCode = location.state?.verificationCode;
     if (verificationCode === expectedCode) {
       const data = {
@@ -64,6 +65,7 @@ const Verification = ({ setToken }) => {
           headers: { 'Content-Type': 'application/json' }
         });
         const result = await response.json();
+        console.log(result);
       } catch (error) {
         console.error(error);
       }
