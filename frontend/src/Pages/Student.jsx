@@ -2,8 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 
 export default function Student() {
-  const location = useLocation();
-  const email = location.state?.email;
+  const email = JSON.parse(localStorage.getItem("email"));
 
   const [data, setData] = useState([])
   const [firstName, setFirstName] = useState('')
@@ -21,8 +20,7 @@ export default function Student() {
   const [report, setReport] = useState('')
 
   useEffect(() => {
-    localStorage.setItem('email', JSON.stringify(email));
-    localStorage.setItem('isStudent', JSON.stringify(true));
+    localStorage.setItem("profileImage", JSON.stringify(profileAddress));
   }, [email]);
 
   useEffect(() => {
