@@ -173,6 +173,11 @@ const handleCourseDeletion = (course) => {
     .catch(error => console.error('Error deleting course:', error));
 };
 
+  useEffect(() => {
+    localStorage.setItem("email", JSON.stringify(email));
+    localStorage.setItem("isStudent", JSON.stringify(false));
+    localStorage.setItem("profileImage", JSON.stringify(profileAddress));
+  }, [email]);
 
   return (
     <div>
