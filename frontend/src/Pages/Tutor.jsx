@@ -215,23 +215,23 @@ function TutorProfile() {
       .catch(error => console.error('Error adding course:', error));
   };
 
-  const handleCourseDeletion = course => {
-    const courseData = {
-      tutor_mail: course.tutor_mail,
-      course_name: course.subject,
-    };
-
-    // Send DELETE request to delete the course
-    fetch(`http://localhost:8000/tutor/delete_course`, {
-      method: 'DELETE',
-      body: JSON.stringify(courseData),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-      .then(response => response.json())
-      .catch(error => console.error('Error deleting course:', error));
-  };
+//   const handleCourseDeletion = course => {
+//     const courseData = {
+//       tutor_mail: course.tutor_mail,
+//       course_name: course.subject,
+//     };
+//
+//     // Send DELETE request to delete the course
+//     fetch(`http://localhost:8000/tutor/delete_course`, {
+//       method: 'DELETE',
+//       body: JSON.stringify(courseData),
+//       headers: {
+//         'Content-Type': 'application/json',
+//       },
+//     })
+//       .then(response => response.json())
+//       .catch(error => console.error('Error deleting course:', error));
+//   };
   const [selectedImage, setSelectedImage] = useState(null);
 
   const changeHandler = (event) => {
@@ -254,6 +254,30 @@ function TutorProfile() {
       console.log(response);
     });
 };
+
+const handleCourseDeletion = (course) => {
+    const courseData = {
+      tutor_mail: course.tutor_mail,
+      course_name: course.subject,
+    };
+  // Send DELETE request to delete the course
+  fetch(`http://localhost:8000/tutor/delete_course`, {
+    method: 'DELETE',
+    body: JSON.stringify(courseData),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+    .then(response => response.json())
+
+    .catch(error => console.error('Error deleting course:', error));
+};
+
+  useEffect(() => {
+    localStorage.setItem("email", JSON.stringify(email));
+    localStorage.setItem("isStudent", JSON.stringify(false));
+    localStorage.setItem("profileImage", JSON.stringify(profileAddress));
+  }, [email]);
 
   return (
     <div>

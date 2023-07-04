@@ -1,9 +1,17 @@
-import * as React from "react"
-import Box from "@mui/material/Box"
-import { Link } from "react-router-dom"
+import backgroundImage from '../Images/HomepageBG.png';
+
+export const background = {
+  backgroundImage: `url(${backgroundImage})`,
+  backgroundSize: 'cover',
+  backgroundRepeat: 'repeat',
+  backgroundPosition: 'center',
+  minHeight: '100vh',
+  opacity: 0.4,
+  filter: 'blur(0.5px)',
+};
 
 export default function Homepage() {
   return (
-    <h1>Homepage</h1>
+    <div style={background}/>
   );
 }

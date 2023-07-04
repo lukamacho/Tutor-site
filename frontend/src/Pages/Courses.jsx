@@ -1,9 +1,26 @@
 import { useState, useEffect } from 'react';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import IconButton from '@mui/material/IconButton';
-import AddBoxIcon from '@mui/icons-material/AddBox';
-import Course from "../Components/Course"
+import { styled } from '@mui/system';
+import { Container, Grid, Card, CardContent, Button } from '@mui/material';
+import { theme } from "../Components/Theme"
+import { ThemeProvider } from '@mui/material/styles';
+import backgroundImage from '../Images/CoursesBG.png';
+import CategoryIcon from '@mui/icons-material/Category';
+import PersonIcon from '@mui/icons-material/Person';
+import LocalOfferIcon from '@mui/icons-material/LocalOffer';
+import { CourseStyledTypography } from "../Components/Styles"
+import { HeaderStyledTypography } from "../Components/Styles"
+
+const StyledCard = styled(Card)(({ theme }) => ({
+  backgroundColor: '#fffede',
+}));
+
+const containerStyle = {
+  backgroundImage: `url(${backgroundImage})`,
+  backgroundSize: 'cover',
+  backgroundRepeat: 'repeat',
+  backgroundPosition: 'center',
+  minHeight: '100vh',
+};
 
 export default function Courses() {
   const email = JSON.parse(localStorage.getItem("email"))
@@ -38,7 +55,7 @@ export default function Courses() {
         "lesson_price": course.price,
       }
 
-      const response = await fetch('http://localhost:8000/student/buy_lesson/' + email, {
+      let response = await fetch('http://localhost:8000/student/buy_lesson/' + email, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -53,20 +70,43 @@ export default function Courses() {
   }
 
   return (
-    <div>
-      <h1>Courses</h1>
-      <List>
-        {courses.map((course, index) =>
-          <ListItem key={index}>
-            <Course
-              subject={course["subject"]}
-              tutor_mail={course["tutor_mail"]}
-              price={course["price"]}/>
-            <IconButton color="primary" onClick={(e) => handleBuyLesson(course)} disabled={!isStudent}>
-              <AddBoxIcon />
-            </IconButton>
-          </ListItem>)}
-      </List>
+    <div style={containerStyle}>
+      <ThemeProvider theme={theme}>
+        <HeaderStyledTypography variant="h4" align="center">
+          Courses
+        </HeaderStyledTypography>
+        <Container maxWidth="md">
+          <Grid container spacing={4}>
+            {courses.map((course, index) =>
+              <Grid item key={index} xs={12} sm={6} md={4}>
+                <StyledCard>
+                  <CardContent>
+                    <CourseStyledTypography variant="h7">
+                      <CategoryIcon />
+                      {course.subject}
+                    </CourseStyledTypography>
+                    <CourseStyledTypography variant="h7">
+                      <PersonIcon />
+                      {course.tutor_mail}
+                    </CourseStyledTypography>
+                    <CourseStyledTypography variant="h7">
+                      <LocalOfferIcon />
+                      <span>${course.price}</span>
+                    </CourseStyledTypography>
+                  </CardContent>
+                  <Button
+                    fullWidth
+                    onClick={(e) => handleBuyLesson(course)}
+                    disabled={!isStudent}
+                    sx ={{ borderRadius: 0, }}>
+                    Enroll Now
+                  </Button>
+                </StyledCard>
+              </Grid>
+            )}
+          </Grid>
+        </Container>
+      </ThemeProvider>
     </div>
   );
 }

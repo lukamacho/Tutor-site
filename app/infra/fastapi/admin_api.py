@@ -19,6 +19,11 @@ from app.core.facade import OlympianTutorService
 from app.infra.fastapi.dependables import get_core
 from app.infra.fastapi.homepage_api import hash_password
 
+import jwt
+
+SECRET_KEY = "olympian-tutors-service"
+ALGORITHM = "HS256"
+
 admin_api = APIRouter()
 
 GOOGLE_CLIENT_ID = "your_client_id"
@@ -27,8 +32,7 @@ GOOGLE_REDIRECT_URI = "your_redirect_uri"
 
 
 class PasswordResetRequest(BaseModel):
-    user_mail: str
-    is_student: bool
+    email: str
 
 
 class StudentDeleteRequest(BaseModel):
@@ -48,9 +52,8 @@ class ReportToAdminRequest(BaseModel):
 
 
 class SingInRequest(BaseModel):
-    user_mail: str
+    email: str
     password: str
-    is_student: bool
 
 
 class BalanceAdditionRequest(BaseModel):
@@ -61,6 +64,11 @@ class BalanceAdditionRequest(BaseModel):
 class DecreaseBalanceRequest(BaseModel):
     tutor_mail: str
     amount: int
+
+
+class VerifyTokenRequest(BaseModel):
+    token: str
+    email: str
 
 
 def generate_new_password() -> str:
@@ -93,8 +101,8 @@ def get_admin(core: OlympianTutorService = Depends(get_core)):
 
 @admin_api.post("/admin/report_to_admin/{user_mail}")
 async def report_to_admin(
-    user_mail: str,
-    data: ReportToAdminRequest,
+        user_mail: str,
+        data: ReportToAdminRequest,
 ):
     print("/student/report_to_admin/" + user_mail)
     port = 465
@@ -113,7 +121,7 @@ async def report_to_admin(
 
 @admin_api.delete("/admin/delete_student")
 def delete_student(
-    student_mail: StudentDeleteRequest, core: OlympianTutorService = Depends(get_core)
+        student_mail: StudentDeleteRequest, core: OlympianTutorService = Depends(get_core)
 ):
     print(student_mail)
     core.student_interactor.delete_student(student_mail.student_mail)
@@ -122,7 +130,7 @@ def delete_student(
 
 @admin_api.delete("/admin/delete_tutor")
 def delete_tutor(
-    tutor_mail: TutorDeleteRequest, core: OlympianTutorService = Depends(get_core)
+        tutor_mail: TutorDeleteRequest, core: OlympianTutorService = Depends(get_core)
 ):
     print(tutor_mail)
     tutor = core.tutor_interactor.get_tutor(tutor_mail.tutor_mail)
@@ -134,7 +142,7 @@ def delete_tutor(
 
 @admin_api.delete("/admin/commission_pct")
 def commission_tutor(
-    tutor_mail: TutorCommissionRequest, core: OlympianTutorService = Depends(get_core)
+        tutor_mail: TutorCommissionRequest, core: OlympianTutorService = Depends(get_core)
 ):
     print(tutor_mail)
     tutor = core.tutor_interactor.get_tutor(tutor_mail.tutor_mail)
@@ -147,10 +155,9 @@ def commission_tutor(
 
 @admin_api.post("/admin/reset_password")
 def reset_password(
-    password_reset: PasswordResetRequest, core: OlympianTutorService = Depends(get_core)
+        password_reset: PasswordResetRequest, core: OlympianTutorService = Depends(get_core)
 ):
-    user_mail = password_reset.user_mail
-    is_student = password_reset.is_student
+    user_mail = password_reset.email
     print(password_reset)
     student = core.get_student(user_mail)
     tutor = core.get_tutor(user_mail)
@@ -170,29 +177,56 @@ def reset_password(
     return {"message": "Password reset successfully."}
 
 
+def generate_token(email: str) -> str:
+    token_data = {"email": email}
+    return jwt.encode(token_data, SECRET_KEY, algorithm=ALGORITHM)
+
+
 @admin_api.post("/sign_in")
 def sign_in(
-    sign_in_request: SingInRequest, core: OlympianTutorService = Depends(get_core)
+        sign_in_request: SingInRequest, core: OlympianTutorService = Depends(get_core)
 ):
     print(sign_in_request)
-    user_mail = sign_in_request.user_mail
-    user_password = hash_password(sign_in_request.password)
-    tutor = core.tutor_interactor.get_tutor(user_mail)
-    student = core.student_interactor.get_student(user_mail)
-    if tutor is None and student is None:
-        return {"message": "Email or password is incorrect."}
-    if tutor is not None:
-        if user_password != tutor.password:
-            return {"message": "Email or password is incorrect."}
-        else:
-            return {"message": "Tutor signed in successfully."}
-    else:
-        if user_password != student.password:
-            return {"message": "Email or password is incorrect."}
-        else:
-            return {"message": "Student signed in successfully."}
 
-    return {"message": "Something unknown happened."}
+    email = sign_in_request.email
+    password = hash_password(sign_in_request.password)
+
+    tutor = core.tutor_interactor.get_tutor(email)
+    student = core.student_interactor.get_student(email)
+
+    token = generate_token(email)
+
+    errorMessage = {
+        "error": True,
+        "token": '',
+    }
+
+    if tutor is None and student is None:
+        print("tutor is None and student is None")
+        return errorMessage
+
+    if tutor is not None:
+        if password != tutor.password:
+            print("tutor is not None; password != tutor.password")
+            return errorMessage
+        else:
+            print("tutor is not None; password == tutor.password")
+            return {
+                "error": False,
+                "token": token,
+                "is_student": False,
+            }
+    else:
+        if password != student.password:
+            print("student is not None; password != student.password")
+            return errorMessage
+        else:
+            print("student is not None; password == student.password")
+            return {
+                "error": False,
+                "token": token,
+                "is_student": True,
+            }
 
 
 @admin_api.get("/google_sign_in")
@@ -256,7 +290,7 @@ def get_user_info(access_token: str):
 
 @admin_api.post("/admin/increase_student_balance")
 def add_balance(
-    add_balance: BalanceAdditionRequest, core: OlympianTutorService = Depends(get_core)
+        add_balance: BalanceAdditionRequest, core: OlympianTutorService = Depends(get_core)
 ):
     student_mail = add_balance.student_mail
     amount = add_balance.amount
@@ -270,8 +304,8 @@ def add_balance(
 
 @admin_api.post("/admin/decrease_tutor_balance")
 def decrease_balance(
-    decrease_balance: DecreaseBalanceRequest,
-    core: OlympianTutorService = Depends(get_core),
+        decrease_balance: DecreaseBalanceRequest,
+        core: OlympianTutorService = Depends(get_core),
 ):
     tutor_mail = decrease_balance.tutor_mail
     amount = decrease_balance.amount
@@ -280,6 +314,31 @@ def decrease_balance(
         return {"Message": "No such tutor exists."}
     core.tutor_interactor.decrease_tutor_balance(tutor_mail, amount)
     return {"message": "Balance decreased successfully."}
+
+
+def verify_token(token: str) -> str:
+    payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+    email = payload.get("email")
+    if email is None:
+        return ''
+    return email
+
+
+@admin_api.post("/verify_token")
+def verify_token(
+        verify_token_request: VerifyTokenRequest,
+):
+    print("/verify_token")
+    print(verify_token_request)
+
+    if verify_token_request.token == '' or verify_token_request.email == '':
+        return {"verified": False}
+
+    verification = verify_token(verify_token_request.token)
+    if verification == verify_token_request.email:
+        return {"verified": True}
+    else:
+        return {"verified": False}
 
 
 class MeetingLinkRequest(BaseModel):
@@ -361,7 +420,7 @@ class ScoreTutorRequest(BaseModel):
 
 @admin_api.post("/admin/score_tutor")
 async def score_tutor(
-    data: ScoreTutorRequest, core: OlympianTutorService = Depends(get_core)
+        data: ScoreTutorRequest, core: OlympianTutorService = Depends(get_core)
 ):
     tutor_mail = data.tutor_mail
     score = data.score
