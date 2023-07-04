@@ -4,14 +4,22 @@ from typing import List, Optional
 from app.core.admin.interactor import AdminInteractor, IEmailService
 from app.core.course.entity import Course
 from app.core.course.interactor import CourseInteractor, ICourseInteractor
+from app.core.homework.entity import Homework
+from app.core.homework.interactor import HomeworkInteractor, IHomeworkInteractor
 from app.core.lesson.entity import Lesson
 from app.core.lesson.interactor import ILessonInteractor, LessonInteractor
+from app.core.message.entity import Message
+from app.core.message.interactor import MessageInteractor, IMessageInteractor
 from app.core.review.entity import Review
 from app.core.review.interactor import IReviewInteractor, ReviewInteractor
 from app.core.student.entity import Student
 from app.core.student.interactor import IStudentInteractor, StudentInteractor
 from app.core.tutor.entity import Tutor
 from app.core.tutor.interactor import ITutorInteractor, TutorInteractor
+from app.core.tutor_ranking.interactor import (
+    TutorRankingInteractor,
+    ITutorRankingInteractor,
+)
 
 
 @dataclass
@@ -22,6 +30,116 @@ class OlympianTutorService:
     lesson_interactor: LessonInteractor
     student_interactor: StudentInteractor
     tutor_interactor: TutorInteractor
+    homework_interactor: HomeworkInteractor
+    message_interactor: MessageInteractor
+    tutor_ranking_interactor: TutorRankingInteractor
+
+    def add_tutor_in_ranking(
+        self,
+        email: str,
+    ) -> None:
+        self.tutor_ranking_interactor.add_tutor_in_ranking(email)
+
+    def get_review_scores(self, email: str) -> int:
+        return self.tutor_ranking_interactor.get_review_scores(email)
+
+    def get_number_of_reviews(self, email: str) -> int:
+        return self.tutor_ranking_interactor.get_number_of_reviews(email)
+
+    def get_minimum_lesson_price(self, email: str) -> int:
+        return self.tutor_ranking_interactor.get_minimum_lesson_price(email)
+
+    def get_number_of_lessons(self, email: str) -> int:
+        return self.tutor_ranking_interactor.get_number_of_lessons(email)
+
+    def get_admin_score(self, email: str) -> int:
+        return self.tutor_ranking_interactor.get_admin_score(email)
+
+    def add_review_score(self, email: str, review_score: int) -> None:
+        self.tutor_ranking_interactor.add_review_score(email, review_score)
+
+    def add_number_of_lessons(self, email: str, added_lesson_number: int) -> None:
+        self.tutor_ranking_interactor.add_number_of_lessons(email, added_lesson_number)
+
+    def set_minimum_lesson_price(self, email: str, new_price: int) -> None:
+        self.tutor_ranking_interactor.set_minimum_lesson_price(email, new_price)
+
+    def set_admin_score(self, email: str, admin_score: int) -> None:
+        self.tutor_ranking_interactor.set_admin_score(email, admin_score)
+
+    def sort_by_review_score_desc(self) -> List[str]:
+        return self.tutor_ranking_interactor.sort_by_review_score_desc()
+
+    def sort_by_review_score_asc(self) -> List[str]:
+        return self.tutor_ranking_interactor.sort_by_review_score_asc()
+
+    def sort_by_number_of_lessons_asc(self) -> List[str]:
+        return self.tutor_ranking_interactor.sort_by_number_of_lessons_asc()
+
+    def sort_by_number_of_lessons_desc(self) -> List[str]:
+        return self.tutor_ranking_interactor.sort_by_number_of_lessons_desc()
+
+    def sort_by_minimum_lesson_price_asc(self) -> List[str]:
+        return self.tutor_ranking_interactor.sort_by_minimum_lesson_price_asc()
+
+    def sort_by_minimum_lesson_price_desc(self) -> List[str]:
+        return self.tutor_ranking_interactor.sort_by_minimum_lesson_price_desc()
+
+    def sort_by_admin_score_asc(self) -> List[str]:
+        return self.tutor_ranking_interactor.sort_by_admin_score_asc()
+
+    def sort_by_admin_score_desc(self) -> List[str]:
+        return self.tutor_ranking_interactor.sort_by_review_score_desc()
+
+    def create_message(
+        self, message_text: str, tutor_mail: str, student_mail: str
+    ) -> Message:
+        return self.message_interactor.create_message(
+            message_text, tutor_mail, student_mail
+        )
+
+    def get_messages(self, tutor_mail: str, student_mail: str) -> List[Message]:
+        return self.message_interactor.get_messages(tutor_mail, student_mail)
+
+    def delete_tutor_messages(self, tutor_mail: str) -> None:
+        self.message_interactor.delete_tutor_messages(tutor_mail)
+
+    def delete_student_messages(self, student_mail: str) -> None:
+        self.message_interactor.delete_student_messages(student_mail)
+
+    def get_student_messaged_tutors(self, student_mail: str) -> List[str]:
+        return self.message_interactor.get_student_messaged_tutors(student_mail)
+
+    def get_tutor_messaged_students(self, tutor_mail: str) -> List[str]:
+        return self.message_interactor.get_tutor_messaged_students(tutor_mail)
+
+    def create_homework(
+        self, homework_text: str, tutor_mail: str, student_mail: str
+    ) -> Homework:
+        return self.homework_interactor.create_homework(
+            homework_text, tutor_mail, student_mail
+        )
+
+    def change_homework(
+        self,
+        new_homework_text: str,
+        old_homework_text: str,
+        tutor_mail: str,
+        student_mail: str,
+    ) -> Homework:
+        return self.homework_interactor.change_homework(
+            new_homework_text, old_homework_text, tutor_mail, student_mail
+        )
+
+    def get_student_homework(self, student_mail: str) -> List[Homework]:
+        return self.homework_interactor.get_student_homework(student_mail)
+
+    def delete_homework(
+        self, homework_text: str, tutor_mail: str, student_mail: str
+    ) -> None:
+        self.homework_interactor.delete_homework(
+            homework_text, tutor_mail, student_mail
+        )
 
     def send_hello(self):
         self.admin_interactor.send_hello()
@@ -104,8 +222,11 @@ class OlympianTutorService:
             tutor_mail, student_mail, subject, new_price
         )
 
-    def get_tutor_lessons(self, tutor_mail: str) -> List[str]:
+    def get_tutor_lessons(self, tutor_mail: str) -> List[Lesson]:
         return self.lesson_interactor.get_tutor_lessons(tutor_mail)
+
+    def get_tutor_students(self, tutor_mail: str) -> List[str]:
+        return self.lesson_interactor.get_tutor_students(tutor_mail)
 
     def create_student(
         self, first_name: str, last_name: str, email: str, password: str, balance: int
@@ -199,6 +320,9 @@ class OlympianTutorService:
         lesson_interactor: ILessonInteractor,
         student_interactor: IStudentInteractor,
         tutor_interactor: ITutorInteractor,
+        homework_interactor: IHomeworkInteractor,
+        message_interactor: IMessageInteractor,
+        tutor_ranking_interactor: ITutorRankingInteractor,
     ) -> "OlympianTutorService":
         return cls(
             admin_interactor=AdminInteractor(emailer),
@@ -207,4 +331,7 @@ class OlympianTutorService:
             lesson_interactor=LessonInteractor(lesson_interactor),
             student_interactor=StudentInteractor(student_interactor),
             tutor_interactor=TutorInteractor(tutor_interactor),
+            homework_interactor=HomeworkInteractor(homework_interactor),
+            message_interactor=MessageInteractor(message_interactor),
+            tutor_ranking_interactor=TutorRankingInteractor(tutor_ranking_interactor),
         )

@@ -102,11 +102,20 @@ class SqlLessonRepository:
         )
         self.conn.commit()
 
-    def get_tutor_lessons(self, tutor_mail: str) -> List[str]:
-        lessons: List[str] = []
+    def get_tutor_lessons(self, tutor_mail: str) -> List[Lesson]:
+        lessons: List[Lesson] = []
         for row in self.conn.execute(
             " SELECT * FROM Lessons WHERE tutor_mail = ?",
             (tutor_mail,),
         ):
             lessons.append(Lesson(*row))
         return lessons
+
+    def get_tutor_students(self, tutor_mail: str) -> List[str]:
+        students: List[str] = []
+        for row in self.conn.execute(
+            " SELECT * FROM Lessons WHERE tutor_mail = ?",
+            (tutor_mail,),
+        ):
+            students.append(str(Lesson(*row).student_mail))
+        return students

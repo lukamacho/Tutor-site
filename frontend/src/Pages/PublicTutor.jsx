@@ -1,5 +1,6 @@
 import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import './Styles.css'
 
 const PublicTutor = () => {
   const { email } = useParams();
@@ -14,6 +15,9 @@ const PublicTutor = () => {
   const [reviews, setReviews] = useState([]);
   const [reviewText, setReviewText] = useState('');
   const [is_tutor_student, setIsTutorStudent] = useState(false);
+  const [rating, setRating] = useState(0); // New state for star rating
+
+  const [messageToTutor, setMessageToTutor] = useState('');
 
   useEffect(() => {
     const handleGetTutor = async () => {
@@ -78,7 +82,7 @@ const PublicTutor = () => {
   useEffect(() => {
     const handleIsTutorStudent = async () => {
       try {
-        const response = await fetch('http://localhost:8000/tutor/students/' + email, {
+        const response = await fetch('http://localhost:8000/tutor/lessons/' + email, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -87,7 +91,7 @@ const PublicTutor = () => {
         const isStudentData = await response.json();
         const isStudent = isStudentData.some(lesson => lesson.student_mail === visitor_mail);
 
-      setIsTutorStudent(isStudent);
+        setIsTutorStudent(isStudent);
       } catch (error) {
         console.error(error);
       }
@@ -95,8 +99,10 @@ const PublicTutor = () => {
 
     handleIsTutorStudent();
   }, []);
+
   const handleReviewAddition = () => {
     const reviewData = {
+      rating: rating,
       review_text: reviewText,
       tutor_mail: email,
       student_mail: visitor_mail,
@@ -117,6 +123,50 @@ const PublicTutor = () => {
         setReviewText('');
       })
       .catch(error => console.error('Error adding review:', error));
+  };
+
+  const handleSendMessage = () => {
+    const messageData = {
+      message_text: messageToTutor,
+      tutor_mail: email,
+      student_mail: visitor_mail,
+    };
+
+    // Send POST request to send message to tutor
+    fetch('http://localhost:8000/student/message_to_tutor', {
+      method: 'POST',
+      body: JSON.stringify(messageData),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Message sent:', data);
+        setMessageToTutor('');
+      })
+      .catch(error => console.error('Error sending message:', error));
+  };
+
+  const renderStarRating = () => {
+    const stars = [];
+    const maxRating = 5;
+
+    for (let i = 1; i <= maxRating; i++) {
+      const starClass = i <= rating ? 'star-filled' : 'star-unfilled';
+
+      stars.push(
+        <span
+          key={i}
+          className={starClass}
+          onClick={() => setRating(i)}
+        >
+          &#9733;
+        </span>
+      );
+    }
+
+    return stars;
   };
 
   return (
@@ -160,7 +210,11 @@ const PublicTutor = () => {
       ) : (
         <p>No reviews</p>
       )}
-      {is_tutor_student && ( // Conditionally render the review addition part
+      <div>
+        <h1>Rate the Tutor:</h1>
+        {renderStarRating()}
+      </div>
+      {is_tutor_student && (
         <div>
           <h1>Add a Review</h1>
           <input
@@ -171,6 +225,15 @@ const PublicTutor = () => {
           <button onClick={handleReviewAddition}>Add Review</button>
         </div>
       )}
+      <div>
+        <h1>Send a Message to the Tutor</h1>
+        <input
+          type="text"
+          value={messageToTutor}
+          onChange={event => setMessageToTutor(event.target.value)}
+        />
+        <button onClick={handleSendMessage}>Send Message</button>
+      </div>
     </div>
   );
 };

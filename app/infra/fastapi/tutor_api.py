@@ -1,8 +1,11 @@
+from typing import List
+
 import aiofiles
 from fastapi import APIRouter, Depends, File, UploadFile
 from pydantic import BaseModel
 
 from app.core.facade import OlympianTutorService
+from app.core.student.entity import Student
 from app.infra.fastapi.dependables import get_core
 
 tutor_api = APIRouter()
@@ -19,6 +22,7 @@ class MoneyWithdrawalRequest(BaseModel):
 
 
 class ReviewAdditionRequest(BaseModel):
+    rating: int
     review_text: str
     tutor_mail: str
     student_mail: str
@@ -33,6 +37,18 @@ class CourseAdditionRequest(BaseModel):
 class CourseDeletionRequest(BaseModel):
     tutor_mail: str
     course_name: str
+
+
+class HomeworkAdditionRequest(BaseModel):
+    tutor_mail: str
+    student_mail: str
+    homework: str
+
+
+class MessageToStudentRequest(BaseModel):
+    message_text: str
+    tutor_mail: str
+    student_mail: str
 
 
 @tutor_api.get("/tutor/{tutor_mail}")
@@ -59,7 +75,7 @@ async def get_tutor_reviews(
     return tutor_reviews
 
 
-@tutor_api.get("/tutor/students/{tutor_mail}")
+@tutor_api.get("/tutor/lessons/{tutor_mail}")
 async def get_tutor_lessons(
     tutor_mail: str, core: OlympianTutorService = Depends(get_core)
 ):
@@ -67,17 +83,93 @@ async def get_tutor_lessons(
     return tutor_lessons
 
 
+@tutor_api.get("/tutor/students/{tutor_mail}")
+async def get_tutor_lessons(
+    tutor_mail: str, core: OlympianTutorService = Depends(get_core)
+):
+    tutor_students: List[Student] = []
+    tutor_mails: set[str] = set()
+    tutor_lesson_students = core.lesson_interactor.get_tutor_students(tutor_mail)
+    for tutor_student_mail in tutor_lesson_students:
+        if tutor_student_mail not in tutor_mails:
+            student = core.student_interactor.get_student(tutor_student_mail)
+            tutor_students.append(student)
+            tutor_mails.add(tutor_student_mail)
+    print(tutor_students)
+    return tutor_students
+
+
+@tutor_api.get("/tutor/messaged_students/{tutor_mail}")
+async def get_student_messaged_tutors(
+    tutor_mail: str,
+    core: OlympianTutorService = Depends(get_core),
+):
+    print("/tutor/" + tutor_mail)
+
+    tutor_messaged_students = core.message_interactor.get_tutor_messaged_students(
+        tutor_mail
+    )
+    print(tutor_messaged_students)
+    return tutor_messaged_students
+
+
+@tutor_api.get("/tutor/messages/{tutor_mail}/{student_mail}")
+async def get_tutor_lessons(
+    tutor_mail: str,
+    student_mail: str,
+    core: OlympianTutorService = Depends(get_core),
+):
+    print("/student/lessons/" + student_mail)
+
+    messages = core.message_interactor.get_messages(tutor_mail, student_mail)
+    print(messages)
+    return messages
+
+
 @tutor_api.post("/tutor/add_review")
 async def add_review(
     review_addition: ReviewAdditionRequest,
     core: OlympianTutorService = Depends(get_core),
 ):
-    print(review_addition)
+    print(review_addition.rating)
+    review_score = review_addition.rating
     review_text = review_addition.review_text
     tutor_mail = review_addition.tutor_mail
     student_mail = review_addition.student_mail
     core.review_interactor.create_review(review_text, tutor_mail, student_mail)
+    core.tutor_ranking_interactor.add_review_score(tutor_mail,review_score)
     return review_addition
+
+
+@tutor_api.post("/tutor/message_to_student")
+async def message_to_student(
+    data: MessageToStudentRequest,
+    core: OlympianTutorService = Depends(get_core),
+):
+    message_text = data.message_text
+    tutor_mail = data.tutor_mail
+    student_mail = data.student_mail
+    student = core.student_interactor.get_student(student_mail)
+    tutor = core.tutor_interactor.get_tutor(tutor_mail)
+    if student is None:
+        return {"message": "Student with this visitor mail doesn't exits"}
+    if tutor is None:
+        return {"message": "Tutor with this mail doesn't exist."}
+    print(data)
+    core.message_interactor.create_message(message_text, tutor_mail, student_mail)
+    return {"message": "Message sent successfully."}
+
+
+@tutor_api.post("/tutor/add_homework")
+async def add_homework(
+    homework_addition: HomeworkAdditionRequest,
+    core: OlympianTutorService = Depends(get_core),
+):
+    tutor_mail = homework_addition.tutor_mail
+    student_mail = homework_addition.student_mail
+    homework = homework_addition.homework
+    print(homework_addition)
+    core.homework_interactor.create_homework(homework, tutor_mail, student_mail)
 
 
 @tutor_api.post("/tutor/change_bio")
@@ -143,7 +235,8 @@ async def add_course(
         return {"message": "No such tutor exists!"}
 
     core.course_interactor.create_course(course_name, tutor_mail, course_price)
-
+    core.tutor_ranking_interactor.set_minimum_lesson_price(tutor_mail,course_price)
+    return {"message": "Course added successfully."}
 
 @tutor_api.delete("/tutor/delete_course")
 def delete_course(
