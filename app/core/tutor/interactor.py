@@ -13,7 +13,7 @@ class ITutorInteractor(Protocol):
         password: str,
         balance: int,
         biography: str,
-        profile_address: "",
+        profile_address: str = "",
     ) -> Tutor:
         pass
 
@@ -68,7 +68,7 @@ class ITutorRepository(Protocol):
         password: str,
         balance: int,
         biography: str,
-        profile_address: "",
+        profile_address: str = "",
     ) -> Tutor:
         pass
 
@@ -129,7 +129,7 @@ class TutorInteractor:
         password: str,
         balance: int,
         biography: str,
-        profile_address: "",
+        profile_address: str = "",
     ) -> Tutor:
         return self.tutor_repository.create_tutor(
             first_name, last_name, email, password, balance, biography, profile_address

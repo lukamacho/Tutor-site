@@ -115,7 +115,7 @@ async def get_courses(
 
 
 @homepage_api.get("/tutors")
-async def get_courses(
+async def get_tutors(
     core: OlympianTutorService = Depends(get_core),
 ):
     print("/tutors")

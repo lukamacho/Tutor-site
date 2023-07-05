@@ -1,5 +1,3 @@
-from typing import Protocol
-
 from fastapi import FastAPI
 
 from app.core.facade import OlympianTutorService

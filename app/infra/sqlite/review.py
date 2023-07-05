@@ -16,7 +16,7 @@ class SqlReviewRepository:
                 tutor_mail TEXT,
                 student_mail TEXT,
                 FOREIGN KEY (tutor_mail) REFERENCES Tutors (email),
-                FOREIGN KEY (student_mail) REFERENCES Students (email)  
+                FOREIGN KEY (student_mail) REFERENCES Students (email)
             );
             """
         )

@@ -153,7 +153,7 @@ async def change_first_name(
         "/student/change_first_name/" + student_mail + " value: " + data.new_first_name
     )
 
-    student = core.student_interactor.get_student(student_mail)
+    # student = core.student_interactor.get_student(student_mail)
     core.student_interactor.change_student_first_name(student_mail, data.new_first_name)
 
     return {"message": "Changed student first name successfully."}
@@ -198,7 +198,7 @@ async def change_last_name(
 ):
     print("/student/change_last_name/" + student_mail + " value: " + data.new_last_name)
 
-    student = core.student_interactor.get_student(student_mail)
+    # student = core.student_interactor.get_student(student_mail)
     core.student_interactor.change_student_last_name(student_mail, data.new_last_name)
 
     return {"message": "Changed student last name successfully."}
@@ -212,7 +212,7 @@ async def change_password(
 ):
     print("/student/change_password/" + student_mail + " value: " + data.new_password)
 
-    student = core.student_interactor.get_student(student_mail)
+    # student = core.student_interactor.get_student(student_mail)
     core.student_interactor.change_student_password(student_mail, data.new_password)
 
     return {"message": "Changed student password successfully."}
@@ -274,7 +274,7 @@ async def buy_lesson(
                 lesson.number_of_lessons + 1,
                 data.subject,
             )
-            core.tutor_ranking_interactor.add_number_of_lessons(data.tutor_mail,1)
+            core.tutor_ranking_interactor.add_number_of_lessons(data.tutor_mail, 1)
 
         core.student_interactor.set_student_balance(
             student_mail, student_balance - data.lesson_price

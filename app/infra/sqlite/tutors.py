@@ -13,14 +13,14 @@ class SqlTutorRepository:
         self.conn.executescript(
             """
             create table if not exists Tutors (
-                first_name TEXT ,
-                last_name TEXT ,
+                first_name TEXT,
+                last_name TEXT,
                 email TEXT primary key,
                 password TEXT NOT NULL,
                 commission_pct REAL NOT NULL,
                 balance INTEGER,
                 biography TEXT,
-                profile_address TEXT                
+                profile_address TEXT
             );
             """
         )

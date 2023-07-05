@@ -1,5 +1,4 @@
-from dataclasses import dataclass, field
-from typing import Dict, Optional
+from dataclasses import dataclass
 
 from app.infra.inmemory.tutor import Tutor
 

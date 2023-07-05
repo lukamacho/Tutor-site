@@ -54,9 +54,6 @@ class CourseInteractor:
     def get_course(self, subject: str, tutor_mail: str) -> Optional[Course]:
         return self.course_repository.get_course(subject, tutor_mail)
 
-    def get_courses(self, tutor_mail: str) -> Optional[List[Course]]:
-        return self.course_repository.get_courses(tutor_mail)
-
     def delete_course(self, tutor_mail: str, subject: str) -> None:
         return self.course_repository.delete_course(tutor_mail, subject)
 

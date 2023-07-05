@@ -9,7 +9,7 @@ from app.core.homework.interactor import HomeworkInteractor, IHomeworkInteractor
 from app.core.lesson.entity import Lesson
 from app.core.lesson.interactor import ILessonInteractor, LessonInteractor
 from app.core.message.entity import Message
-from app.core.message.interactor import MessageInteractor, IMessageInteractor
+from app.core.message.interactor import IMessageInteractor, MessageInteractor
 from app.core.review.entity import Review
 from app.core.review.interactor import IReviewInteractor, ReviewInteractor
 from app.core.student.entity import Student
@@ -17,8 +17,8 @@ from app.core.student.interactor import IStudentInteractor, StudentInteractor
 from app.core.tutor.entity import Tutor
 from app.core.tutor.interactor import ITutorInteractor, TutorInteractor
 from app.core.tutor_ranking.interactor import (
-    TutorRankingInteractor,
     ITutorRankingInteractor,
+    TutorRankingInteractor,
 )
 
 
@@ -49,7 +49,7 @@ class OlympianTutorService:
     def get_minimum_lesson_price(self, email: str) -> int:
         return self.tutor_ranking_interactor.get_minimum_lesson_price(email)
 
-    def get_number_of_lessons(self, email: str) -> int:
+    def get_tutor_number_of_lessons(self, email: str) -> int:
         return self.tutor_ranking_interactor.get_number_of_lessons(email)
 
     def get_admin_score(self, email: str) -> int:
@@ -267,7 +267,7 @@ class OlympianTutorService:
         password: str,
         balance: int,
         biography: str,
-        profile_address: "",
+        profile_address: str = "",
     ) -> Tutor:
         return self.tutor_interactor.create_tutor(
             first_name, last_name, email, password, balance, biography, profile_address

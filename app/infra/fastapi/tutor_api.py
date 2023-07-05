@@ -84,7 +84,7 @@ async def get_tutor_lessons(
 
 
 @tutor_api.get("/tutor/students/{tutor_mail}")
-async def get_tutor_lessons(
+async def get_tutor_students(
     tutor_mail: str, core: OlympianTutorService = Depends(get_core)
 ):
     tutor_students: List[Student] = []
@@ -114,7 +114,7 @@ async def get_student_messaged_tutors(
 
 
 @tutor_api.get("/tutor/messages/{tutor_mail}/{student_mail}")
-async def get_tutor_lessons(
+async def get_tutor_messages(
     tutor_mail: str,
     student_mail: str,
     core: OlympianTutorService = Depends(get_core),
@@ -137,7 +137,7 @@ async def add_review(
     tutor_mail = review_addition.tutor_mail
     student_mail = review_addition.student_mail
     core.review_interactor.create_review(review_text, tutor_mail, student_mail)
-    core.tutor_ranking_interactor.add_review_score(tutor_mail,review_score)
+    core.tutor_ranking_interactor.add_review_score(tutor_mail, review_score)
     return review_addition
 
 
@@ -235,8 +235,9 @@ async def add_course(
         return {"message": "No such tutor exists!"}
 
     core.course_interactor.create_course(course_name, tutor_mail, course_price)
-    core.tutor_ranking_interactor.set_minimum_lesson_price(tutor_mail,course_price)
+    core.tutor_ranking_interactor.set_minimum_lesson_price(tutor_mail, course_price)
     return {"message": "Course added successfully."}
+
 
 @tutor_api.delete("/tutor/delete_course")
 def delete_course(
