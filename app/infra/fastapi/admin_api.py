@@ -3,13 +3,12 @@ import ssl
 from datetime import datetime
 from random import choices
 from string import ascii_letters, digits
-
+from typing import Dict, Any, Union
 
 import jwt
 import requests
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import JSONResponse, RedirectResponse
-
 from pydantic import BaseModel
 from pydantic.datetime_parse import timedelta
 
@@ -89,17 +88,13 @@ def send_new_password(receiver_mail: str) -> str:
     return new_password
 
 
-@admin_api.get("/admin/hello")
-def get_admin(core: OlympianTutorService = Depends(get_core)):
-    print("hello sender")
-    core.admin_interactor.send_verification()
 
 
 @admin_api.post("/admin/report_to_admin/{user_mail}")
 async def report_to_admin(
     user_mail: str,
     data: ReportToAdminRequest,
-):
+) -> Dict[str, str]:
     print("/student/report_to_admin/" + user_mail)
     port = 465
     smtp_server = "smtp.gmail.com"
@@ -118,7 +113,7 @@ async def report_to_admin(
 @admin_api.delete("/admin/delete_student")
 def delete_student(
     student_mail: StudentDeleteRequest, core: OlympianTutorService = Depends(get_core)
-):
+) -> Dict[str, str]:
     print(student_mail)
     core.student_interactor.delete_student(student_mail.student_mail)
     return {"message": "Student deleted successfully"}
@@ -127,7 +122,7 @@ def delete_student(
 @admin_api.delete("/admin/delete_tutor")
 def delete_tutor(
     tutor_mail: TutorDeleteRequest, core: OlympianTutorService = Depends(get_core)
-):
+) -> Dict[str, str]:
     print(tutor_mail)
     tutor = core.tutor_interactor.get_tutor(tutor_mail.tutor_mail)
     if tutor is None:
@@ -139,7 +134,7 @@ def delete_tutor(
 @admin_api.delete("/admin/commission_pct")
 def commission_tutor(
     tutor_mail: TutorCommissionRequest, core: OlympianTutorService = Depends(get_core)
-):
+) -> Dict[str, str]:
     print(tutor_mail)
     tutor = core.tutor_interactor.get_tutor(tutor_mail.tutor_mail)
     if tutor is None:
@@ -152,7 +147,7 @@ def commission_tutor(
 @admin_api.post("/admin/reset_password")
 def reset_password(
     password_reset: PasswordResetRequest, core: OlympianTutorService = Depends(get_core)
-):
+) -> Dict[str, str]:
     user_mail = password_reset.email
     print(password_reset)
     student = core.get_student(user_mail)
@@ -181,7 +176,7 @@ def generate_token(email: str) -> str:
 @admin_api.post("/sign_in")
 def sign_in(
     sign_in_request: SingInRequest, core: OlympianTutorService = Depends(get_core)
-):
+) -> Dict[str, object]:
     print(sign_in_request)
 
     email = sign_in_request.email
@@ -226,7 +221,7 @@ def sign_in(
 
 
 @admin_api.get("/google_sign_in")
-def google_sign_in():
+def google_sign_in() -> Dict[str, str]:
     # Generate and return the Google OAuth2 authorization URL
     authorization_url = generate_google_auth_url()
     return {"authorization_url": authorization_url}
@@ -249,7 +244,7 @@ def google_sign_in_callback(code: str):
         )
 
 
-def generate_google_auth_url():
+def generate_google_auth_url() -> str:
     # Construct the Google OAuth2 authorization URL
     auth_endpoint = "https://accounts.google.com/o/oauth2/auth"
     params = {
@@ -262,7 +257,7 @@ def generate_google_auth_url():
     return auth_url
 
 
-def exchange_code_for_token(code: str):
+def exchange_code_for_token(code: str) -> Any:
     token_endpoint = "https://oauth2.googleapis.com/token"
     data = {
         "code": code,
@@ -276,7 +271,7 @@ def exchange_code_for_token(code: str):
     return response.json()
 
 
-def get_user_info(access_token: str):
+def get_user_info(access_token: str) -> Any:
     user_info_endpoint = "https://www.googleapis.com/oauth2/v2/userinfo"
     headers = {"Authorization": f"Bearer {access_token}"}
     response = requests.get(user_info_endpoint, headers=headers)
@@ -287,7 +282,7 @@ def get_user_info(access_token: str):
 @admin_api.post("/admin/increase_student_balance")
 def add_balance(
     add_balance: BalanceAdditionRequest, core: OlympianTutorService = Depends(get_core)
-):
+) -> Dict[str, str]:
     student_mail = add_balance.student_mail
     amount = add_balance.amount
     student = core.student_interactor.get_student(student_mail)
@@ -302,7 +297,7 @@ def add_balance(
 def decrease_balance(
     decrease_balance: DecreaseBalanceRequest,
     core: OlympianTutorService = Depends(get_core),
-):
+) -> Dict[str, str]:
     tutor_mail = decrease_balance.tutor_mail
     amount = decrease_balance.amount
     tutor = core.tutor_interactor.get_tutor(tutor_mail)
@@ -312,7 +307,7 @@ def decrease_balance(
     return {"message": "Balance decreased successfully."}
 
 
-def token_verification(token: str) -> str:
+def token_verification(token: str) -> Any:
     payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
     email = payload.get("email")
     if email is None:
@@ -323,7 +318,7 @@ def token_verification(token: str) -> str:
 @admin_api.post("/verify_token")
 def verify_token(
     verify_token_request: VerifyTokenRequest,
-):
+) -> Dict[str, bool]:
     print("/verify_token")
     print(verify_token_request)
 
@@ -344,7 +339,7 @@ class MeetingLinkRequest(BaseModel):
 
 
 @admin_api.post("/generate_meeting_link")
-async def generate_meeting_link(data: MeetingLinkRequest):
+async def generate_meeting_link(data: MeetingLinkRequest) -> Dict[str, str]:
     tutor_mail = data.tutor_mail
     student_mail = data.student_mail
     user_mails = [tutor_mail, student_mail]
@@ -417,7 +412,7 @@ class ScoreTutorRequest(BaseModel):
 @admin_api.post("/admin/score_tutor")
 async def score_tutor(
     data: ScoreTutorRequest, core: OlympianTutorService = Depends(get_core)
-):
+) -> Dict[str, str]:
     tutor_mail = data.tutor_mail
     score = data.score
     tutor = core.tutor_interactor.get_tutor(tutor_mail)

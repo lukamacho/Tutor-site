@@ -106,7 +106,7 @@ class SqlTutorRankingRepository:
         self.conn.commit()
 
     def add_number_of_lessons(self, email: str, added_lesson_number: int) -> None:
-        number_of_lessons = self.get_number_of_lessons(email)
+        number_of_lessons = self.get_tutor_number_of_lessons(email)
         new_number_of_lessons = number_of_lessons + added_lesson_number
         self.conn.execute(
             "UPDATE TutorRankings SET number_of_lessons = ?  WHERE email = ?",

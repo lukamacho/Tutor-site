@@ -77,7 +77,7 @@ class ITutorRankingRepository(Protocol):
     def get_minimum_lesson_price(self, email: str) -> int:
         pass
 
-    def get_number_of_lessons(self, email: str) -> int:
+    def get_tutor_number_of_lessons(self, email: str) -> int:
         pass
 
     def get_admin_score(self, email: str) -> int:
@@ -140,7 +140,7 @@ class TutorRankingInteractor:
         return self.tutor_ranking_repository.get_minimum_lesson_price(email)
 
     def get_tutor_number_of_lessons(self, email: str) -> int:
-        return self.tutor_ranking_repository.get_number_of_lessons(email)
+        return self.tutor_ranking_repository.get_tutor_number_of_lessons(email)
 
     def get_admin_score(self, email: str) -> int:
         return self.tutor_ranking_repository.get_admin_score(email)

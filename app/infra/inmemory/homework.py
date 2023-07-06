@@ -29,6 +29,7 @@ class InMemoryHomeworkRepository:
                 and homework.student_mail == student_mail
             ):
                 homework.homework_text = new_homework_text
+        return Homework(new_homework_text, tutor_mail, student_mail)
 
     def get_student_homework(self, student_mail: str) -> List[Homework]:
         homeworks: List[Homework] = []

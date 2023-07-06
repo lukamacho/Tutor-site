@@ -2,6 +2,7 @@ import hashlib
 import random
 import smtplib
 import ssl
+from typing import Dict
 
 from fastapi import APIRouter, Depends
 from pydantic import BaseModel
@@ -62,7 +63,7 @@ def send_verification(receiver_mail: str) -> str:
 @homepage_api.post("/add_user")
 async def add_student(
     data: CreateUserRequest, core: OlympianTutorService = Depends(get_core)
-):
+) -> Dict[str, str]:
     password_hash = hash_password(data.password)
     if data.is_student:
         student_mail = data.mail
@@ -82,7 +83,7 @@ async def add_student(
 @homepage_api.post("/sign_up")
 async def create_user(
     data: CreateUserRequest, core: OlympianTutorService = Depends(get_core)
-):
+) -> Dict[str, str]:
     first_name = data.first_name
     last_name = data.last_name
     student_mail = data.mail
@@ -100,7 +101,7 @@ async def create_user(
 @homepage_api.get("/courses")
 async def get_courses(
     core: OlympianTutorService = Depends(get_core),
-):
+) -> list[GetCourseResponse]:
     print("/courses")
 
     courses = core.course_interactor.get_courses()
@@ -117,7 +118,7 @@ async def get_courses(
 @homepage_api.get("/tutors")
 async def get_tutors(
     core: OlympianTutorService = Depends(get_core),
-):
+) -> list[GetTutorResponse]:
     print("/tutors")
 
     tutors = core.tutor_interactor.get_tutors()

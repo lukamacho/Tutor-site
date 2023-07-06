@@ -56,7 +56,6 @@ def setup() -> FastAPI:
     tutor_ranking_repository = setup_tutor_ranking_repository()
     return setup_fastapi(
         OlympianTutorService.create(
-            emailer=SMTPEmailService,
             course_interactor=course_repository,
             review_interactor=review_repository,
             lesson_interactor=lesson_repository,

@@ -38,6 +38,9 @@ class IStudentInteractor(Protocol):
     def change_student_password(self, student_mail: str, password: str) -> None:
         pass
 
+    def delete_student(self, student_mail: str) -> None:
+        pass
+
     def change_student_profile_address(
         self, student_mail: str, profile_address: str
     ) -> None:

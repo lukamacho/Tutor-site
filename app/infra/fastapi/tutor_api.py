@@ -1,11 +1,16 @@
-from typing import List
+from typing import List, Dict, Optional
 
 import aiofiles
 from fastapi import APIRouter, Depends, File, UploadFile
 from pydantic import BaseModel
 
+from app.core.course.entity import Course
 from app.core.facade import OlympianTutorService
+from app.core.lesson.entity import Lesson
+from app.core.message.entity import Message
+from app.core.review.entity import Review
 from app.core.student.entity import Student
+from app.core.tutor.entity import Tutor
 from app.infra.fastapi.dependables import get_core
 
 tutor_api = APIRouter()
@@ -54,14 +59,14 @@ class MessageToStudentRequest(BaseModel):
 @tutor_api.get("/tutor/{tutor_mail}")
 async def get_tutor_profile(
     tutor_mail: str, core: OlympianTutorService = Depends(get_core)
-):
+) -> Optional[Tutor]:
     return core.tutor_interactor.get_tutor(tutor_mail)
 
 
 @tutor_api.get("/tutor/courses/{tutor_mail}")
 async def get_tutor_courses(
     tutor_mail: str, core: OlympianTutorService = Depends(get_core)
-):
+) -> Optional[list[Course]]:
     tutor_courses = core.course_interactor.get_tutor_courses(tutor_mail)
     print(tutor_courses)
     return tutor_courses
@@ -70,7 +75,7 @@ async def get_tutor_courses(
 @tutor_api.get("/tutor/reviews/{tutor_mail}")
 async def get_tutor_reviews(
     tutor_mail: str, core: OlympianTutorService = Depends(get_core)
-):
+) -> List[Review]:
     tutor_reviews = core.review_interactor.get_tutor_reviews(tutor_mail)
     return tutor_reviews
 
@@ -78,7 +83,7 @@ async def get_tutor_reviews(
 @tutor_api.get("/tutor/lessons/{tutor_mail}")
 async def get_tutor_lessons(
     tutor_mail: str, core: OlympianTutorService = Depends(get_core)
-):
+) -> list[Lesson]:
     tutor_lessons = core.lesson_interactor.get_tutor_lessons(tutor_mail)
     return tutor_lessons
 
@@ -87,7 +92,7 @@ async def get_tutor_lessons(
 async def get_tutor_students(
     tutor_mail: str, core: OlympianTutorService = Depends(get_core)
 ):
-    tutor_students: List[Student] = []
+    tutor_students: List[Optional[Student]] = []
     tutor_mails: set[str] = set()
     tutor_lesson_students = core.lesson_interactor.get_tutor_students(tutor_mail)
     for tutor_student_mail in tutor_lesson_students:
@@ -103,7 +108,7 @@ async def get_tutor_students(
 async def get_student_messaged_tutors(
     tutor_mail: str,
     core: OlympianTutorService = Depends(get_core),
-):
+) -> list[str]:
     print("/tutor/" + tutor_mail)
 
     tutor_messaged_students = core.message_interactor.get_tutor_messaged_students(
@@ -118,7 +123,7 @@ async def get_tutor_messages(
     tutor_mail: str,
     student_mail: str,
     core: OlympianTutorService = Depends(get_core),
-):
+) -> list[Message]:
     print("/student/lessons/" + student_mail)
 
     messages = core.message_interactor.get_messages(tutor_mail, student_mail)
@@ -130,7 +135,7 @@ async def get_tutor_messages(
 async def add_review(
     review_addition: ReviewAdditionRequest,
     core: OlympianTutorService = Depends(get_core),
-):
+) -> ReviewAdditionRequest:
     print(review_addition.rating)
     review_score = review_addition.rating
     review_text = review_addition.review_text
@@ -145,7 +150,7 @@ async def add_review(
 async def message_to_student(
     data: MessageToStudentRequest,
     core: OlympianTutorService = Depends(get_core),
-):
+) -> Dict[str, str]:
     message_text = data.message_text
     tutor_mail = data.tutor_mail
     student_mail = data.student_mail
@@ -164,7 +169,7 @@ async def message_to_student(
 async def add_homework(
     homework_addition: HomeworkAdditionRequest,
     core: OlympianTutorService = Depends(get_core),
-):
+) -> None:
     tutor_mail = homework_addition.tutor_mail
     student_mail = homework_addition.student_mail
     homework = homework_addition.homework
@@ -175,7 +180,7 @@ async def add_homework(
 @tutor_api.post("/tutor/change_bio")
 def tutor_change_bio(
     change_bio: ChangeBioRequest, core: OlympianTutorService = Depends(get_core)
-):
+) -> Dict[str, str]:
     tutor_mail = change_bio.tutor_mail
     new_bio = change_bio.new_bio
     print(change_bio)
@@ -190,7 +195,7 @@ def tutor_change_bio(
 def tutor_withdrawal_request(
     withdrawal_request: MoneyWithdrawalRequest,
     core: OlympianTutorService = Depends(get_core),
-):
+) -> Dict[str, str]:
     tutor_mail = withdrawal_request.tutor_mail
     amount = withdrawal_request.amount
     print(withdrawal_request)
@@ -209,7 +214,7 @@ async def create_upload_file(
     tutor_mail: str,
     file: UploadFile = File(...),
     core: OlympianTutorService = Depends(get_core),
-):
+) -> None:
     dest_path = "../../frontend/src/Storage/" + tutor_mail
     async with aiofiles.open(dest_path, "wb") as dest_file:
         content = await file.read()
@@ -222,7 +227,7 @@ async def create_upload_file(
 async def add_course(
     course_addition: CourseAdditionRequest,
     core: OlympianTutorService = Depends(get_core),
-):
+) -> Dict[str, str]:
     print(course_addition)
     tutor_mail = course_addition.tutor_mail
     course_name = course_addition.course_name
@@ -243,7 +248,7 @@ async def add_course(
 def delete_course(
     course_deletion: CourseDeletionRequest,
     core: OlympianTutorService = Depends(get_core),
-):
+) -> None:
     print(course_deletion)
     course_name = course_deletion.course_name
     tutor_mail = course_deletion.tutor_mail

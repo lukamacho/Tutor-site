@@ -20,39 +20,42 @@ class ITutorInteractor(Protocol):
     def get_tutor(self, email: str) -> Optional[Tutor]:
         pass
 
-    def set_balance(self, tutor_mail: str, new_balance: int) -> None:
+    def set_tutor_balance(self, tutor_mail: str, new_balance: int) -> None:
         pass
 
-    def get_balance(self, tutor_mail: str) -> int:
+    def get_tutor_balance(self, tutor_mail: str) -> int:
         pass
 
-    def increase_balance(self, tutor_mail: str, amount: int) -> None:
+    def increase_tutor_balance(self, tutor_mail: str, amount: int) -> None:
         pass
 
-    def decrease_balance(self, tutor_mail: str, amount: int) -> None:
+    def decrease_tutor_balance(self, tutor_mail: str, amount: int) -> None:
         pass
 
-    def set_commission_pct(self, tutor_mail: str, new_commission_pct: float):
+    def set_commission_pct(self, tutor_mail: str, new_commission_pct: float) -> None:
         pass
 
     def decrease_commission_pct(self, tutor_mail: str) -> None:
         pass
 
-    def change_first_name(self, tutor_mail: str, first_name: str) -> None:
+    def change_tutor_first_name(self, tutor_mail: str, first_name: str) -> None:
         pass
 
-    def change_last_name(self, tutor_mail: str, last_name: str) -> None:
+    def change_tutor_last_name(self, tutor_mail: str, last_name: str) -> None:
         pass
 
-    def change_biography(self, tutor_mail: str, biography: str) -> None:
+    def change_tutor_biography(self, tutor_mail: str, biography: str) -> None:
         pass
 
-    def change_tutor_password(self, tutor_mail: str, password: str) -> None:
+    def delete_tutor(self, tutor_mail: str) -> None:
         pass
 
     def change_tutor_profile_address(
-        self, tutor_mail: str, profile_address: str
+            self, tutor_mail: str, profile_address: str
     ) -> None:
+        pass
+
+    def change_tutor_password(self, tutor_mail: str, password: str) -> None:
         pass
 
     def get_tutors(self) -> Optional[List[Tutor]]:
@@ -87,7 +90,7 @@ class ITutorRepository(Protocol):
     def decrease_tutor_balance(self, tutor_mail: str, amount: int) -> None:
         pass
 
-    def set_commission_pct(self, tutor_mail: str, new_commission_pct: float):
+    def set_commission_pct(self, tutor_mail: str, new_commission_pct: float) -> None:
         pass
 
     def decrease_commission_pct(self, tutor_mail: str) -> None:
@@ -150,7 +153,7 @@ class TutorInteractor:
     def decrease_tutor_balance(self, tutor_mail: str, amount: int) -> None:
         self.tutor_repository.decrease_tutor_balance(tutor_mail, amount)
 
-    def set_commission_pct(self, tutor_mail: str, new_commission_pct: float):
+    def set_commission_pct(self, tutor_mail: str, new_commission_pct: float) -> None:
         self.tutor_repository.set_commission_pct(tutor_mail, new_commission_pct)
 
     def decrease_commission_pct(self, tutor_mail: str) -> None:

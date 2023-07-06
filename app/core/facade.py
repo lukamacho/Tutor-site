@@ -1,7 +1,6 @@
 from dataclasses import dataclass
 from typing import List, Optional
 
-from app.core.admin.interactor import AdminInteractor, IEmailService
 from app.core.course.entity import Course
 from app.core.course.interactor import CourseInteractor, ICourseInteractor
 from app.core.homework.entity import Homework
@@ -24,7 +23,6 @@ from app.core.tutor_ranking.interactor import (
 
 @dataclass
 class OlympianTutorService:
-    admin_interactor: AdminInteractor
     course_interactor: CourseInteractor
     review_interactor: ReviewInteractor
     lesson_interactor: LessonInteractor
@@ -50,7 +48,7 @@ class OlympianTutorService:
         return self.tutor_ranking_interactor.get_minimum_lesson_price(email)
 
     def get_tutor_number_of_lessons(self, email: str) -> int:
-        return self.tutor_ranking_interactor.get_number_of_lessons(email)
+        return self.tutor_ranking_interactor.get_tutor_number_of_lessons(email)
 
     def get_admin_score(self, email: str) -> int:
         return self.tutor_ranking_interactor.get_admin_score(email)
@@ -140,9 +138,6 @@ class OlympianTutorService:
         self.homework_interactor.delete_homework(
             homework_text, tutor_mail, student_mail
         )
-
-    def send_hello(self):
-        self.admin_interactor.send_hello()
 
     def get_course(self, subject: str, tutor_mail: str) -> Optional[Course]:
         return self.course_interactor.get_course(subject, tutor_mail)
@@ -288,7 +283,7 @@ class OlympianTutorService:
     def decrease_tutor_balance(self, tutor_mail: str, amount: int) -> None:
         self.tutor_interactor.decrease_tutor_balance(tutor_mail, amount)
 
-    def set_commission_pct(self, tutor_mail: str, new_commission_pct: float):
+    def set_commission_pct(self, tutor_mail: str, new_commission_pct: float) -> None:
         self.tutor_interactor.set_commission_pct(tutor_mail, new_commission_pct)
 
     def decrease_commission_pct(self, tutor_mail: str) -> None:
@@ -314,7 +309,6 @@ class OlympianTutorService:
     @classmethod
     def create(
         cls,
-        emailer: IEmailService,
         course_interactor: ICourseInteractor,
         review_interactor: IReviewInteractor,
         lesson_interactor: ILessonInteractor,
@@ -325,7 +319,6 @@ class OlympianTutorService:
         tutor_ranking_interactor: ITutorRankingInteractor,
     ) -> "OlympianTutorService":
         return cls(
-            admin_interactor=AdminInteractor(emailer),
             course_interactor=CourseInteractor(course_interactor),
             review_interactor=ReviewInteractor(review_interactor),
             lesson_interactor=LessonInteractor(lesson_interactor),

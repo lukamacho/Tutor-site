@@ -34,7 +34,7 @@ class SqlTutorRepository:
         password: str,
         balance: int,
         biography: str,
-        profile_address: str,
+        profile_address: str = "",
     ) -> Tutor:
         commission_pct = 0.25
         self.conn.execute(
@@ -95,7 +95,7 @@ class SqlTutorRepository:
         new_balance = current_balance - amount
         self.set_tutor_balance(tutor_mail, new_balance)
 
-    def set_commission_pct(self, tutor_mail: str, new_commission_pct: float):
+    def set_commission_pct(self, tutor_mail: str, new_commission_pct: float)->None:
         self.conn.execute(
             "UPDATE Tutors SET commission_pct = ? WHERE email = ? ",
             (
