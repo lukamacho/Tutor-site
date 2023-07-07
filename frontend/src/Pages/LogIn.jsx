@@ -10,7 +10,6 @@ import Checkbox from '@mui/material/Checkbox';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import backgroundImage from '../Images/LogInBG.png';
-import Grid from '@mui/material/Grid';
 import Link from '@mui/material/Link';
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
@@ -37,13 +36,6 @@ export const StyledBox = styled(Box)(({ theme }) => ({
   backgroundColor: 'rgba(255, 255, 255, 0.8)',
   justifyContent: 'center',
 }));
-
-const centeredStyle = {
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  marginBottom: 10,
-}
 
 const handleGoogleSignIn = async () => {
   try {
