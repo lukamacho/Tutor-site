@@ -30,8 +30,8 @@ export default function App() {
           <Route path="verification" element={<Verification setToken={setToken}/>} />
           <Route path="about" element={<AboutUs />} />
           <Route path="admin" element={<Admin />} />
-          <Route path="student_profile" element={<Student />} />
-          <Route path="tutor_profile" element={<TutorProfile />} />
+          <Route path="student_profile" element={<Student token={token}/>} />
+          <Route path="tutor_profile" element={<TutorProfile token={token}/>} />
           <Route path="courses" element={<Courses />} />
           <Route path="tutors" element={<Tutors />} />
           <Route path="tutors/tutor/:email" element={<PublicTutor />} />

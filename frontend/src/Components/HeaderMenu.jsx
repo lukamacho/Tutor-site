@@ -12,29 +12,27 @@ import { useEffect, useState } from 'react';
 const HeaderMenu = ({ token }) => {
   const [isUser, setIsUser] = useState(false);
 
-  console.log("token")
-  console.log(token)
+  console.log("token: %s", token);
 
   useEffect(() => {
     const handleVerification = async () => {
-      let tokenStr = token === null ? "" : token
-      let emailToken = JSON.parse(sessionStorage.getItem('token'))
-      let emailStr = emailToken === null ? "" : emailToken
+      let emailToken = JSON.parse(sessionStorage.getItem('email'))
+      let emailStr = emailToken === null ? '' : emailToken
 
       const data = {
-        "token": tokenStr,
-        "email": emailStr,
+        token: token,
+        email: emailStr,
       }
 
-      console.log(data);
+      console.log(data)
 
       try {
         let response = await fetch('http://localhost:8000/verify_token', {
           method: 'POST',
+          body: JSON.stringify(data),
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify(data),
         });
 
         response = await response.json();
@@ -84,7 +82,7 @@ const HeaderMenu = ({ token }) => {
 }
 
 HeaderMenu.propTypes = {
-  token: PropTypes.func.isRequired,
+  token: PropTypes.string.isRequired,
 };
 
 export default HeaderMenu;

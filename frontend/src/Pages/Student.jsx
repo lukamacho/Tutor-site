@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, Link, useNavigate } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
-export default function Student() {
-  const email = JSON.parse(localStorage.getItem("email"));
-//   const location = useLocation();
-//   const email = location.state?.email;
+const Student = ({ token }) => {
+  let emailToken = JSON.parse(sessionStorage.getItem('email'))
+  let emailStr = emailToken === null ? '' : emailToken
+
+  const [email, setEmail] = useState(emailStr);
   const navigate = useNavigate(); // Add navigate from react-router-dom
 
+  console.log("student token: %s and email: %s", token, email);
 
   const [data, setData] = useState([]);
   const [firstName, setFirstName] = useState('');
@@ -336,3 +339,8 @@ const handleFinishHomework = async (homework_text, tutor_mail) => {
   );
 }
 
+Student.propTypes = {
+  token: PropTypes.string.isRequired,
+};
+
+export default Student;
