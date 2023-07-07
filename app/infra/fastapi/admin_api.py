@@ -310,9 +310,10 @@ def decrease_balance(
     return {"message": "Balance decreased successfully."}
 
 
-def verify_token(token: str) -> str:
+def token_verification(token: str) -> str:
     payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
     email = payload.get("email")
+    print("token verification - email: %s", email)
     if email is None:
         return ''
     return email
@@ -322,16 +323,21 @@ def verify_token(token: str) -> str:
 def verify_token(
         verify_token_request: VerifyTokenRequest,
 ):
-    print("/verify_token")
-    print(verify_token_request)
+    verifyToken = verify_token_request.token
+    verifyMail = verify_token_request.email
 
-    if verify_token_request.token == '' or verify_token_request.email == '':
+    if verifyToken == '' or verifyMail == '':
         return {"verified": False}
 
-    verification = verify_token(verify_token_request.token)
-    if verification == verify_token_request.email:
+    print(verifyToken)
+    print(verifyMail)
+
+    verification = token_verification(verifyToken)
+    if verification == verifyMail:
+        print("verified")
         return {"verified": True}
     else:
+        print("not verified")
         return {"verified": False}
 
 

@@ -20,20 +20,19 @@ const HeaderMenu = ({ token }) => {
       let emailStr = emailToken === null ? '' : emailToken
 
       const data = {
-        "token": token,
-        "email": emailStr,
+        token: token,
+        email: emailStr,
       }
 
-      console.log("handleVerification:data");
-      console.log(data);
+      console.log(data)
 
       try {
         let response = await fetch('http://localhost:8000/verify_token', {
           method: 'POST',
+          body: JSON.stringify(data),
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify(data),
         });
 
         response = await response.json();
