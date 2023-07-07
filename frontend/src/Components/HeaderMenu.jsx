@@ -12,20 +12,19 @@ import { useEffect, useState } from 'react';
 const HeaderMenu = ({ token }) => {
   const [isUser, setIsUser] = useState(false);
 
-  console.log("token")
-  console.log(token)
+  console.log("token: %s", token);
 
   useEffect(() => {
     const handleVerification = async () => {
-      let tokenStr = token === null ? "" : token
-      let emailToken = JSON.parse(sessionStorage.getItem('token'))
-      let emailStr = emailToken === null ? "" : emailToken
+      let emailToken = JSON.parse(sessionStorage.getItem('email'))
+      let emailStr = emailToken === null ? '' : emailToken
 
       const data = {
-        "token": tokenStr,
+        "token": token,
         "email": emailStr,
       }
 
+      console.log("handleVerification:data");
       console.log(data);
 
       try {
@@ -84,7 +83,7 @@ const HeaderMenu = ({ token }) => {
 }
 
 HeaderMenu.propTypes = {
-  token: PropTypes.func.isRequired,
+  token: PropTypes.string.isRequired,
 };
 
 export default HeaderMenu;
