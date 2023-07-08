@@ -1,6 +1,6 @@
 import sqlite3
 from dataclasses import dataclass
-from typing import List, Optional
+from typing import List
 
 from app.core.lesson.entity import Lesson
 from app.core.student.entity import Student
@@ -48,15 +48,15 @@ class SqlStudentRepository:
         print("Student has been created.")
         return Student(first_name, last_name, email, password, balance, profile_address)
 
-    def get_student(self, email: str) -> Optional[Student]:
+    def get_student(self, email: str) -> Student:
         for row in self.conn.execute(
             " SELECT * FROM Students WHERE email = ?", (email,)
         ):
             return Student(*row)
 
-        return None
+        return Student("", "", "", "", 0, "")
 
-    def get_student_lessons(self, student_mail: str) -> Optional[List[Lesson]]:
+    def get_student_lessons(self, student_mail: str) -> List[Lesson]:
         lessons: List[Lesson] = []
         for row in self.conn.execute(
             " SELECT * FROM Lessons WHERE student_mail = ?", (student_mail,)

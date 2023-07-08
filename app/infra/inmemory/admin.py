@@ -1,5 +1,3 @@
-from app.infra.inmemory.tutor import Tutor
-
 from dataclasses import dataclass
 
 
@@ -15,7 +13,6 @@ class Admin:
         pass
 
     def set_top_tutor(self, tutor_id: int) -> None:
-        Tutor.is_top_tutor = True
         pass
 
     def send_message(self, tutor_or_user_id: int) -> None:

@@ -1,6 +1,6 @@
 import sqlite3
 from dataclasses import dataclass
-from typing import List, Optional
+from typing import List
 
 from app.core.review.entity import Review
 
@@ -36,7 +36,7 @@ class SqlReviewRepository:
         self.conn.commit()
         return Review(review_text, tutor_mail, student_mail)
 
-    def get_review(self, tutor_mail: str, student_mail: str) -> Optional[Review]:
+    def get_review(self, tutor_mail: str, student_mail: str) -> Review:
         for row in self.conn.execute(
             " SELECT * FROM Reviews WHERE tutor_mail = ? and student_mail = ?",
             (
@@ -46,7 +46,7 @@ class SqlReviewRepository:
         ):
             return Review(*row)
 
-        return None
+        return Review("", "", "")
 
     def get_tutor_reviews(self, tutor_mail: str) -> List[Review]:
         reviews: List[Review] = []

@@ -4,7 +4,6 @@ from typing import Dict, List
 
 @dataclass
 class Tutor:
-
     first_name: str
     last_name: str
     email: str

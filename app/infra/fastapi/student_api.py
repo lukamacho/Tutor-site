@@ -172,9 +172,9 @@ async def message_to_tutor(
     student_mail = data.student_mail
     student = core.student_interactor.get_student(student_mail)
     tutor = core.tutor_interactor.get_tutor(tutor_mail)
-    if student is None:
+    if student.email == "":
         return {"message": "Student with this visitor mail doesn't exits"}
-    if tutor is None:
+    if tutor.email == "":
         return {"message": "Tutor with this mail doesn't exist."}
     core.message_interactor.create_message(message_text, tutor_mail, student_mail)
     return {"message": "Message sent successfully."}
@@ -266,7 +266,7 @@ async def buy_lesson(
         lesson = core.lesson_interactor.get_lesson(
             data.tutor_mail, student_mail, data.subject
         )
-        if lesson is None:
+        if lesson.subject == "":
             core.lesson_interactor.create_lesson(
                 data.subject, data.tutor_mail, student_mail, 1, data.lesson_price
             )

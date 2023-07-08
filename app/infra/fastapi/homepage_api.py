@@ -90,7 +90,7 @@ async def create_user(
     student = core.student_interactor.get_student(student_mail)
     tutor_mail = data.mail
     tutor = core.tutor_interactor.get_tutor(tutor_mail)
-    if student is not None or tutor is not None:
+    if student.email != "" or tutor.email != "":
         return {"message": "User with this mail already exist!"}
     if first_name == "" or last_name == "":
         return {"message": "Can't register with none values!"}

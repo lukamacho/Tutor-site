@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import List, Optional
+from typing import List
 
 from app.core.course.entity import Course
 from app.core.course.interactor import CourseInteractor, ICourseInteractor
@@ -139,7 +139,7 @@ class OlympianTutorService:
             homework_text, tutor_mail, student_mail
         )
 
-    def get_course(self, subject: str, tutor_mail: str) -> Optional[Course]:
+    def get_course(self, subject: str, tutor_mail: str) -> Course:
         return self.course_interactor.get_course(subject, tutor_mail)
 
     def delete_course(self, tutor_mail: str, subject: str) -> None:
@@ -155,7 +155,7 @@ class OlympianTutorService:
             review_text, tutor_mail, student_mail
         )
 
-    def get_review(self, tutor_mail: str, student_mail: str) -> Optional[Review]:
+    def get_review(self, tutor_mail: str, student_mail: str) -> Review:
         return self.review_interactor.get_review(tutor_mail, student_mail)
 
     def get_tutor_reviews(self, tutor_mail: str) -> List[Review]:
@@ -230,7 +230,7 @@ class OlympianTutorService:
             first_name, last_name, email, password, balance
         )
 
-    def get_student(self, email: str) -> Optional[Student]:
+    def get_student(self, email: str) -> Student:
         return self.student_interactor.get_student(email)
 
     def set_student_balance(self, student_mail: str, new_balance: int) -> None:
@@ -268,7 +268,7 @@ class OlympianTutorService:
             first_name, last_name, email, password, balance, biography, profile_address
         )
 
-    def get_tutor(self, email: str) -> Optional[Tutor]:
+    def get_tutor(self, email: str) -> Tutor:
         return self.tutor_interactor.get_tutor(email)
 
     def set_tutor_balance(self, tutor_mail: str, new_balance: int) -> None:

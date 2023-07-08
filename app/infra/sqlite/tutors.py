@@ -1,6 +1,6 @@
 import sqlite3
 from dataclasses import dataclass
-from typing import List, Optional
+from typing import List
 
 from app.core.tutor.entity import Tutor
 
@@ -63,11 +63,11 @@ class SqlTutorRepository:
             profile_address,
         )
 
-    def get_tutor(self, email: str) -> Optional[Tutor]:
+    def get_tutor(self, email: str) -> Tutor:
         for row in self.conn.execute(" SELECT * FROM Tutors WHERE email = ?", (email,)):
             return Tutor(*row)
 
-        return None
+        return Tutor("", "", "", "", 0.01, 0, "", "")
 
     def set_tutor_balance(self, tutor_mail: str, new_balance: int) -> None:
         self.conn.execute(
@@ -95,7 +95,7 @@ class SqlTutorRepository:
         new_balance = current_balance - amount
         self.set_tutor_balance(tutor_mail, new_balance)
 
-    def set_commission_pct(self, tutor_mail: str, new_commission_pct: float)->None:
+    def set_commission_pct(self, tutor_mail: str, new_commission_pct: float) -> None:
         self.conn.execute(
             "UPDATE Tutors SET commission_pct = ? WHERE email = ? ",
             (
@@ -174,7 +174,7 @@ class SqlTutorRepository:
         )
         self.conn.commit()
 
-    def get_tutors(self) -> Optional[List[Tutor]]:
+    def get_tutors(self) -> List[Tutor]:
         tutors: List[Tutor] = []
         for row in self.conn.execute(
             " SELECT * FROM Tutors",

@@ -48,7 +48,7 @@ class SqlLessonRepository:
         ):
             return Lesson(*row)
 
-        return Lesson("","","",0,0)
+        return Lesson("", "", "", 0, 0)
 
     def get_number_of_lessons(
         self, tutor_mail: str, student_mail: str, subject: str

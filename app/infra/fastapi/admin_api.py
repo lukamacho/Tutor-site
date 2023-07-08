@@ -3,14 +3,13 @@ import ssl
 from datetime import datetime
 from random import choices
 from string import ascii_letters, digits
-from typing import Dict, Any, Union
+from typing import Any, Dict
 
 import jwt
 import requests
 from fastapi import APIRouter, Depends, HTTPException
-from fastapi.responses import JSONResponse, RedirectResponse
+
 from pydantic import BaseModel
-from pydantic.datetime_parse import timedelta
 
 from app.core.facade import OlympianTutorService
 from app.infra.fastapi.dependables import get_core
@@ -88,8 +87,6 @@ def send_new_password(receiver_mail: str) -> str:
     return new_password
 
 
-
-
 @admin_api.post("/admin/report_to_admin/{user_mail}")
 async def report_to_admin(
     user_mail: str,
@@ -125,7 +122,7 @@ def delete_tutor(
 ) -> Dict[str, str]:
     print(tutor_mail)
     tutor = core.tutor_interactor.get_tutor(tutor_mail.tutor_mail)
-    if tutor is None:
+    if tutor.email == "":
         return {"message": "Tutor with this mail doesn't exist!"}
     core.tutor_interactor.delete_tutor(tutor_mail.tutor_mail)
     return {"message": "Tutor deleted successfully"}
@@ -137,7 +134,7 @@ def commission_tutor(
 ) -> Dict[str, str]:
     print(tutor_mail)
     tutor = core.tutor_interactor.get_tutor(tutor_mail.tutor_mail)
-    if tutor is None:
+    if tutor.email == "":
         return {"message": "Tutor with this mail doesn't exist!"}
     core.tutor_interactor.decrease_commission_pct(tutor_mail.tutor_mail)
 
@@ -152,14 +149,14 @@ def reset_password(
     print(password_reset)
     student = core.get_student(user_mail)
     tutor = core.get_tutor(user_mail)
-    if student is None and tutor is None:
+    if student.email == "" and tutor.email == "":
         raise HTTPException(status_code=505, detail="Email not found")
-    if student is not None:
+    if student.email != "":
         new_password = send_new_password(user_mail)
         new_password = hash_password(new_password)
         core.student_interactor.change_student_password(user_mail, new_password)
         return {"message": "Student password reset successfully."}
-    if tutor is not None:
+    if tutor.email != "":
         new_password = send_new_password(user_mail)
         new_password = hash_password(new_password)
         core.tutor_interactor.change_tutor_password(user_mail, new_password)
@@ -192,11 +189,11 @@ def sign_in(
         "token": "",
     }
 
-    if tutor is None and student is None:
+    if tutor.email == "" and student.email == "":
         print("tutor is None and student is None")
         return errorMessage
 
-    if tutor is not None:
+    if tutor.email != "":
         if password != tutor.password:
             print("tutor is not None; password != tutor.password")
             return errorMessage
@@ -227,21 +224,21 @@ def google_sign_in() -> Dict[str, str]:
     return {"authorization_url": authorization_url}
 
 
-@admin_api.get("/google_sign_in_callback")
-def google_sign_in_callback(code: str):
-    # Handle the Google sign-in callback here
-    try:
-        # token_response = exchange_code_for_token(code)
-        # user_info = get_user_info(token_response["access_token"])
-        # Process user_info as needed
-        # ...
-        # Redirect the user to the desired page after successful authentication
-        redirect_url = "http://localhost:3000/"  # Change this to the desired URL
-        return RedirectResponse(redirect_url)
-    except Exception:
-        return JSONResponse(
-            status_code=400, content={"message": "Google sign-in failed."}
-        )
+# @admin_api.get("/google_sign_in_callback")
+# def google_sign_in_callback(code: str):
+# Handle the Google sign-in callback here
+#   try:
+# token_response = exchange_code_for_token(code)
+# user_info = get_user_info(token_response["access_token"])
+# Process user_info as needed
+# ...
+# Redirect the user to the desired page after successful authentication
+#      redirect_url = "http://localhost:3000/"  # Change this to the desired URL
+#     return RedirectResponse(redirect_url)
+# except Exception:
+#    return JSONResponse(
+#       status_code=400, content={"message": "Google sign-in failed."}
+#   )
 
 
 def generate_google_auth_url() -> str:
@@ -286,7 +283,7 @@ def add_balance(
     student_mail = add_balance.student_mail
     amount = add_balance.amount
     student = core.student_interactor.get_student(student_mail)
-    if student is None:
+    if student.email == "":
         return {"Message": "No such student exists."}
     core.student_interactor.increase_student_balance(student_mail, amount)
 
@@ -301,7 +298,7 @@ def decrease_balance(
     tutor_mail = decrease_balance.tutor_mail
     amount = decrease_balance.amount
     tutor = core.tutor_interactor.get_tutor(tutor_mail)
-    if tutor is None:
+    if tutor.email == "":
         return {"Message": "No such tutor exists."}
     core.tutor_interactor.decrease_tutor_balance(tutor_mail, amount)
     return {"message": "Balance decreased successfully."}
@@ -310,7 +307,8 @@ def decrease_balance(
 def token_verification(token: str) -> Any:
     payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
     email = payload.get("email")
-    if email is None:
+    print("token verification - email: %s", email)
+    if email is None or email == "":
         return ""
     return email
 
@@ -319,16 +317,21 @@ def token_verification(token: str) -> Any:
 def verify_token(
     verify_token_request: VerifyTokenRequest,
 ) -> Dict[str, bool]:
-    print("/verify_token")
-    print(verify_token_request)
+    verifyToken = verify_token_request.token
+    verifyMail = verify_token_request.email
 
-    if verify_token_request.token == "" or verify_token_request.email == "":
+    if verifyToken == "" or verifyMail == "":
         return {"verified": False}
 
-    verification = token_verification(verify_token_request.token)
-    if verification == verify_token_request.email:
+    print(verifyToken)
+    print(verifyMail)
+
+    verification = token_verification(verifyToken)
+    if verification == verifyMail:
+        print("verified")
         return {"verified": True}
     else:
+        print("not verified")
         return {"verified": False}
 
 
@@ -366,9 +369,9 @@ async def generate_meeting_link(data: MeetingLinkRequest) -> Dict[str, str]:
     print(minute)
     # Construct the start and end time objects
     start_time = datetime.strptime(date, "%Y-%m-%d").replace(hour=hour, minute=minute)
-    end_time = start_time + timedelta(hours=1)  # Assuming a meeting duration of 1 hour
-
-    print("gacda")
+    # This must be but problems of mypy
+    # end_time = start_time + timedelta(hours=1)  # Assuming a meeting duration of 1 hour
+    end_time = start_time
     # Construct the event payload
     event = {
         "summary": "Meeting",
@@ -416,7 +419,7 @@ async def score_tutor(
     tutor_mail = data.tutor_mail
     score = data.score
     tutor = core.tutor_interactor.get_tutor(tutor_mail)
-    if tutor is None:
+    if tutor.email == "":
         return {"message": "Tutor with this mail doesn't exist"}
     core.tutor_ranking_interactor.set_admin_score(tutor_mail, score)
 

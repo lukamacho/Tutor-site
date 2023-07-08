@@ -1,6 +1,6 @@
 import sqlite3
 from dataclasses import dataclass
-from typing import List, Optional
+from typing import List
 
 from app.core.course.entity import Course
 
@@ -28,7 +28,7 @@ class SqlCourseRepository:
         self.conn.commit()
         return Course(subject, tutor_mail, price)
 
-    def get_course(self, subject: str, tutor_mail: str) -> Optional[Course]:
+    def get_course(self, subject: str, tutor_mail: str) -> Course:
         for row in self.conn.execute(
             " SELECT * FROM Courses WHERE subject = ? and tutor_mail = ?",
             (
@@ -38,9 +38,9 @@ class SqlCourseRepository:
         ):
             return Course(*row)
 
-        return None
+        return Course("", "", 0)
 
-    def get_tutor_courses(self, tutor_mail: str) -> Optional[List[Course]]:
+    def get_tutor_courses(self, tutor_mail: str) -> List[Course]:
         courses: List[Course] = []
         for row in self.conn.execute(
             " SELECT * FROM Courses WHERE tutor_mail = ?", (tutor_mail,)
@@ -49,7 +49,7 @@ class SqlCourseRepository:
 
         return courses
 
-    def get_courses(self) -> Optional[List[Course]]:
+    def get_courses(self) -> List[Course]:
         courses: List[Course] = []
         for row in self.conn.execute(
             " SELECT * FROM Courses",

@@ -1,4 +1,4 @@
-from typing import List, Dict, Optional
+from typing import Dict, List
 
 import aiofiles
 from fastapi import APIRouter, Depends, File, UploadFile
@@ -59,14 +59,14 @@ class MessageToStudentRequest(BaseModel):
 @tutor_api.get("/tutor/{tutor_mail}")
 async def get_tutor_profile(
     tutor_mail: str, core: OlympianTutorService = Depends(get_core)
-) -> Optional[Tutor]:
+) -> Tutor:
     return core.tutor_interactor.get_tutor(tutor_mail)
 
 
 @tutor_api.get("/tutor/courses/{tutor_mail}")
 async def get_tutor_courses(
     tutor_mail: str, core: OlympianTutorService = Depends(get_core)
-) -> Optional[list[Course]]:
+) -> list[Course]:
     tutor_courses = core.course_interactor.get_tutor_courses(tutor_mail)
     print(tutor_courses)
     return tutor_courses
@@ -91,8 +91,8 @@ async def get_tutor_lessons(
 @tutor_api.get("/tutor/students/{tutor_mail}")
 async def get_tutor_students(
     tutor_mail: str, core: OlympianTutorService = Depends(get_core)
-):
-    tutor_students: List[Optional[Student]] = []
+) -> List[Student]:
+    tutor_students: List[Student] = []
     tutor_mails: set[str] = set()
     tutor_lesson_students = core.lesson_interactor.get_tutor_students(tutor_mail)
     for tutor_student_mail in tutor_lesson_students:
@@ -156,9 +156,9 @@ async def message_to_student(
     student_mail = data.student_mail
     student = core.student_interactor.get_student(student_mail)
     tutor = core.tutor_interactor.get_tutor(tutor_mail)
-    if student is None:
+    if student.email == "":
         return {"message": "Student with this visitor mail doesn't exits"}
-    if tutor is None:
+    if tutor.email == "":
         return {"message": "Tutor with this mail doesn't exist."}
     print(data)
     core.message_interactor.create_message(message_text, tutor_mail, student_mail)
@@ -185,7 +185,7 @@ def tutor_change_bio(
     new_bio = change_bio.new_bio
     print(change_bio)
     tutor = core.tutor_interactor.get_tutor(tutor_mail)
-    if tutor is None:
+    if tutor.email == "":
         return {"message": "No such tutor exists."}
     core.tutor_interactor.change_tutor_biography(tutor_mail, new_bio)
     return {"message": "Bio changed successfully!"}
@@ -200,7 +200,7 @@ def tutor_withdrawal_request(
     amount = withdrawal_request.amount
     print(withdrawal_request)
     tutor = core.tutor_interactor.get_tutor(tutor_mail)
-    if tutor is None:
+    if tutor.email == "":
         return {"message": "No such tutor exists."}
     tutor_balance = core.tutor_interactor.get_tutor_balance(tutor_mail)
     if amount > tutor_balance:
@@ -236,7 +236,7 @@ async def add_course(
         return {"message": "Course price can not be negative!"}
     tutor = core.tutor_interactor.get_tutor(tutor_mail)
 
-    if tutor is None:
+    if tutor.email == "":
         return {"message": "No such tutor exists!"}
 
     core.course_interactor.create_course(course_name, tutor_mail, course_price)
