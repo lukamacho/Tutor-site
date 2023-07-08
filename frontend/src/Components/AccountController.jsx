@@ -46,8 +46,9 @@ export default function AccountController() {
     email = null
     profileImage = null
 
-    localStorage.setItem("email", JSON.stringify(email));
-    localStorage.setItem("profileImage", JSON.stringify(profileImage));
+    sessionStorage.setItem("email", JSON.stringify(''));
+    sessionStorage.setItem("token", JSON.stringify(''));
+//     localStorage.setItem("profileImage", JSON.stringify(profileImage));
 
     handleClose();
   };

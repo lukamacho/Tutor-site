@@ -1,10 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, Link, useNavigate } from 'react-router-dom';
 import { Typography, TextField, Button, Card, CardContent, CardHeader, Grid } from '@mui/material';
+import PropTypes from 'prop-types';
 
 import './TutorProfile.css';
 
-function TutorProfile() {
+const Tutor = ({ token }) => {
+  let emailToken = JSON.parse(sessionStorage.getItem('email'))
+  let emailStr = emailToken === null ? '' : emailToken
+
+  const [email, setEmail] = useState(emailStr);
+
+  console.log("tutor token: %s and email: %s", token, email);
+
   const [data, setData] = useState([]);
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -23,7 +31,6 @@ function TutorProfile() {
   const [newBio, setNewBio] = useState('');
 
   const location = useLocation();
-  const email = location.state?.email;
 
   useEffect(() => {
     const handleGetTutor = async () => {
@@ -437,4 +444,8 @@ const handleCourseDeletion = (course) => {
   );
 }
 
-export default TutorProfile;
+Tutor.propTypes = {
+  token: PropTypes.string.isRequired,
+};
+
+export default Tutor;

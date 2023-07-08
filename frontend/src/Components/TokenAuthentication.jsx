@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 export const useToken = () => {
   const getToken = () => {
     const userToken = JSON.parse(sessionStorage.getItem('token'));
-    return userToken;
+    return userToken === null? '' : userToken;
   };
 
   const [token, setToken] = useState(getToken());

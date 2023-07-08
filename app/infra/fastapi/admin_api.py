@@ -9,7 +9,10 @@ import jwt
 import requests
 from fastapi import APIRouter, Depends, HTTPException
 
+from fastapi.responses import JSONResponse, RedirectResponse
 from pydantic import BaseModel
+from pydantic.datetime_parse import timedelta
+
 
 from app.core.facade import OlympianTutorService
 from app.infra.fastapi.dependables import get_core
@@ -304,12 +307,14 @@ def decrease_balance(
     return {"message": "Balance decreased successfully."}
 
 
+
 def token_verification(token: str) -> Any:
     payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
     email = payload.get("email")
     print("token verification - email: %s", email)
     if email is None or email == "":
         return ""
+
     return email
 
 
@@ -320,7 +325,9 @@ def verify_token(
     verifyToken = verify_token_request.token
     verifyMail = verify_token_request.email
 
-    if verifyToken == "" or verifyMail == "":
+
+    if verifyToken == '' or verifyMail == '':
+
         return {"verified": False}
 
     print(verifyToken)
