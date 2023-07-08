@@ -1,9 +1,6 @@
-from typing import Protocol
-
 from fastapi import FastAPI
 
 from app.core.facade import OlympianTutorService
-from app.infra.emailer.smtp import SMTPEmailService
 from app.infra.fastapi.api_main import setup_fastapi
 from app.infra.sqlite.course import SqlCourseRepository
 from app.infra.sqlite.homework import SqlHomeworkRepository
@@ -58,7 +55,6 @@ def setup() -> FastAPI:
     tutor_ranking_repository = setup_tutor_ranking_repository()
     return setup_fastapi(
         OlympianTutorService.create(
-            emailer=SMTPEmailService,
             course_interactor=course_repository,
             review_interactor=review_repository,
             lesson_interactor=lesson_repository,

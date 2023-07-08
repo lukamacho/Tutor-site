@@ -9,12 +9,11 @@ class Tutor:
     email: str
     password: str
     commission_pct: float
-    balance: 0
+    balance: int
     biography: str
     # TODO: Remove this field, it is unnecessary, based on the scheme of how we name the image files: {email}
-    profile_address: str
-    languages: List[str] = field(default_factory=list)
     profile_address: str = ""
+    languages: List[str] = field(default_factory=list)
     is_top_tutor: bool = False
     subject_prices: Dict[str, int] = field(default_factory=dict)
     availability_calendar: Dict[str, int] = field(default_factory=dict)

@@ -18,7 +18,7 @@ class SqlLessonRepository:
                 number_of_lessons int,
                 lesson_price int,
                 FOREIGN KEY (tutor_mail) REFERENCES Tutors (email),
-                FOREIGN KEY (student_mail) REFERENCES Students (email)  
+                FOREIGN KEY (student_mail) REFERENCES Students (email)
             );
             """
         )
@@ -48,7 +48,7 @@ class SqlLessonRepository:
         ):
             return Lesson(*row)
 
-        return None
+        return Lesson("", "", "", 0, 0)
 
     def get_number_of_lessons(
         self, tutor_mail: str, student_mail: str, subject: str

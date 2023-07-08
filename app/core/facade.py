@@ -1,7 +1,6 @@
 from dataclasses import dataclass
-from typing import List, Optional
+from typing import List
 
-from app.core.admin.interactor import AdminInteractor, IEmailService
 from app.core.course.entity import Course
 from app.core.course.interactor import CourseInteractor, ICourseInteractor
 from app.core.homework.entity import Homework
@@ -9,7 +8,7 @@ from app.core.homework.interactor import HomeworkInteractor, IHomeworkInteractor
 from app.core.lesson.entity import Lesson
 from app.core.lesson.interactor import ILessonInteractor, LessonInteractor
 from app.core.message.entity import Message
-from app.core.message.interactor import MessageInteractor, IMessageInteractor
+from app.core.message.interactor import IMessageInteractor, MessageInteractor
 from app.core.review.entity import Review
 from app.core.review.interactor import IReviewInteractor, ReviewInteractor
 from app.core.student.entity import Student
@@ -17,14 +16,13 @@ from app.core.student.interactor import IStudentInteractor, StudentInteractor
 from app.core.tutor.entity import Tutor
 from app.core.tutor.interactor import ITutorInteractor, TutorInteractor
 from app.core.tutor_ranking.interactor import (
-    TutorRankingInteractor,
     ITutorRankingInteractor,
+    TutorRankingInteractor,
 )
 
 
 @dataclass
 class OlympianTutorService:
-    admin_interactor: AdminInteractor
     course_interactor: CourseInteractor
     review_interactor: ReviewInteractor
     lesson_interactor: LessonInteractor
@@ -49,8 +47,8 @@ class OlympianTutorService:
     def get_minimum_lesson_price(self, email: str) -> int:
         return self.tutor_ranking_interactor.get_minimum_lesson_price(email)
 
-    def get_number_of_lessons(self, email: str) -> int:
-        return self.tutor_ranking_interactor.get_number_of_lessons(email)
+    def get_tutor_number_of_lessons(self, email: str) -> int:
+        return self.tutor_ranking_interactor.get_tutor_number_of_lessons(email)
 
     def get_admin_score(self, email: str) -> int:
         return self.tutor_ranking_interactor.get_admin_score(email)
@@ -141,10 +139,7 @@ class OlympianTutorService:
             homework_text, tutor_mail, student_mail
         )
 
-    def send_hello(self):
-        self.admin_interactor.send_hello()
-
-    def get_course(self, subject: str, tutor_mail: str) -> Optional[Course]:
+    def get_course(self, subject: str, tutor_mail: str) -> Course:
         return self.course_interactor.get_course(subject, tutor_mail)
 
     def delete_course(self, tutor_mail: str, subject: str) -> None:
@@ -160,7 +155,7 @@ class OlympianTutorService:
             review_text, tutor_mail, student_mail
         )
 
-    def get_review(self, tutor_mail: str, student_mail: str) -> Optional[Review]:
+    def get_review(self, tutor_mail: str, student_mail: str) -> Review:
         return self.review_interactor.get_review(tutor_mail, student_mail)
 
     def get_tutor_reviews(self, tutor_mail: str) -> List[Review]:
@@ -235,7 +230,7 @@ class OlympianTutorService:
             first_name, last_name, email, password, balance
         )
 
-    def get_student(self, email: str) -> Optional[Student]:
+    def get_student(self, email: str) -> Student:
         return self.student_interactor.get_student(email)
 
     def set_student_balance(self, student_mail: str, new_balance: int) -> None:
@@ -267,13 +262,13 @@ class OlympianTutorService:
         password: str,
         balance: int,
         biography: str,
-        profile_address: "",
+        profile_address: str = "",
     ) -> Tutor:
         return self.tutor_interactor.create_tutor(
             first_name, last_name, email, password, balance, biography, profile_address
         )
 
-    def get_tutor(self, email: str) -> Optional[Tutor]:
+    def get_tutor(self, email: str) -> Tutor:
         return self.tutor_interactor.get_tutor(email)
 
     def set_tutor_balance(self, tutor_mail: str, new_balance: int) -> None:
@@ -288,7 +283,7 @@ class OlympianTutorService:
     def decrease_tutor_balance(self, tutor_mail: str, amount: int) -> None:
         self.tutor_interactor.decrease_tutor_balance(tutor_mail, amount)
 
-    def set_commission_pct(self, tutor_mail: str, new_commission_pct: float):
+    def set_commission_pct(self, tutor_mail: str, new_commission_pct: float) -> None:
         self.tutor_interactor.set_commission_pct(tutor_mail, new_commission_pct)
 
     def decrease_commission_pct(self, tutor_mail: str) -> None:
@@ -314,7 +309,6 @@ class OlympianTutorService:
     @classmethod
     def create(
         cls,
-        emailer: IEmailService,
         course_interactor: ICourseInteractor,
         review_interactor: IReviewInteractor,
         lesson_interactor: ILessonInteractor,
@@ -325,7 +319,6 @@ class OlympianTutorService:
         tutor_ranking_interactor: ITutorRankingInteractor,
     ) -> "OlympianTutorService":
         return cls(
-            admin_interactor=AdminInteractor(emailer),
             course_interactor=CourseInteractor(course_interactor),
             review_interactor=ReviewInteractor(review_interactor),
             lesson_interactor=LessonInteractor(lesson_interactor),

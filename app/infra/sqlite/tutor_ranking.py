@@ -1,6 +1,6 @@
 import sqlite3
 from dataclasses import dataclass
-from typing import List, Optional
+from typing import List
 
 
 @dataclass
@@ -16,7 +16,7 @@ class SqlTutorRankingRepository:
                 number_of_lessons int,
                 minimum_lesson_price int,
                 admin_score int,
-                FOREIGN KEY (email) REFERENCES Tutors (email)          
+                FOREIGN KEY (email) REFERENCES Tutors (email)
             );
             """
         )
@@ -72,7 +72,7 @@ class SqlTutorRankingRepository:
 
         return 0
 
-    def get_number_of_lessons(self, email: str) -> int:
+    def get_tutor_number_of_lessons(self, email: str) -> int:
         for row in self.conn.execute(
             " SELECT number_of_lessons FROM TutorRankings WHERE email = ?",
             (email,),
@@ -106,7 +106,7 @@ class SqlTutorRankingRepository:
         self.conn.commit()
 
     def add_number_of_lessons(self, email: str, added_lesson_number: int) -> None:
-        number_of_lessons = self.get_number_of_lessons(email)
+        number_of_lessons = self.get_tutor_number_of_lessons(email)
         new_number_of_lessons = number_of_lessons + added_lesson_number
         self.conn.execute(
             "UPDATE TutorRankings SET number_of_lessons = ?  WHERE email = ?",

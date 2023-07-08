@@ -1,11 +1,14 @@
 import smtplib
 import ssl
+from typing import Dict
 
 import aiofiles
 from fastapi import APIRouter, Depends, File, UploadFile
 from pydantic import BaseModel
 
 from app.core.facade import OlympianTutorService
+from app.core.homework.entity import Homework
+from app.core.message.entity import Message
 from app.infra.fastapi.dependables import get_core
 
 
@@ -72,7 +75,7 @@ student_api = APIRouter()
 async def get_student(
     student_mail: str,
     core: OlympianTutorService = Depends(get_core),
-):
+) -> GetStudentResponse:
     print("/student/" + student_mail)
 
     student = core.student_interactor.get_student(student_mail)
@@ -90,7 +93,7 @@ async def get_student(
 async def get_student_messaged_tutors(
     student_mail: str,
     core: OlympianTutorService = Depends(get_core),
-):
+) -> list[str]:
     print("/student/" + student_mail)
 
     student_messaged_tutors = core.message_interactor.get_student_messaged_tutors(
@@ -104,7 +107,7 @@ async def get_student_messaged_tutors(
 async def get_student_homeworks(
     student_mail: str,
     core: OlympianTutorService = Depends(get_core),
-):
+) -> list[Homework]:
     homeworks = core.homework_interactor.get_student_homework(student_mail)
     return homeworks
 
@@ -113,7 +116,7 @@ async def get_student_homeworks(
 async def get_student_lessons(
     student_mail: str,
     core: OlympianTutorService = Depends(get_core),
-):
+) -> list[GetLessonResponse]:
     print("/student/lessons/" + student_mail)
 
     lessons = core.student_interactor.get_student_lessons(student_mail)
@@ -135,7 +138,7 @@ async def get_student_messages(
     student_mail: str,
     tutor_mail: str,
     core: OlympianTutorService = Depends(get_core),
-):
+) -> list[Message]:
     print("/student/lessons/" + student_mail)
 
     messages = core.message_interactor.get_messages(tutor_mail, student_mail)
@@ -148,12 +151,12 @@ async def change_first_name(
     data: ChangeFirstNameRequest,
     student_mail: str,
     core: OlympianTutorService = Depends(get_core),
-):
+) -> Dict[str, str]:
     print(
         "/student/change_first_name/" + student_mail + " value: " + data.new_first_name
     )
 
-    student = core.student_interactor.get_student(student_mail)
+    # student = core.student_interactor.get_student(student_mail)
     core.student_interactor.change_student_first_name(student_mail, data.new_first_name)
 
     return {"message": "Changed student first name successfully."}
@@ -163,15 +166,15 @@ async def change_first_name(
 async def message_to_tutor(
     data: MessageToTutorRequest,
     core: OlympianTutorService = Depends(get_core),
-):
+) -> Dict[str, str]:
     message_text = data.message_text
     tutor_mail = data.tutor_mail
     student_mail = data.student_mail
     student = core.student_interactor.get_student(student_mail)
     tutor = core.tutor_interactor.get_tutor(tutor_mail)
-    if student is None:
+    if student.email == "":
         return {"message": "Student with this visitor mail doesn't exits"}
-    if tutor is None:
+    if tutor.email == "":
         return {"message": "Tutor with this mail doesn't exist."}
     core.message_interactor.create_message(message_text, tutor_mail, student_mail)
     return {"message": "Message sent successfully."}
@@ -181,7 +184,7 @@ async def message_to_tutor(
 async def finish_homework(
     finish_homework: FinishHomeworkRequest,
     core: OlympianTutorService = Depends(get_core),
-):
+) -> Dict[str, str]:
     print(finish_homework)
     homework_text = finish_homework.homework_text
     tutor_mail = finish_homework.tutor_mail
@@ -195,10 +198,10 @@ async def change_last_name(
     data: ChangeLastNameRequest,
     student_mail: str,
     core: OlympianTutorService = Depends(get_core),
-):
+) -> Dict[str, str]:
     print("/student/change_last_name/" + student_mail + " value: " + data.new_last_name)
 
-    student = core.student_interactor.get_student(student_mail)
+    # student = core.student_interactor.get_student(student_mail)
     core.student_interactor.change_student_last_name(student_mail, data.new_last_name)
 
     return {"message": "Changed student last name successfully."}
@@ -209,10 +212,10 @@ async def change_password(
     data: ChangePasswordRequest,
     student_mail: str,
     core: OlympianTutorService = Depends(get_core),
-):
+) -> Dict[str, str]:
     print("/student/change_password/" + student_mail + " value: " + data.new_password)
 
-    student = core.student_interactor.get_student(student_mail)
+    # student = core.student_interactor.get_student(student_mail)
     core.student_interactor.change_student_password(student_mail, data.new_password)
 
     return {"message": "Changed student password successfully."}
@@ -223,7 +226,7 @@ async def create_upload_file(
     student_mail: str,
     file: UploadFile = File(...),
     core: OlympianTutorService = Depends(get_core),
-):
+) -> None:
     dest_path = "../../frontend/src/Storage/" + student_mail
     async with aiofiles.open(dest_path, "wb") as dest_file:
         content = await file.read()
@@ -236,7 +239,7 @@ async def create_upload_file(
 async def add_balance(
     student_mail: str,
     data: AddBalanceRequest,
-):
+) -> Dict[str, str]:
     print("/student/add_balance/" + student_mail)
     port = 465
     smtp_server = "smtp.gmail.com"
@@ -257,13 +260,13 @@ async def buy_lesson(
     student_mail: str,
     data: BuyLessonRequest,
     core: OlympianTutorService = Depends(get_core),
-):
+) -> Dict[str, str]:
     student_balance = core.student_interactor.get_student_balance(student_mail)
     if student_balance >= data.lesson_price:
         lesson = core.lesson_interactor.get_lesson(
             data.tutor_mail, student_mail, data.subject
         )
-        if lesson is None:
+        if lesson.subject == "":
             core.lesson_interactor.create_lesson(
                 data.subject, data.tutor_mail, student_mail, 1, data.lesson_price
             )
@@ -274,7 +277,7 @@ async def buy_lesson(
                 lesson.number_of_lessons + 1,
                 data.subject,
             )
-            core.tutor_ranking_interactor.add_number_of_lessons(data.tutor_mail,1)
+            core.tutor_ranking_interactor.add_number_of_lessons(data.tutor_mail, 1)
 
         core.student_interactor.set_student_balance(
             student_mail, student_balance - data.lesson_price

@@ -30,7 +30,7 @@ class InMemoryLessonRepository:
                 and lesson.student_mail == student_mail
             ):
                 return lesson
-        return None
+        return Lesson("", "", "", 0, 0)
 
     def get_number_of_lessons(
         self, tutor_mail: str, student_mail: str, subject: str

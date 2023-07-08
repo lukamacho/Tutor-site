@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import List, Optional, Protocol
+from typing import List, Protocol
 
 from app.core.review.entity import Review
 
@@ -10,7 +10,7 @@ class IReviewRepository(Protocol):
     ) -> Review:
         pass
 
-    def get_review(self, tutor_mail: str, student_mail: str) -> Optional[Review]:
+    def get_review(self, tutor_mail: str, student_mail: str) -> Review:
         pass
 
     def get_tutor_reviews(self, tutor_mail: str) -> List[Review]:
@@ -31,7 +31,7 @@ class IReviewInteractor(Protocol):
     ) -> Review:
         pass
 
-    def get_review(self, tutor_mail: str, student_mail: str) -> Optional[Review]:
+    def get_review(self, tutor_mail: str, student_mail: str) -> Review:
         pass
 
     def get_tutor_reviews(self, tutor_mail: str) -> List[Review]:
@@ -57,7 +57,7 @@ class ReviewInteractor:
             review_text, tutor_mail, student_mail
         )
 
-    def get_review(self, tutor_mail: str, student_mail: str) -> Optional[Review]:
+    def get_review(self, tutor_mail: str, student_mail: str) -> Review:
         return self.review_repository.get_review(tutor_mail, student_mail)
 
     def get_tutor_reviews(self, tutor_mail: str) -> List[Review]:

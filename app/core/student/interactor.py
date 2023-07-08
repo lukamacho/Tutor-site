@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import List, Optional, Protocol
+from typing import List, Protocol
 
 from app.core.lesson.entity import Lesson
 from app.core.student.entity import Student
@@ -11,10 +11,10 @@ class IStudentInteractor(Protocol):
     ) -> Student:
         pass
 
-    def get_student(self, email: str) -> Optional[Student]:
+    def get_student(self, email: str) -> Student:
         pass
 
-    def get_student_lessons(self, student_mail: str) -> Optional[List[Lesson]]:
+    def get_student_lessons(self, student_mail: str) -> List[Lesson]:
         pass
 
     def set_student_balance(self, student_mail: str, new_balance: int) -> None:
@@ -38,6 +38,9 @@ class IStudentInteractor(Protocol):
     def change_student_password(self, student_mail: str, password: str) -> None:
         pass
 
+    def delete_student(self, student_mail: str) -> None:
+        pass
+
     def change_student_profile_address(
         self, student_mail: str, profile_address: str
     ) -> None:
@@ -50,10 +53,10 @@ class IStudentRepository(Protocol):
     ) -> Student:
         pass
 
-    def get_student(self, email: str) -> Optional[Student]:
+    def get_student(self, email: str) -> Student:
         pass
 
-    def get_student_lessons(self, student_mail: str) -> Optional[List[Lesson]]:
+    def get_student_lessons(self, student_mail: str) -> List[Lesson]:
         pass
 
     def set_student_balance(self, student_mail: str, new_balance: int) -> None:
@@ -97,10 +100,10 @@ class StudentInteractor:
             first_name, last_name, email, password, balance
         )
 
-    def get_student(self, email: str) -> Optional[Student]:
+    def get_student(self, email: str) -> Student:
         return self.student_repository.get_student(email)
 
-    def get_student_lessons(self, student_mail: str) -> Optional[List[Lesson]]:
+    def get_student_lessons(self, student_mail: str) -> List[Lesson]:
         return self.student_repository.get_student_lessons(student_mail)
 
     def set_student_balance(self, student_mail: str, new_balance: int) -> None:

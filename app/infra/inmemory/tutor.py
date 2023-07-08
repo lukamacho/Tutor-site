@@ -47,7 +47,7 @@ class InMemoryTutorRepository:
         if tutor is not None:
             return tutor.decrease_balance(amount)
 
-    def set_commission_pct(self, tutor_mail: str, new_commission_pct: float):
+    def set_commission_pct(self, tutor_mail: str, new_commission_pct: float) -> None:
         tutor = self.get_tutor(tutor_mail)
         if tutor is not None:
             return tutor.set_commission_pct(new_commission_pct)

@@ -16,7 +16,7 @@ class SqlHomeworkRepository:
                 tutor_mail TEXT NOT NULL,
                 student_mail TEXT NOT NULL,
                 FOREIGN KEY (tutor_mail) REFERENCES Tutors (email),
-                FOREIGN KEY (student_mail) REFERENCES Students (email)  
+                FOREIGN KEY (student_mail) REFERENCES Students (email)
             );
             """
         )
