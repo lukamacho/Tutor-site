@@ -5,21 +5,16 @@ from random import choices
 from string import ascii_letters, digits
 from typing import Any, Dict
 
-import jwt
+from app.infra.fastapi.token_authentication import generate_token, token_verification
+
 import requests
 from fastapi import APIRouter, Depends, HTTPException
 
-from fastapi.responses import JSONResponse, RedirectResponse
 from pydantic import BaseModel
-from pydantic.datetime_parse import timedelta
-
 
 from app.core.facade import OlympianTutorService
 from app.infra.fastapi.dependables import get_core
 from app.infra.fastapi.homepage_api import hash_password
-
-SECRET_KEY = "olympian-tutors-service"
-ALGORITHM = "HS256"
 
 admin_api = APIRouter()
 
@@ -92,8 +87,8 @@ def send_new_password(receiver_mail: str) -> str:
 
 @admin_api.post("/admin/report_to_admin/{user_mail}")
 async def report_to_admin(
-    user_mail: str,
-    data: ReportToAdminRequest,
+        user_mail: str,
+        data: ReportToAdminRequest,
 ) -> Dict[str, str]:
     print("/student/report_to_admin/" + user_mail)
     port = 465
@@ -112,7 +107,7 @@ async def report_to_admin(
 
 @admin_api.delete("/admin/delete_student")
 def delete_student(
-    student_mail: StudentDeleteRequest, core: OlympianTutorService = Depends(get_core)
+        student_mail: StudentDeleteRequest, core: OlympianTutorService = Depends(get_core)
 ) -> Dict[str, str]:
     print(student_mail)
     core.student_interactor.delete_student(student_mail.student_mail)
@@ -121,7 +116,7 @@ def delete_student(
 
 @admin_api.delete("/admin/delete_tutor")
 def delete_tutor(
-    tutor_mail: TutorDeleteRequest, core: OlympianTutorService = Depends(get_core)
+        tutor_mail: TutorDeleteRequest, core: OlympianTutorService = Depends(get_core)
 ) -> Dict[str, str]:
     print(tutor_mail)
     tutor = core.tutor_interactor.get_tutor(tutor_mail.tutor_mail)
@@ -133,7 +128,7 @@ def delete_tutor(
 
 @admin_api.delete("/admin/commission_pct")
 def commission_tutor(
-    tutor_mail: TutorCommissionRequest, core: OlympianTutorService = Depends(get_core)
+        tutor_mail: TutorCommissionRequest, core: OlympianTutorService = Depends(get_core)
 ) -> Dict[str, str]:
     print(tutor_mail)
     tutor = core.tutor_interactor.get_tutor(tutor_mail.tutor_mail)
@@ -146,7 +141,7 @@ def commission_tutor(
 
 @admin_api.post("/admin/reset_password")
 def reset_password(
-    password_reset: PasswordResetRequest, core: OlympianTutorService = Depends(get_core)
+        password_reset: PasswordResetRequest, core: OlympianTutorService = Depends(get_core)
 ) -> Dict[str, str]:
     user_mail = password_reset.email
     print(password_reset)
@@ -168,14 +163,9 @@ def reset_password(
     return {"message": "Password reset successfully."}
 
 
-def generate_token(email: str) -> str:
-    token_data = {"email": email}
-    return jwt.encode(token_data, SECRET_KEY, algorithm=ALGORITHM)
-
-
 @admin_api.post("/sign_in")
 def sign_in(
-    sign_in_request: SingInRequest, core: OlympianTutorService = Depends(get_core)
+        sign_in_request: SingInRequest, core: OlympianTutorService = Depends(get_core)
 ) -> Dict[str, object]:
     print(sign_in_request)
 
@@ -281,7 +271,7 @@ def get_user_info(access_token: str) -> Any:
 
 @admin_api.post("/admin/increase_student_balance")
 def add_balance(
-    add_balance: BalanceAdditionRequest, core: OlympianTutorService = Depends(get_core)
+        add_balance: BalanceAdditionRequest, core: OlympianTutorService = Depends(get_core)
 ) -> Dict[str, str]:
     student_mail = add_balance.student_mail
     amount = add_balance.amount
@@ -295,8 +285,8 @@ def add_balance(
 
 @admin_api.post("/admin/decrease_tutor_balance")
 def decrease_balance(
-    decrease_balance: DecreaseBalanceRequest,
-    core: OlympianTutorService = Depends(get_core),
+        decrease_balance: DecreaseBalanceRequest,
+        core: OlympianTutorService = Depends(get_core),
 ) -> Dict[str, str]:
     tutor_mail = decrease_balance.tutor_mail
     amount = decrease_balance.amount
@@ -307,27 +297,14 @@ def decrease_balance(
     return {"message": "Balance decreased successfully."}
 
 
-
-def token_verification(token: str) -> Any:
-    payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-    email = payload.get("email")
-    print("token verification - email: %s", email)
-    if email is None or email == "":
-        return ""
-
-    return email
-
-
 @admin_api.post("/verify_token")
 def verify_token(
-    verify_token_request: VerifyTokenRequest,
+        verify_token_request: VerifyTokenRequest,
 ) -> Dict[str, bool]:
     verifyToken = verify_token_request.token
     verifyMail = verify_token_request.email
 
-
     if verifyToken == '' or verifyMail == '':
-
         return {"verified": False}
 
     print(verifyToken)
@@ -406,11 +383,9 @@ async def generate_meeting_link(data: MeetingLinkRequest) -> Dict[str, str]:
 
     if response.status_code == 200:
         # Extract the meeting link from the API response
-        print("saswauli")
         meeting_link = response.json()["conferenceData"]["entryPoints"][0]["uri"]
         return {"meeting_link": meeting_link}
     else:
-        print("jandaba")
         return {"message": "Failed to create the meeting."}
 
 
@@ -421,7 +396,7 @@ class ScoreTutorRequest(BaseModel):
 
 @admin_api.post("/admin/score_tutor")
 async def score_tutor(
-    data: ScoreTutorRequest, core: OlympianTutorService = Depends(get_core)
+        data: ScoreTutorRequest, core: OlympianTutorService = Depends(get_core)
 ) -> Dict[str, str]:
     tutor_mail = data.tutor_mail
     score = data.score

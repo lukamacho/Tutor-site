@@ -46,9 +46,6 @@ const Verification = ({ setToken }) => {
   const [resendLoading, setResendLoading] = useState(false);
   const [resendSuccess, setResendSuccess] = useState(false);
 
-  console.log("is student")
-  console.log(is_student)
-
   const handleVerification = async () => {
     const expectedCode = location.state?.verificationCode;
     if (verificationCode === expectedCode) {
@@ -60,6 +57,9 @@ const Verification = ({ setToken }) => {
         "is_student": is_student,
       }
 
+      console.log("/add_user/parameters")
+      console.log(data)
+
       try {
         const response = await fetch('http://localhost:8000/add_user', {
           method: 'POST',
@@ -67,10 +67,15 @@ const Verification = ({ setToken }) => {
           headers: { 'Content-Type': 'application/json' }
         });
         const result = await response.json();
+        console.log("/add_user/response")
         console.log(result);
+
+        setToken(result.token)
       } catch (error) {
         console.error(error);
       }
+
+      sessionStorage.setItem("email", JSON.stringify(email))
 
       if (is_student) {
         navigate("/student_profile", {
