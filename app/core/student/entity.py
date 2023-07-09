@@ -37,6 +37,12 @@ class Student:
     def add_lessons(self, course_id: int, num_lessons: int) -> None:
         self.lessons[course_id] += num_lessons
 
+    def change_password(self, password: str) -> None:
+        self.password = password
+
+    def change_profile_address(self, profile_address: str) -> None:
+        self.profile_address = profile_address
+
     def book_lesson(self, course_id: int, timeslot: str) -> None:
         pass
 

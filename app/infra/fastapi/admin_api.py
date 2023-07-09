@@ -8,11 +8,7 @@ from typing import Any, Dict
 import jwt
 import requests
 from fastapi import APIRouter, Depends, HTTPException
-
-from fastapi.responses import JSONResponse, RedirectResponse
 from pydantic import BaseModel
-from pydantic.datetime_parse import timedelta
-
 
 from app.core.facade import OlympianTutorService
 from app.infra.fastapi.dependables import get_core
@@ -95,7 +91,7 @@ async def report_to_admin(
     user_mail: str,
     data: ReportToAdminRequest,
 ) -> Dict[str, str]:
-    print("/student/report_to_admin/" + user_mail)
+    print("/user/report_to_admin/" + user_mail)
     port = 465
     smtp_server = "smtp.gmail.com"
     sender_email = "tutorsite727@gmail.com"
@@ -307,7 +303,6 @@ def decrease_balance(
     return {"message": "Balance decreased successfully."}
 
 
-
 def token_verification(token: str) -> Any:
     payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
     email = payload.get("email")
@@ -325,9 +320,7 @@ def verify_token(
     verifyToken = verify_token_request.token
     verifyMail = verify_token_request.email
 
-
-    if verifyToken == '' or verifyMail == '':
-
+    if verifyToken == "" or verifyMail == "":
         return {"verified": False}
 
     print(verifyToken)

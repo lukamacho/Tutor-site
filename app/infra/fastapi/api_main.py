@@ -11,7 +11,7 @@ from app.infra.fastapi.tutor_api import tutor_api
 def setup_fastapi(core: OlympianTutorService) -> FastAPI:
     app = FastAPI()
 
-    origins = ["*"]
+    # origins = ["*"]
 
     app.add_middleware(
         CORSMiddleware,

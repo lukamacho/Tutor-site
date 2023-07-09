@@ -33,20 +33,33 @@ class InMemoryStudentRepository:
 
     def increase_student_balance(self, student_mail: str, amount: int) -> None:
         student = self.get_student(student_mail)
-        if student is not None:
+        if student.email != "":
             return student.increase_balance(amount)
 
     def decrease_student_balance(self, student_mail: str, amount: int) -> None:
         student = self.get_student(student_mail)
-        if student is not None:
+        if student.email != "":
             return student.decrease_balance(amount)
 
     def change_student_first_name(self, student_mail: str, first_name: str) -> None:
         student = self.get_student(student_mail)
-        if student is not None:
+        if student.email != "":
             student.change_first_name(first_name)
 
     def change_student_last_name(self, student_mail: str, last_name: str) -> None:
         student = self.get_student(student_mail)
-        if student is not None:
+        if student.email != "":
             student.change_last_name(last_name)
+
+    def change_student_password(self, student_mail: str, password: str) -> None:
+        student = self.get_student(student_mail)
+        if student.email != "":
+            student.change_password(password)
+
+    def change_student_profile_address(self, student_mail: str, profile_address: str):
+        student = self.get_student(student_mail)
+        if student.email != "":
+            student.change_profile_address(profile_address)
+
+    def delete_student(self, student_mail: str) -> None:
+        self.data.pop(student_mail)
