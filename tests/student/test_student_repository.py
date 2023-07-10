@@ -1,5 +1,5 @@
-from app.core.student.interactor import IStudentRepository
 from app.core.student.entity import Student
+from app.core.student.interactor import IStudentRepository
 
 
 def test_create_student(student_repository: IStudentRepository) -> None:
@@ -9,7 +9,9 @@ def test_create_student(student_repository: IStudentRepository) -> None:
     password = "anne123"
     balance = 0
 
-    response = student_repository.create_student(first_name, last_name, email, password, balance)
+    response = student_repository.create_student(
+        first_name, last_name, email, password, balance
+    )
 
     assert isinstance(response, Student)
     assert response.first_name == first_name
@@ -114,3 +116,79 @@ def test_change_information(student_repository: IStudentRepository) -> None:
     assert isinstance(get_response, Student)
     assert get_response.first_name == new_first_name
     assert get_response.last_name == new_last_name
+
+
+def test_change_password(student_repository: IStudentRepository) -> None:
+    first_name = "Anne"
+    last_name = "Warwick"
+    email = "annewarwick@gmail.com"
+    password = "anne123"
+    new_password = "anne1234"
+    balance = 0
+
+    response = student_repository.create_student(
+        first_name, last_name, email, password, balance
+    )
+
+    assert isinstance(response, Student)
+    assert response.first_name == first_name
+    assert response.last_name == last_name
+    assert response.email == email
+    assert response.password == password
+    assert response.balance == balance
+
+    student_repository.change_student_password(email, new_password)
+    response = student_repository.get_student(email)
+    assert response.email == email
+    assert response.password == new_password
+
+
+def test_change_profile_address(student_repository: IStudentRepository) -> None:
+    first_name = "Anne"
+    last_name = "Warwick"
+    email = "annewarwick@gmail.com"
+    password = "anne123"
+    balance = 0
+    profile_address = "/annewarwick"
+    response = student_repository.create_student(
+        first_name, last_name, email, password, balance
+    )
+
+    assert isinstance(response, Student)
+    assert response.first_name == first_name
+    assert response.last_name == last_name
+    assert response.email == email
+    assert response.password == password
+    assert response.balance == balance
+    assert response.profile_address == ""
+
+    student_repository.change_student_profile_address(email, profile_address)
+    response = student_repository.get_student(email)
+    assert response.profile_address == profile_address
+
+
+def test_delete_student(student_repository: IStudentRepository) -> None:
+    first_name = "Anne"
+    last_name = "Warwick"
+    email = "annewarwick@gmail.com"
+    password = "anne123"
+    balance = 0
+
+    response = student_repository.create_student(
+        first_name, last_name, email, password, balance
+    )
+
+    assert isinstance(response, Student)
+    assert response.first_name == first_name
+    assert response.last_name == last_name
+    assert response.email == email
+    assert response.password == password
+    assert response.balance == balance
+
+    student_repository.delete_student(email)
+    response = student_repository.get_student(email)
+    assert response.first_name == ""
+    assert response.last_name == ""
+    assert response.email == ""
+    assert response.password == ""
+    assert response.balance == 0
