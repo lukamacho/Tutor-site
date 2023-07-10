@@ -16,8 +16,18 @@ class InMemoryTutorRepository:
         password: str,
         balance: int,
         biography: str,
+        profile_address: str = "",
     ) -> Tutor:
-        tutor = Tutor(first_name, last_name, email, password, 0.25, balance, biography)
+        tutor = Tutor(
+            first_name,
+            last_name,
+            email,
+            password,
+            0.25,
+            balance,
+            biography,
+            profile_address,
+        )
         self.data[email] = tutor
         return tutor
 

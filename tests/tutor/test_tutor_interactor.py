@@ -19,7 +19,9 @@ def test_create_tutors(tutor_repository: ITutorRepository) -> None:
 
     for i in range(10000):
         mail = "johndoe{i}@gmail.com".format(i=i)
-        response = interactor.create_tutor("John", "Doe", mail, "johndoe", 0, "I'm John.")
+        response = interactor.create_tutor(
+            "John", "Doe", mail, "johndoe", 0, "I'm John."
+        )
         assert isinstance(response, Tutor)
         assert tutor_repository.get_tutor(mail) is not None
 
@@ -160,15 +162,81 @@ def test_change_information(tutor_repository: ITutorRepository) -> None:
     new_first_name = "Violet"
     new_last_name = "Dove"
     new_biography = "Who am I?"
-
+    new_password = "johndoe1"
+    new_profile_address = "prof_address"
     interactor.create_tutor(first_name, last_name, email, password, balance, biography)
     interactor.change_tutor_first_name(email, new_first_name)
     interactor.change_tutor_last_name(email, new_last_name)
     interactor.change_tutor_biography(email, new_biography)
-
+    interactor.change_tutor_password(email, new_password)
+    interactor.change_tutor_profile_address(email, new_profile_address)
     get_response = interactor.get_tutor(email)
 
     assert isinstance(get_response, Tutor)
     assert get_response.first_name == new_first_name
     assert get_response.last_name == new_last_name
     assert get_response.biography == new_biography
+    assert get_response.password == new_password
+    assert get_response.profile_address == new_profile_address
+
+
+def test_delete_tutor(tutor_repository: ITutorRepository) -> None:
+    interactor = TutorInteractor(tutor_repository)
+
+    first_name = "Emma"
+    last_name = "Stone"
+    email = "emmastone@gmail.com"
+    password = "lalaland"
+    balance = 80
+    biography = "I am an actress."
+
+    interactor.create_tutor(first_name, last_name, email, password, balance, biography)
+    get_response = interactor.get_tutor(email)
+
+    assert isinstance(get_response, Tutor)
+    assert get_response.first_name == first_name
+    assert get_response.last_name == last_name
+    assert get_response.email == email
+    assert get_response.password == password
+    assert get_response.balance == balance
+    assert get_response.biography == biography
+    assert get_response.commission_pct == 0.25
+
+    interactor.delete_tutor(email)
+    get_response = interactor.get_tutor(email)
+
+    assert get_response.first_name == ""
+    assert get_response.last_name == ""
+    assert get_response.email == ""
+    assert get_response.password == ""
+    assert get_response.balance == 0
+    assert get_response.biography == ""
+
+
+def test_get_tutors(tutor_repository: ITutorRepository) -> None:
+    interactor = TutorInteractor(tutor_repository)
+
+    first_name = "Emma"
+    last_name = "Stone"
+    email = "emmastone@gmail.com"
+    email_2 = "jackdaniels@gmail.com"
+    password = "lalaland"
+    balance = 80
+    biography = "I am an actress."
+
+    interactor.create_tutor(first_name, last_name, email, password, balance, biography)
+    tutors = interactor.get_tutors()
+
+    assert len(tutors) == 1
+    interactor.create_tutor(
+        first_name, last_name, email_2, password, balance, biography
+    )
+
+    tutors = interactor.get_tutors()
+    assert len(tutors) == 2
+
+    interactor.delete_tutor(email)
+    interactor.delete_tutor(email_2)
+
+    tutors = interactor.get_tutors()
+    assert len(tutors) == 0
