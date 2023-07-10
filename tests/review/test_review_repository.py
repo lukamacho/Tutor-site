@@ -1,6 +1,5 @@
-from app.core.review.interactor import IReviewRepository
-from app.infra.sqlite.review import SqlReviewRepository
 from app.core.review.entity import Review
+from app.core.review.interactor import IReviewRepository
 
 
 def test_create_review(review_repository: IReviewRepository) -> None:
