@@ -25,8 +25,39 @@ const containerStyle = {
 
 export default function Courses() {
   const email = JSON.parse(sessionStorage.getItem("email"))
-  const isStudent = JSON.parse(sessionStorage.getItem("isStudent"))
   const [courses, setCourses] = useState([])
+  const [isStudent, setIsStudent] = useState(false)
+
+  useEffect(() => {
+    const getUser = async () => {
+      const data = {
+        email: email,
+      }
+
+      console.log("/get_user/parameters")
+      console.log(data)
+
+      try {
+        let response = await fetch('http://localhost:8000/get_user', {
+          method: 'POST',
+          body: JSON.stringify(data),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        response = await response.json();
+        console.log("/get_user/response");
+        console.log(response)
+
+        setIsStudent(response.is_student)
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    getUser();
+  }, []);
 
   useEffect(() => {
     const handleGetCourses = async () => {
