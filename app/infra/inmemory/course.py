@@ -26,6 +26,10 @@ class InMemoryCourseRepository:
                 courses.append(course)
         return courses
 
+    def change_price(self, tutor_mail: str, subject: str, course_price: int) -> None:
+        # dasamtavrebeli maq
+        return
+
     def get_courses(self) -> List[Course]:
         return self.data
 

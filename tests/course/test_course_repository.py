@@ -1,6 +1,5 @@
-from app.core.course.interactor import ICourseRepository
-from app.infra.sqlite.course import SqlCourseRepository
 from app.core.course.entity import Course
+from app.core.course.interactor import ICourseRepository
 
 
 def test_create_course(course_repository: ICourseRepository) -> None:
@@ -72,6 +71,6 @@ def test_delete_course(course_repository: ICourseRepository) -> None:
     get_response = course_repository.get_tutor_courses(tutor_mail)
 
     assert len(get_response) == num_subjects
-    course_repository.delete_course(tutor_mail,subject_1)
+    course_repository.delete_course(tutor_mail, subject_1)
     get_response = course_repository.get_tutor_courses(tutor_mail)
     assert len(get_response) == (num_subjects - 1)

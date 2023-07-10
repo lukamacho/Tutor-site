@@ -1,5 +1,5 @@
 from app.core.course.entity import Course
-from app.core.course.interactor import ICourseRepository, CourseInteractor
+from app.core.course.interactor import CourseInteractor, ICourseRepository
 
 
 def test_create_course(course_repository: ICourseRepository) -> None:
@@ -26,7 +26,7 @@ def test_create_courses(course_repository: ICourseRepository) -> None:
         response = interactor.create_course(subject, mail, 35)
         assert isinstance(response, Course)
         assert course_repository.get_course(subject, mail) is not None
-        assert course_repository.get_courses(mail) is not None
+        assert course_repository.get_courses() is not None
 
 
 def test_get_course(course_repository: ICourseRepository) -> None:
@@ -89,6 +89,6 @@ def test_delete_course(course_repository: ICourseRepository) -> None:
     get_response = course_repository.get_tutor_courses(tutor_mail)
 
     assert len(get_response) == num_subjects
-    interactor.delete_course(tutor_mail,subject_1)
-    get_response = course_repository.get_tutor_courses(tutor_mail)
+    interactor.delete_course(tutor_mail, subject_1)
+    get_response = interactor.get_tutor_courses(tutor_mail)
     assert len(get_response) == (num_subjects - 1)
