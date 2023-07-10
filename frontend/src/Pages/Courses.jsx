@@ -9,6 +9,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 import { CourseStyledTypography } from "../Components/Styles"
 import { HeaderStyledTypography } from "../Components/Styles"
+import { Link } from "react-router-dom"
 
 const StyledCard = styled(Card)(({ theme }) => ({
   backgroundColor: '#fffede',
@@ -23,8 +24,8 @@ const containerStyle = {
 };
 
 export default function Courses() {
-  const email = JSON.parse(localStorage.getItem("email"))
-  const isStudent = JSON.parse(localStorage.getItem("isStudent"))
+  const email = JSON.parse(sessionStorage.getItem("email"))
+  const isStudent = JSON.parse(sessionStorage.getItem("isStudent"))
   const [courses, setCourses] = useState([])
 
   useEffect(() => {
@@ -87,7 +88,9 @@ export default function Courses() {
                     </CourseStyledTypography>
                     <CourseStyledTypography variant="h7">
                       <PersonIcon />
-                      {course.tutor_mail}
+                      <Link to={"/tutors/tutor/" + course.tutor_mail}>
+                        {course.tutor_mail}
+                      </Link>
                     </CourseStyledTypography>
                     <CourseStyledTypography variant="h7">
                       <LocalOfferIcon />
