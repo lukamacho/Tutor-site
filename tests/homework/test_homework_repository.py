@@ -7,7 +7,9 @@ def test_create_homework(homework_repository: IHomeworkRepository) -> None:
     tutor_mail = "tutor@gmail.com"
     student_mail = "student@gmail.com"
 
-    response = homework_repository.create_homework(homework_text, tutor_mail, student_mail)
+    response = homework_repository.create_homework(
+        homework_text, tutor_mail, student_mail
+    )
 
     assert isinstance(response, Homework)
     assert response.homework_text == homework_text
@@ -23,7 +25,9 @@ def test_change_homework(homework_repository: IHomeworkRepository) -> None:
     new_homework_text = "Solve five problems."
 
     homework_repository.create_homework(homework_text, tutor_mail, student_mail)
-    homework_repository.change_homework(new_homework_text, homework_text, tutor_mail, student_mail)
+    homework_repository.change_homework(
+        new_homework_text, homework_text, tutor_mail, student_mail
+    )
     response = homework_repository.get_student_homework(student_mail)
 
     assert response is not None
