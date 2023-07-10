@@ -26,7 +26,9 @@ def test_get_lesson(lesson_repository: ILessonRepository) -> None:
     number_of_lessons = 10
     lesson_price = 45
 
-    interactor.create_lesson(subject, tutor_mail, student_mail, number_of_lessons, lesson_price)
+    interactor.create_lesson(
+        subject, tutor_mail, student_mail, number_of_lessons, lesson_price
+    )
     get_response = interactor.get_lesson(tutor_mail, student_mail, subject)
 
     assert isinstance(get_response, Lesson)
@@ -59,7 +61,9 @@ def test_get_number_of_lessons(lesson_repository: ILessonRepository) -> None:
     number_of_lessons = 7
     lesson_price = 65
 
-    interactor.create_lesson(subject, tutor_mail, student_mail, number_of_lessons, lesson_price)
+    interactor.create_lesson(
+        subject, tutor_mail, student_mail, number_of_lessons, lesson_price
+    )
     get_response = interactor.get_number_of_lessons(tutor_mail, student_mail, subject)
 
     assert isinstance(get_response, int)
@@ -77,8 +81,12 @@ def test_set_number_of_lessons(lesson_repository: ILessonRepository) -> None:
 
     new_number_of_lessons = 7
 
-    interactor.create_lesson(subject, tutor_mail, student_mail, number_of_lessons, lesson_price)
-    interactor.set_number_of_lessons(tutor_mail, student_mail, new_number_of_lessons, subject)
+    interactor.create_lesson(
+        subject, tutor_mail, student_mail, number_of_lessons, lesson_price
+    )
+    interactor.set_number_of_lessons(
+        tutor_mail, student_mail, new_number_of_lessons, subject
+    )
     get_response = interactor.get_number_of_lessons(tutor_mail, student_mail, subject)
 
     assert isinstance(get_response, int)
@@ -86,7 +94,9 @@ def test_set_number_of_lessons(lesson_repository: ILessonRepository) -> None:
 
     new_number_of_lessons = 14
 
-    interactor.set_number_of_lessons(tutor_mail, student_mail, new_number_of_lessons, subject)
+    interactor.set_number_of_lessons(
+        tutor_mail, student_mail, new_number_of_lessons, subject
+    )
     get_response = interactor.get_number_of_lessons(tutor_mail, student_mail, subject)
 
     assert isinstance(get_response, int)
@@ -104,7 +114,9 @@ def test_change_number_of_lessons(lesson_repository: ILessonRepository) -> None:
 
     increment = 2
 
-    interactor.create_lesson(subject, tutor_mail, student_mail, number_of_lessons, lesson_price)
+    interactor.create_lesson(
+        subject, tutor_mail, student_mail, number_of_lessons, lesson_price
+    )
     interactor.increase_lesson_number(tutor_mail, student_mail, increment, subject)
     get_response = interactor.get_number_of_lessons(tutor_mail, student_mail, subject)
 
@@ -133,7 +145,9 @@ def test_set_lesson_price(lesson_repository: ILessonRepository) -> None:
 
     new_lesson_price = 55
 
-    interactor.create_lesson(subject, tutor_mail, student_mail, number_of_lessons, lesson_price)
+    interactor.create_lesson(
+        subject, tutor_mail, student_mail, number_of_lessons, lesson_price
+    )
     interactor.set_lesson_price(tutor_mail, student_mail, subject, new_lesson_price)
     get_response = interactor.get_lesson(tutor_mail, student_mail, subject)
 
@@ -147,3 +161,62 @@ def test_set_lesson_price(lesson_repository: ILessonRepository) -> None:
 
     assert isinstance(get_response, Lesson)
     assert get_response.lesson_price == new_lesson_price
+
+
+def test_get_tutor_lessons(lesson_repository: ILessonRepository) -> None:
+    interactor = LessonInteractor(lesson_repository)
+
+    subject = "Machine Learning"
+    subject_2 = "Music"
+    tutor_mail = "tutor@gmail.com"
+    student_mail = "student@gmail.com"
+    number_of_lessons = 25
+    lesson_price = 60
+
+    new_lesson_price = 55
+
+    interactor.create_lesson(
+        subject, tutor_mail, student_mail, number_of_lessons, lesson_price
+    )
+    interactor.set_lesson_price(tutor_mail, student_mail, subject, new_lesson_price)
+    interactor.create_lesson(
+        subject_2, tutor_mail, student_mail, number_of_lessons, lesson_price
+    )
+    get_response = interactor.get_lesson(tutor_mail, student_mail, subject)
+
+    tutor_lessons = interactor.get_tutor_lessons(tutor_mail)
+    assert len(tutor_lessons) == 2
+
+    tutor_lessons = interactor.get_tutor_lessons("Invalid")
+    assert len(tutor_lessons) == 0
+    assert isinstance(get_response.lesson_price, int)
+    assert get_response.lesson_price == new_lesson_price
+
+
+def test_get_tutor_students(lesson_repository: ILessonRepository) -> None:
+    interactor = LessonInteractor(lesson_repository)
+
+    subject = "Machine Learning"
+    tutor_mail = "tutor@gmail.com"
+    student_mail = "student@gmail.com"
+    student_mail_2 = "stud@gmail.com"
+    number_of_lessons = 25
+    lesson_price = 60
+
+    new_lesson_price = 55
+
+    interactor.create_lesson(
+        subject, tutor_mail, student_mail, number_of_lessons, lesson_price
+    )
+
+    interactor.set_lesson_price(tutor_mail, student_mail, subject, new_lesson_price)
+    tutor_students = interactor.get_tutor_students(tutor_mail)
+
+    assert len(tutor_students) == 1
+
+    interactor.create_lesson(
+        subject, tutor_mail, student_mail_2, number_of_lessons, lesson_price
+    )
+    tutor_students = interactor.get_tutor_students(tutor_mail)
+
+    assert len(tutor_students) == 2
