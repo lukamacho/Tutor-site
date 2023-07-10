@@ -63,3 +63,9 @@ class InMemoryMessageRepository:
                 i -= 1
                 length -= 1
             i += 1
+
+    def get_student_messaged_tutors(self, student_mail: str) -> list[str]:
+        return []
+
+    def get_tutor_messaged_students(self, tutor_mail: str) -> list[str]:
+        return []
