@@ -15,6 +15,8 @@ import TutorProfile from './Pages/Tutor';
 import Courses from './Pages/Courses';
 import Tutors from './Pages/Tutors';
 import PublicTutor from './Pages/PublicTutor';
+import TutorMessages from "./Pages/TutorMessages"
+import StudentMessages from "./Pages/StudentMessages"
 
 export default function App() {
   const {token, setToken} = useToken();
@@ -35,6 +37,8 @@ export default function App() {
           <Route path="courses" element={<Courses />} />
           <Route path="tutors" element={<Tutors />} />
           <Route path="tutors/tutor/:email" element={<PublicTutor />} />
+          <Route path="tutor/messages" element={<TutorMessages />}/>
+          <Route path="student/messages" element={<StudentMessages />}/>
         </Routes>
       </BrowserRouter>
     </ThemeProvider>
