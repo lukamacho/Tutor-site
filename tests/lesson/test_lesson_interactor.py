@@ -12,9 +12,9 @@ def test_create_lesson(lesson_repository: ILessonRepository) -> None:
     response = interactor.create_lesson(subject, tutor_mail, student_mail, 5, 70)
 
     assert isinstance(response, Lesson)
-    assert interactor.get_lesson(tutor_mail, student_mail, subject) is not None
-    assert interactor.get_lesson(tutor_mail, "", subject) is None
-    assert interactor.get_lesson(tutor_mail, student_mail, "") is None
+    assert interactor.get_lesson(tutor_mail, student_mail, subject).lesson_price != 0
+    assert interactor.get_lesson(tutor_mail, "", subject).lesson_price == 0
+    assert interactor.get_lesson(tutor_mail, student_mail, "").subject == ""
 
 
 def test_get_lesson(lesson_repository: ILessonRepository) -> None:
@@ -43,13 +43,13 @@ def test_get_lesson(lesson_repository: ILessonRepository) -> None:
     new_student_mail = "student2@gmail.com"
 
     get_response = interactor.get_lesson(tutor_mail, student_mail, new_subject)
-    assert get_response is None
+    assert get_response.lesson_price == 0
 
     get_response = interactor.get_lesson(new_tutor_mail, student_mail, subject)
-    assert get_response is None
+    assert get_response.subject == ""
 
     get_response = interactor.get_lesson(tutor_mail, new_student_mail, subject)
-    assert get_response is None
+    assert get_response.tutor_mail == ""
 
 
 def test_get_number_of_lessons(lesson_repository: ILessonRepository) -> None:
