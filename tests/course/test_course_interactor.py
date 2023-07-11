@@ -12,8 +12,8 @@ def test_create_course(course_repository: ICourseRepository) -> None:
 
     assert isinstance(response, Course)
     assert course_repository.get_course(subject, mail) is not None
-    assert course_repository.get_course(subject, "") is None
-    assert course_repository.get_course("", mail) is None
+    assert course_repository.get_course(subject, "").subject == ""
+    assert course_repository.get_course("", mail).tutor_mail == ""
 
 
 def test_create_courses(course_repository: ICourseRepository) -> None:
@@ -48,7 +48,7 @@ def test_get_course(course_repository: ICourseRepository) -> None:
 
     get_response = interactor.get_course(subject, tutor_mail)
 
-    assert get_response is None
+    assert get_response.tutor_mail == ""
 
 
 def test_get_courses(course_repository: ICourseRepository) -> None:
