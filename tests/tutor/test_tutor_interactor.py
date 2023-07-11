@@ -10,8 +10,8 @@ def test_create_tutor(tutor_repository: ITutorRepository) -> None:
     response = interactor.create_tutor("John", "Doe", mail, "johndoe", 0, "I'm John.")
 
     assert isinstance(response, Tutor)
-    assert tutor_repository.get_tutor(mail) is not None
-    assert tutor_repository.get_tutor("") is None
+    assert tutor_repository.get_tutor(mail).email != ""
+    assert tutor_repository.get_tutor("").email == ""
 
 
 def test_create_tutors(tutor_repository: ITutorRepository) -> None:
@@ -23,7 +23,7 @@ def test_create_tutors(tutor_repository: ITutorRepository) -> None:
             "John", "Doe", mail, "johndoe", 0, "I'm John."
         )
         assert isinstance(response, Tutor)
-        assert tutor_repository.get_tutor(mail) is not None
+        assert tutor_repository.get_tutor(mail).email != ""
 
 
 def test_get_tutor(tutor_repository: ITutorRepository) -> None:
@@ -52,7 +52,7 @@ def test_get_tutor(tutor_repository: ITutorRepository) -> None:
 
     get_response = interactor.get_tutor(new_email)
 
-    assert get_response is None
+    assert get_response.email == ""
 
 
 def test_set_balance(tutor_repository: ITutorRepository) -> None:

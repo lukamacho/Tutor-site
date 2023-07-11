@@ -50,7 +50,7 @@ def test_get_tutor(tutor_repository: ITutorRepository) -> None:
 
     get_response = tutor_repository.get_tutor(new_email)
 
-    assert get_response is None
+    assert get_response.email == ""
 
 
 def test_set_balance(tutor_repository: ITutorRepository) -> None:
