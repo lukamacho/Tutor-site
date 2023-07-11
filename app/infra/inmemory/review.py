@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from typing import List, Optional
+from typing import List
 
 from app.core.review.entity import Review
 
@@ -15,11 +15,11 @@ class InMemoryReviewRepository:
         self.data.append(review)
         return review
 
-    def get_review(self, tutor_mail: str, student_mail: str) -> Optional[Review]:
+    def get_review(self, tutor_mail: str, student_mail: str) -> Review:
         for review in self.data:
             if review.tutor_mail == tutor_mail and review.student_mail == student_mail:
                 return review
-        return None
+        return Review("", "", "")
 
     def get_tutor_reviews(self, tutor_mail: str) -> List[Review]:
         reviews: List[Review] = []

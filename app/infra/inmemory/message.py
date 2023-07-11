@@ -25,6 +25,21 @@ class InMemoryMessageRepository:
                 messages.append(message)
         return messages
 
+    def get_tutor_student_messages(self, tutor_mail: str) -> List[str]:
+        tutor_students: List[str] = []
+        for message in self.data:
+            if message.tutor_mail == tutor_mail:
+                tutor_students.append(message.student_mail)
+
+        return tutor_students
+
+    def get_student_tutor_messages(self, student_mail: str) -> List[str]:
+        student_tutors: List[str] = []
+        for message in self.data:
+            if message.student_mail == student_mail:
+                student_tutors.append(message.tutor_mail)
+        return student_tutors
+
     def delete_tutor_messages(self, tutor_mail: str) -> None:
         i = 0
         length = len(self.data)
@@ -48,3 +63,9 @@ class InMemoryMessageRepository:
                 i -= 1
                 length -= 1
             i += 1
+
+    def get_student_messaged_tutors(self, student_mail: str) -> list[str]:
+        return []
+
+    def get_tutor_messaged_students(self, tutor_mail: str) -> list[str]:
+        return []

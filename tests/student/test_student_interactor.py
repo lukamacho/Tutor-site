@@ -1,5 +1,5 @@
-from app.core.student.interactor import StudentInteractor, IStudentRepository
 from app.core.student.entity import Student
+from app.core.student.interactor import IStudentRepository, StudentInteractor
 
 
 def test_create_student(student_repository: IStudentRepository) -> None:
@@ -10,8 +10,8 @@ def test_create_student(student_repository: IStudentRepository) -> None:
     response = interactor.create_student("John", "Doe", mail, "johndoe", 50)
 
     assert isinstance(response, Student)
-    assert student_repository.get_student(mail) is not None
-    assert student_repository.get_student("") is None
+    assert student_repository.get_student(mail).email != ""
+    assert student_repository.get_student("").email == ""
 
 
 def test_create_students(student_repository: IStudentRepository) -> None:
@@ -47,7 +47,7 @@ def test_get_student(student_repository: IStudentRepository) -> None:
 
     get_response = interactor.get_student(new_email)
 
-    assert get_response is None
+    assert get_response.email == ""
 
 
 def test_set_balance(student_repository: IStudentRepository) -> None:
@@ -127,3 +127,85 @@ def test_change_information(student_repository: IStudentRepository) -> None:
     assert isinstance(get_response, Student)
     assert get_response.first_name == new_first_name
     assert get_response.last_name == new_last_name
+
+
+def test_change_password(student_repository: IStudentRepository) -> None:
+    interactor = StudentInteractor(student_repository)
+
+    first_name = "Anne"
+    last_name = "Warwick"
+    email = "annewarwick@gmail.com"
+    password = "anne123"
+    new_password = "anne1234"
+    balance = 0
+
+    response = interactor.create_student(
+        first_name, last_name, email, password, balance
+    )
+
+    assert isinstance(response, Student)
+    assert response.first_name == first_name
+    assert response.last_name == last_name
+    assert response.email == email
+    assert response.password == password
+    assert response.balance == balance
+
+    interactor.change_student_password(email, new_password)
+    response = interactor.get_student(email)
+    assert response.email == email
+    assert response.password == new_password
+
+
+def test_change_profile_address(student_repository: IStudentRepository) -> None:
+    interactor = StudentInteractor(student_repository)
+
+    first_name = "Anne"
+    last_name = "Warwick"
+    email = "annewarwick@gmail.com"
+    password = "anne123"
+    balance = 0
+    profile_address = "/annewarwick"
+    response = interactor.create_student(
+        first_name, last_name, email, password, balance
+    )
+
+    assert isinstance(response, Student)
+    assert response.first_name == first_name
+    assert response.last_name == last_name
+    assert response.email == email
+    assert response.password == password
+    assert response.balance == balance
+    assert response.profile_address == ""
+
+    interactor.change_student_profile_address(email, profile_address)
+    response = interactor.get_student(email)
+    assert response.profile_address == profile_address
+
+
+def test_delete_student(student_repository: IStudentRepository) -> None:
+    interactor = StudentInteractor(student_repository)
+
+    first_name = "Anne"
+    last_name = "Warwick"
+    email = "annewarwick@gmail.com"
+    password = "anne123"
+    balance = 0
+
+    response = interactor.create_student(
+        first_name, last_name, email, password, balance
+    )
+
+    assert isinstance(response, Student)
+    assert response.first_name == first_name
+    assert response.last_name == last_name
+    assert response.email == email
+    assert response.password == password
+    assert response.balance == balance
+
+    interactor.delete_student(email)
+    response = interactor.get_student(email)
+    assert response.first_name == ""
+    assert response.last_name == ""
+    assert response.email == ""
+    assert response.password == ""
+    assert response.balance == 0

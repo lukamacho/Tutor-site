@@ -7,7 +7,9 @@ def test_create_homework(homework_repository: IHomeworkRepository) -> None:
 
     student_mail = "student@gmail.com"
 
-    response = interactor.create_homework("Solve one problem.", "tutor@gmail.com", student_mail)
+    response = interactor.create_homework(
+        "Solve one problem.", "tutor@gmail.com", student_mail
+    )
 
     assert isinstance(response, Homework)
     assert homework_repository.get_student_homework(student_mail) is not None
@@ -27,21 +29,6 @@ def test_create_homeworks(homework_repository: IHomeworkRepository) -> None:
     assert len(homework_repository.get_student_homework(student_mail)) == 10000
 
 
-def test_create_homework(homework_repository: IHomeworkRepository) -> None:
-    interactor = HomeworkInteractor(homework_repository)
-
-    homework_text = "Solve three problems."
-    tutor_mail = "tutor@gmail.com"
-    student_mail = "student@gmail.com"
-
-    response = interactor.create_homework(homework_text, tutor_mail, student_mail)
-
-    assert isinstance(response, Homework)
-    assert response.homework_text == homework_text
-    assert response.tutor_mail == tutor_mail
-    assert response.student_mail == student_mail
-
-
 def test_change_homework(homework_repository: IHomeworkRepository) -> None:
     interactor = HomeworkInteractor(homework_repository)
 
@@ -52,7 +39,9 @@ def test_change_homework(homework_repository: IHomeworkRepository) -> None:
     new_homework_text = "Solve five problems."
 
     interactor.create_homework(homework_text, tutor_mail, student_mail)
-    interactor.change_homework(new_homework_text, homework_text, tutor_mail, student_mail)
+    interactor.change_homework(
+        new_homework_text, homework_text, tutor_mail, student_mail
+    )
     response = interactor.get_student_homework(student_mail)
 
     assert response is not None
