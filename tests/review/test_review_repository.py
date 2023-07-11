@@ -32,7 +32,7 @@ def test_get_review(review_repository: IReviewRepository) -> None:
 
     get_response = review_repository.get_review(tutor_mail, new_student_mail)
 
-    assert get_response is None
+    assert get_response.tutor_mail == ""
 
 
 def test_delete_review(review_repository: IReviewRepository) -> None:
@@ -43,12 +43,12 @@ def test_delete_review(review_repository: IReviewRepository) -> None:
     review_repository.create_review(review_text, tutor_mail, student_mail)
     get_response = review_repository.get_review(tutor_mail, student_mail)
 
-    assert get_response is not None
+    assert get_response.review_text != ""
 
     review_repository.delete_review(tutor_mail, student_mail)
     get_response = review_repository.get_review(tutor_mail, student_mail)
 
-    assert get_response is None
+    assert get_response.review_text == ""
 
 
 def test_change_review(review_repository: IReviewRepository) -> None:

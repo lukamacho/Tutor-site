@@ -11,9 +11,9 @@ def test_create_review(review_repository: IReviewRepository) -> None:
     response = interactor.create_review("Great tutor.", tutor_mail, student_mail)
 
     assert isinstance(response, Review)
-    assert review_repository.get_review(tutor_mail, student_mail) is not None
-    assert review_repository.get_review("", student_mail) is None
-    assert review_repository.get_review(tutor_mail, "") is None
+    assert review_repository.get_review(tutor_mail, student_mail).review_text != ""
+    assert review_repository.get_review("", student_mail).review_text == ""
+    assert review_repository.get_review(tutor_mail, "").review_text == ""
 
 
 def test_create_reviews(review_repository: IReviewRepository) -> None:
@@ -47,7 +47,7 @@ def test_get_review(review_repository: IReviewRepository) -> None:
 
     get_response = interactor.get_review(tutor_mail, new_student_mail)
 
-    assert get_response is None
+    assert get_response.review_text == ""
 
 
 def test_delete_review(review_repository: IReviewRepository) -> None:
@@ -60,12 +60,12 @@ def test_delete_review(review_repository: IReviewRepository) -> None:
     interactor.create_review(review_text, tutor_mail, student_mail)
     get_response = interactor.get_review(tutor_mail, student_mail)
 
-    assert get_response is not None
+    assert get_response.review_text != ""
 
     interactor.delete_review(tutor_mail, student_mail)
     get_response = interactor.get_review(tutor_mail, student_mail)
 
-    assert get_response is None
+    assert get_response.review_text == ""
 
 
 def test_change_review(review_repository: IReviewRepository) -> None:
