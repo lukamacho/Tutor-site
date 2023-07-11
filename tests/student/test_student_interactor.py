@@ -10,8 +10,8 @@ def test_create_student(student_repository: IStudentRepository) -> None:
     response = interactor.create_student("John", "Doe", mail, "johndoe", 50)
 
     assert isinstance(response, Student)
-    assert student_repository.get_student(mail) is not None
-    assert student_repository.get_student("") is None
+    assert student_repository.get_student(mail).email != ""
+    assert student_repository.get_student("").email == ""
 
 
 def test_create_students(student_repository: IStudentRepository) -> None:
@@ -47,7 +47,7 @@ def test_get_student(student_repository: IStudentRepository) -> None:
 
     get_response = interactor.get_student(new_email)
 
-    assert get_response is None
+    assert get_response.email == ""
 
 
 def test_set_balance(student_repository: IStudentRepository) -> None:

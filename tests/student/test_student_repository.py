@@ -42,7 +42,7 @@ def test_get_student(student_repository: IStudentRepository) -> None:
 
     get_response = student_repository.get_student(new_email)
 
-    assert get_response is None
+    assert get_response.email == ""
 
 
 def test_set_balance(student_repository: IStudentRepository) -> None:
