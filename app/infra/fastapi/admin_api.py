@@ -281,7 +281,7 @@ def add_balance(
     amount = add_balance.amount
     student = core.student_interactor.get_student(student_mail)
     if student.email == "":
-        return {"Message": "No such student exists."}
+        return {"message": "No such student exists."}
     core.student_interactor.increase_student_balance(student_mail, amount)
 
     return {"message": "Balance added successfully."}
@@ -409,4 +409,4 @@ async def score_tutor(
         return {"message": "Tutor with this mail doesn't exist"}
     core.tutor_ranking_interactor.set_admin_score(tutor_mail, score)
 
-    return {"message": "Student evaluated successfully."}
+    return {"message": "Tutor evaluated successfully."}

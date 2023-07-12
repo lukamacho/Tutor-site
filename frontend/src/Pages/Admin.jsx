@@ -14,7 +14,7 @@ const Admin = () => {
   const [tutorCommissionRequested, setTutorCommissionRequested] = useState(false);
   const [tutorDecreaseRequested, setTutorDecreaseRequested] = useState(false);
   const [studentIncreaseRequested, setStudentIncreaseRequested] = useState(false);
-  const [tutorScore, setTutorScore] = useState('');
+  const [tutorScore, setTutorScore] = useState(0);
   const [tutorScoreOptions, setTutorScoreOptions] = useState([]);
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
@@ -133,17 +133,17 @@ const Admin = () => {
       if (!response.ok) {
         throw new Error('Tutor decrease balance request failed');
       }
-      if (data.message === 'Balance decreased successfully.') {
+
+
+      const result = await response.json();
+      console.log(result);
+       if (result.message === 'Balance decreased successfully.') {
           setSuccessMessage('Tutor balance decreased successfully.');
           setErrorMessage('');
         } else {
           setErrorMessage('Failed to decrease tutor balance.');
           setSuccessMessage('');
       }
-
-      const result = await response.json();
-      console.log(result);
-
     } catch (error) {
       console.error(error);
       setErrorMessage('Operation failed.');
@@ -171,11 +171,19 @@ const Admin = () => {
 
       const result = await response.json();
       console.log(result);
-      setSuccessMessage('Operation executed successfully.');
-      setErrorMessage('');
+
+      if (result.message === 'Balance added successfully.') {
+          setSuccessMessage('Student balance increased successfully.');
+          setErrorMessage('');
+        } else {
+          setErrorMessage('Failed to increase student balance.');
+          setSuccessMessage('');
+      }
+
     } catch (error) {
       console.error(error);
       setErrorMessage('Operation failed.');
+      setSuccessMessage('')
     } finally {
       setStudentIncreaseRequested(false);
     }
@@ -200,8 +208,13 @@ const Admin = () => {
 
       const result = await response.json();
       console.log(result);
-      setSuccessMessage('Operation executed successfully.');
-      setErrorMessage('');
+       if (result.message === 'Tutor evaluated successfully.') {
+          setSuccessMessage('Tutor evaluated successfully.');
+          setErrorMessage('');
+        } else {
+          setErrorMessage('Failed to evaluate tutor.');
+          setSuccessMessage('');
+      }
     } catch (error) {
       console.error(error);
       setErrorMessage('Operation failed.');
