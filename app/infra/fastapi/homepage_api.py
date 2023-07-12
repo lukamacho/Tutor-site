@@ -19,6 +19,7 @@ class CreateUserRequest(BaseModel):
     password: str
     is_student: bool
 
+
 class GetUserRequest(BaseModel):
     email: str
 
@@ -77,10 +78,7 @@ async def add_student(
 
         token = generate_token(student_mail)
 
-        return {
-            "message": "Student added successfully.",
-            "token": token
-        }
+        return {"message": "Student added successfully.", "token": token}
     else:
         tutor_mail = data.mail
         core.tutor_interactor.create_tutor(
@@ -90,10 +88,7 @@ async def add_student(
 
         token = generate_token(tutor_mail)
 
-        return {
-            "message": "Tutor added successfully.",
-            "token": token
-        }
+        return {"message": "Tutor added successfully.", "token": token}
 
 
 @homepage_api.post("/sign_up")
@@ -130,11 +125,11 @@ async def get_user(
         return failed
 
     tutor = core.tutor_interactor.get_tutor(email)
-    if tutor.email == email :
+    if tutor.email == email:
         return {
             "first_name": tutor.first_name,
             "profile_address": tutor.profile_address,
-            "is_student": False
+            "is_student": False,
         }
 
     student = core.student_interactor.get_student(email)
@@ -142,7 +137,7 @@ async def get_user(
         return {
             "first_name": student.first_name,
             "profile_address": student.profile_address,
-            "is_student": True
+            "is_student": True,
         }
 
     return failed

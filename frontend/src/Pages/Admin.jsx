@@ -16,29 +16,42 @@ const Admin = () => {
   const [studentIncreaseRequested, setStudentIncreaseRequested] = useState(false);
   const [tutorScore, setTutorScore] = useState('');
   const [tutorScoreOptions, setTutorScoreOptions] = useState([]);
+  const [successMessage, setSuccessMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
-  const handleDeleteStudent = async () => {
-    try {
-      const response = await fetch('http://localhost:8000/admin/delete_student', {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ student_mail: studentMail }), // Replace with your data
-      });
+    const handleDeleteStudent = async () => {
+      try {
+        const response = await fetch('http://localhost:8000/admin/delete_student', {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ student_mail: studentMail }),
+        });
 
-      if (!response.ok) {
-        throw new Error('Delete request failed');
+        if (!response.ok) {
+          throw new Error('Delete request failed');
+        }
+
+        const data = await response.json();
+        console.log(data);
+
+        if (data.message === 'Student deleted successfully') {
+          setSuccessMessage('Student deleted successfully.');
+          setErrorMessage('');
+        } else {
+          setErrorMessage('Failed to delete student.');
+          setSuccessMessage('');
+        }
+      } catch (error) {
+        console.error(error);
+        setErrorMessage('Failed to delete student.');
+        setSuccessMessage('');
+      } finally {
+        setStudentDeleteRequested(false);
       }
-      // Handle the response
-      const data = await response.json();
-      console.log(data);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setStudentDeleteRequested(false); // Reset the deleteRequested flag
-    }
-  };
+    };
+
 
   const handleDeleteTutor = async () => {
     try {
@@ -47,19 +60,28 @@ const Admin = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ tutor_mail: tutorMail }), // Replace with your data
+        body: JSON.stringify({ tutor_mail: tutorMail }),
       });
 
       if (!response.ok) {
         throw new Error('Delete request failed');
       }
-      // Handle the response
+
       const data = await response.json();
       console.log(data);
+       if (data.message === 'Tutor deleted successfully') {
+          setSuccessMessage('Tutor deleted successfully.');
+          setErrorMessage('');
+        } else {
+          setErrorMessage('Failed to delete tutor.');
+          setSuccessMessage('');
+        }
     } catch (error) {
+      setErrorMessage('Operation failed.');
+      setSuccessMessage('')
       console.error(error);
     } finally {
-      setTutorDeleteRequested(false); // Reset the deleteRequested flag
+      setTutorDeleteRequested(false);
     }
   };
 
@@ -70,19 +92,28 @@ const Admin = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ tutor_mail: tutorCommissionMail }), // Replace with your data
+        body: JSON.stringify({ tutor_mail: tutorCommissionMail }),
       });
 
       if (!response.ok) {
         throw new Error('Commission request failed');
       }
-      // Handle the response
+
       const data = await response.json();
       console.log(data);
+      if (data.message === 'Commission_pct decreased successfully') {
+          setSuccessMessage('Commission_pct decreased successfully.');
+          setErrorMessage('');
+        } else {
+          setErrorMessage('Failed to decrease tutor commission_pct.');
+          setSuccessMessage('');
+        }
     } catch (error) {
       console.error(error);
+      setErrorMessage('Operation failed.');
+      setSuccessMessage('');
     } finally {
-      setTutorCommissionRequested(false); // Reset the deleteRequested flag
+      setTutorCommissionRequested(false);
     }
   };
 
@@ -102,11 +133,20 @@ const Admin = () => {
       if (!response.ok) {
         throw new Error('Tutor decrease balance request failed');
       }
+      if (data.message === 'Balance decreased successfully.') {
+          setSuccessMessage('Tutor balance decreased successfully.');
+          setErrorMessage('');
+        } else {
+          setErrorMessage('Failed to decrease tutor balance.');
+          setSuccessMessage('');
+      }
 
       const result = await response.json();
       console.log(result);
+
     } catch (error) {
       console.error(error);
+      setErrorMessage('Operation failed.');
     } finally {
       setTutorDecreaseRequested(false);
     }
@@ -131,8 +171,11 @@ const Admin = () => {
 
       const result = await response.json();
       console.log(result);
+      setSuccessMessage('Operation executed successfully.');
+      setErrorMessage('');
     } catch (error) {
       console.error(error);
+      setErrorMessage('Operation failed.');
     } finally {
       setStudentIncreaseRequested(false);
     }
@@ -157,8 +200,11 @@ const Admin = () => {
 
       const result = await response.json();
       console.log(result);
+      setSuccessMessage('Operation executed successfully.');
+      setErrorMessage('');
     } catch (error) {
       console.error(error);
+      setErrorMessage('Operation failed.');
     }
   };
 
@@ -225,26 +271,34 @@ const Admin = () => {
   };
 
   const handleStudentDeleteButtonClick = () => {
+    setSuccessMessage('');
+    setErrorMessage('');
     setStudentDeleteRequested(true);
   };
 
   const handleTutorDeleteButtonClick = () => {
+    setSuccessMessage('');
+    setErrorMessage('');
     setTutorDeleteRequested(true);
   };
 
   const handleTutorCommissionButtonClick = () => {
+    setSuccessMessage('');
+    setErrorMessage('');
     setTutorCommissionRequested(true);
   };
 
   const handleTutorDecreaseBalanceButtonClick = () => {
+    setSuccessMessage('');
+    setErrorMessage('');
     setTutorDecreaseRequested(true);
   };
 
   const handleStudentIncreaseButtonClick = () => {
+    setSuccessMessage('');
+    setErrorMessage('');
     setStudentIncreaseRequested(true);
   };
-
-
 
   return (
     <div className="admin-parts">
@@ -321,6 +375,10 @@ const Admin = () => {
           ))}
         </select>
         <button onClick={handleTutorScoreButtonClick}>Evaluate Tutor</button>
+      </div>
+      <div className="message-container">
+        <span>{successMessage}</span>
+        <span>{errorMessage}</span>
       </div>
     </div>
   );
