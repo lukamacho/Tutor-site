@@ -120,10 +120,10 @@ async def get_user(
         "profile_address": "",
         "is_student": False,
     }
-
+    print("saertod")
     if email == "":
         return failed
-
+    print("aba aq")
     tutor = core.tutor_interactor.get_tutor(email)
     if tutor.email == email:
         return {
@@ -133,6 +133,7 @@ async def get_user(
         }
 
     student = core.student_interactor.get_student(email)
+    print("shemovida")
     if student.email == email:
         return {
             "first_name": student.first_name,

@@ -5,16 +5,18 @@ from random import choices
 from string import ascii_letters, digits
 from typing import Any, Dict
 
-from app.infra.fastapi.token_authentication import generate_token, token_verification
-
+import jwt
 import requests
 from fastapi import APIRouter, Depends, HTTPException
-
 from pydantic import BaseModel
 
 from app.core.facade import OlympianTutorService
 from app.infra.fastapi.dependables import get_core
 from app.infra.fastapi.homepage_api import hash_password
+from app.infra.fastapi.token_authentication import generate_token
+
+SECRET_KEY = "olympian-tutors-service"
+ALGORITHM = "HS256"
 
 admin_api = APIRouter()
 
