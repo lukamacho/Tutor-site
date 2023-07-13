@@ -59,7 +59,7 @@ export default function Tutors() {
                     Last Name: {tutor.last_name}
                   </TutorStyledTypography>
                   <TutorStyledTypography variant="h7">
-                    Mail: <Link underline="none" href={`tutor/${tutor.email}`}>{tutor.email}</Link>
+                    Mail: <Link underline="none" href={`tutors/tutor/${tutor.email}`}>{tutor.email}</Link>
                   </TutorStyledTypography>
                   <TutorStyledTypography variant="h7">
                     Biography:
