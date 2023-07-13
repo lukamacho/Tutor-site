@@ -1,6 +1,7 @@
 from dataclasses import dataclass, field
-from typing import Dict, Optional
+from typing import Dict
 
+from app.core.lesson.entity import Lesson
 from app.core.student.entity import Student
 
 
@@ -15,17 +16,17 @@ class InMemoryStudentRepository:
         self.data[email] = student
         return student
 
-    def get_student(self, email: str) -> Optional[Student]:
+    def get_student(self, email: str) -> Student:
         if email in self.data.keys():
             return self.data[email]
-        return None
+        return Student("", "", "", "", 0, "")
 
     def set_student_balance(self, student_mail: str, new_balance: int) -> None:
         student = self.get_student(student_mail)
         if student is not None:
             student.set_balance(new_balance)
 
-    def get_student_balance(self, student_mail: str) -> Optional[int]:
+    def get_student_balance(self, student_mail: str) -> int:
         student = self.get_student(student_mail)
         if student is not None:
             return student.get_balance()
@@ -33,20 +34,38 @@ class InMemoryStudentRepository:
 
     def increase_student_balance(self, student_mail: str, amount: int) -> None:
         student = self.get_student(student_mail)
-        if student is not None:
+        if student.email != "":
             return student.increase_balance(amount)
 
     def decrease_student_balance(self, student_mail: str, amount: int) -> None:
         student = self.get_student(student_mail)
-        if student is not None:
+        if student.email != "":
             return student.decrease_balance(amount)
 
     def change_student_first_name(self, student_mail: str, first_name: str) -> None:
         student = self.get_student(student_mail)
-        if student is not None:
+        if student.email != "":
             student.change_first_name(first_name)
 
     def change_student_last_name(self, student_mail: str, last_name: str) -> None:
         student = self.get_student(student_mail)
-        if student is not None:
+        if student.email != "":
             student.change_last_name(last_name)
+
+    def change_student_password(self, student_mail: str, password: str) -> None:
+        student = self.get_student(student_mail)
+        if student.email != "":
+            student.change_password(password)
+
+    def change_student_profile_address(
+        self, student_mail: str, profile_address: str
+    ) -> None:
+        student = self.get_student(student_mail)
+        if student.email != "":
+            student.change_profile_address(profile_address)
+
+    def delete_student(self, student_mail: str) -> None:
+        self.data.pop(student_mail)
+
+    def get_student_lessons(self, student_mail: str) -> list[Lesson]:
+        return []

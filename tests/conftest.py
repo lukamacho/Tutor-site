@@ -1,3 +1,5 @@
+from typing import Any
+
 import pytest
 from _pytest.config.argparsing import Parser
 
@@ -33,7 +35,7 @@ def pytest_addoption(parser: Parser) -> None:
     )
 
 
-def use_sql(request: pytest.FixtureRequest) -> bool:
+def use_sql(request: pytest.FixtureRequest) -> Any:
     return request.config.getoption("--sql")
 
 

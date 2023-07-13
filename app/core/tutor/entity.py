@@ -59,5 +59,11 @@ class Tutor:
     def change_last_name(self, last_name: str) -> None:
         self.last_name = last_name
 
+    def change_password(self, password: str) -> None:
+        self.password = password
+
     def change_biography(self, biography: str) -> None:
         self.biography = biography
+
+    def change_profile_address(self, profile_address: str) -> None:
+        self.profile_address = profile_address
