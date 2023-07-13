@@ -90,7 +90,7 @@ async def report_to_admin(
     user_mail: str,
     data: ReportToAdminRequest,
 ) -> Dict[str, str]:
-    print("/student/report_to_admin/" + user_mail)
+    print("/user/report_to_admin/" + user_mail)
     port = 465
     smtp_server = "smtp.gmail.com"
     sender_email = "tutorsite727@gmail.com"
@@ -300,6 +300,15 @@ def decrease_balance(
     core.tutor_interactor.decrease_tutor_balance(tutor_mail, amount)
     return {"message": "Balance decreased successfully."}
 
+
+def token_verification(token: str) -> Any:
+    payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+    email = payload.get("email")
+    print("token verification - email: %s", email)
+    if email is None or email == "":
+        return ""
+
+    return email
 
 @admin_api.post("/verify_token")
 def verify_token(

@@ -87,3 +87,19 @@ class InMemoryLessonRepository:
                 and lesson.student_mail == student_mail
             ):
                 lesson.lesson_price = new_price
+
+    def get_tutor_lessons(self, tutor_mail: str) -> List[Lesson]:
+        lessons: List[Lesson] = []
+        for lesson in self.data:
+            if lesson.tutor_mail == tutor_mail:
+                lessons.append(lesson)
+
+        return lessons
+
+    def get_tutor_students(self, tutor_mail: str) -> List[str]:
+        tutor_students: List[str] = []
+        for lesson in self.data:
+            if lesson.tutor_mail == tutor_mail:
+                tutor_students.append(lesson.student_mail)
+
+        return tutor_students
