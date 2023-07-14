@@ -17,9 +17,9 @@ export default function AccountController() {
     ? null
     : JSON.parse(localStorage.getItem("email"));
   let profileImage =
-    localStorage.getItem("profileImage") === "undefined"
+    sessionStorage.getItem("profileImage") === "undefined"
     ? null
-    : JSON.parse(localStorage.getItem("profileImage"));
+    : JSON.parse(sessionStorage.getItem("profileImage"));
 
   console.log(email)
   console.log(profileImage)
@@ -48,7 +48,7 @@ export default function AccountController() {
 
     sessionStorage.setItem("email", JSON.stringify(''));
     sessionStorage.setItem("token", JSON.stringify(''));
-//     localStorage.setItem("profileImage", JSON.stringify(profileImage));
+    sessionStorage.setItem("profileImage", JSON.stringify(''));
 
     handleClose();
   };
@@ -75,7 +75,7 @@ export default function AccountController() {
                 src={
                   profileImage === null
                   ? require("../Storage/default")
-                  : "../Storage/" + email
+                  : require("../Storage/" + email)
                 }
                 sx={{
                   height: 32,
