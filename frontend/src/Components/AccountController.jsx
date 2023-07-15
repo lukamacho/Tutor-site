@@ -51,6 +51,8 @@ export default function AccountController() {
     sessionStorage.setItem("profileImage", JSON.stringify(''));
 
     handleClose();
+
+    window.location.reload();
   };
 
   return (
