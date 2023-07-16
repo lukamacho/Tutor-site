@@ -124,6 +124,7 @@ async def get_user(
     if email == "":
         return failed
     print("aba aq")
+    print(email)
     tutor = core.tutor_interactor.get_tutor(email)
     if tutor.email == email:
         return {

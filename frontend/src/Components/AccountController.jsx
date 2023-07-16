@@ -13,21 +13,17 @@ import { Link } from "react-router-dom";
 
 export default function AccountController() {
 
-  let email =
-    localStorage.getItem("email") === "undefined"
-    ? null
-    : JSON.parse(localStorage.getItem("email"));
+
   let profileImage =
     sessionStorage.getItem("profileImage") === "undefined"
     ? null
     : JSON.parse(sessionStorage.getItem("profileImage"));
 
-  console.log(email)
-  console.log(profileImage)
 
 
-  //const [email, setEmail] = useState(JSON.parse(sessionStorage.getItem("email")));
- // const [profileAddress, setProfileAddress] = useState("");
+
+  const [email, setEmail] = useState(JSON.parse(sessionStorage.getItem("email")));
+  const [profileAddress, setProfileAddress] = useState("");
   const [isStudent, setIsStudent] = useState(false);
 
   const [anchorEl, setAnchorEl] = useState(null);
@@ -83,7 +79,7 @@ export default function AccountController() {
   const handleClickLogOut = () => {
     console.log("handleClickLogOut");
 
-    email = null
+    setEmail(null)
     profileImage = null
 
     sessionStorage.setItem("email", JSON.stringify(''));
