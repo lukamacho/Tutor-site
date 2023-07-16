@@ -26,7 +26,7 @@ export default function Course(props) {
       </Grid>
       <Grid item>
         <Typography variant="overline" display="block" gutterBottom>
-          <Link to={"/tutor/" + props.tutor_mail}>{props.tutor_mail}</Link>
+          <Link to={"/tutors/tutor/" + props.tutor_mail}>{props.tutor_mail}</Link>
         </Typography>
       </Grid>
       <Grid item>
