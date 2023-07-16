@@ -4,7 +4,7 @@ import './Styles.css'
 
 const PublicTutor = () => {
   const { email } = useParams();
-  const visitor_mail = JSON.parse(localStorage.getItem('email'));
+  const visitor_mail = JSON.parse(sessionStorage.getItem('email'));
 
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');

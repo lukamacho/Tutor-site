@@ -170,6 +170,8 @@ async def message_to_tutor(
     message_text = data.message_text
     tutor_mail = data.tutor_mail
     student_mail = data.student_mail
+    print(data.student_mail)
+    print(data.tutor_mail)
     student = core.student_interactor.get_student(student_mail)
     tutor = core.tutor_interactor.get_tutor(tutor_mail)
     if student.email == "":
