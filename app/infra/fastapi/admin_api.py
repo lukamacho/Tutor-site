@@ -13,6 +13,7 @@ from pydantic import BaseModel
 from app.core.facade import OlympianTutorService
 from app.infra.fastapi.dependables import get_core
 from app.infra.fastapi.homepage_api import hash_password
+from app.infra.fastapi.token_authentication import generate_token
 
 SECRET_KEY = "olympian-tutors-service"
 ALGORITHM = "HS256"
@@ -111,6 +112,10 @@ def delete_student(
     student_mail: StudentDeleteRequest, core: OlympianTutorService = Depends(get_core)
 ) -> Dict[str, str]:
     print(student_mail)
+    student = core.student_interactor.get_student(student_mail.student_mail)
+    if student.email == "":
+        return {"message": "Student delete failed."}
+
     core.student_interactor.delete_student(student_mail.student_mail)
     return {"message": "Student deleted successfully"}
 
@@ -162,11 +167,6 @@ def reset_password(
         return {"message": "Tutor password reset successfully."}
 
     return {"message": "Password reset successfully."}
-
-
-def generate_token(email: str) -> str:
-    token_data = {"email": email}
-    return jwt.encode(token_data, SECRET_KEY, algorithm=ALGORITHM)
 
 
 @admin_api.post("/sign_in")
@@ -283,7 +283,7 @@ def add_balance(
     amount = add_balance.amount
     student = core.student_interactor.get_student(student_mail)
     if student.email == "":
-        return {"Message": "No such student exists."}
+        return {"message": "No such student exists."}
     core.student_interactor.increase_student_balance(student_mail, amount)
 
     return {"message": "Balance added successfully."}
@@ -311,7 +311,6 @@ def token_verification(token: str) -> Any:
         return ""
 
     return email
-
 
 @admin_api.post("/verify_token")
 def verify_token(
@@ -399,11 +398,9 @@ async def generate_meeting_link(data: MeetingLinkRequest) -> Dict[str, str]:
 
     if response.status_code == 200:
         # Extract the meeting link from the API response
-        print("saswauli")
         meeting_link = response.json()["conferenceData"]["entryPoints"][0]["uri"]
         return {"meeting_link": meeting_link}
     else:
-        print("jandaba")
         return {"message": "Failed to create the meeting."}
 
 
@@ -423,4 +420,4 @@ async def score_tutor(
         return {"message": "Tutor with this mail doesn't exist"}
     core.tutor_ranking_interactor.set_admin_score(tutor_mail, score)
 
-    return {"message": "Student evaluated successfully."}
+    return {"message": "Tutor evaluated successfully."}

@@ -12,8 +12,6 @@ import { useEffect, useState } from 'react';
 const HeaderMenu = ({ token }) => {
   const [isUser, setIsUser] = useState(false);
 
-  console.log("token: %s", token);
-
   useEffect(() => {
     const handleVerification = async () => {
       let emailToken = JSON.parse(sessionStorage.getItem('email'))
@@ -24,6 +22,7 @@ const HeaderMenu = ({ token }) => {
         email: emailStr,
       }
 
+      console.log("/verify_token/parameters")
       console.log(data)
 
       try {
@@ -36,6 +35,7 @@ const HeaderMenu = ({ token }) => {
         });
 
         response = await response.json();
+        console.log("/verify_token:response:");
         console.log(response);
 
         setIsUser(response.verified);

@@ -9,6 +9,7 @@ from pydantic import BaseModel
 
 from app.core.facade import OlympianTutorService
 from app.infra.fastapi.dependables import get_core
+from app.infra.fastapi.token_authentication import generate_token
 
 
 class CreateUserRequest(BaseModel):
@@ -17,6 +18,10 @@ class CreateUserRequest(BaseModel):
     mail: str
     password: str
     is_student: bool
+
+
+class GetUserRequest(BaseModel):
+    email: str
 
 
 class GetCourseResponse(BaseModel):
@@ -70,14 +75,20 @@ async def add_student(
         core.student_interactor.create_student(
             data.first_name, data.last_name, student_mail, password_hash, 0
         )
-        return {"message": "Student added successfully."}
+
+        token = generate_token(student_mail)
+
+        return {"message": "Student added successfully.", "token": token}
     else:
         tutor_mail = data.mail
         core.tutor_interactor.create_tutor(
             data.first_name, data.last_name, tutor_mail, password_hash, 0, "", ""
         )
         core.tutor_ranking_interactor.add_tutor_in_ranking(tutor_mail)
-        return {"message": "Tutor added successfully."}
+
+        token = generate_token(tutor_mail)
+
+        return {"message": "Tutor added successfully.", "token": token}
 
 
 @homepage_api.post("/sign_up")
@@ -96,6 +107,41 @@ async def create_user(
         return {"message": "Can't register with none values!"}
     verification_text = send_verification(student_mail)
     return {"verificationCode": verification_text}
+
+
+@homepage_api.post("/get_user")
+async def get_user(
+    data: GetUserRequest, core: OlympianTutorService = Depends(get_core)
+) -> Dict[str, str]:
+    email = data.email
+
+    failed = {
+        "first_name": "",
+        "profile_address": "",
+        "is_student": False,
+    }
+    print("saertod")
+    if email == "":
+        return failed
+    print("aba aq")
+    tutor = core.tutor_interactor.get_tutor(email)
+    if tutor.email == email:
+        return {
+            "first_name": tutor.first_name,
+            "profile_address": tutor.profile_address,
+            "is_student": False,
+        }
+
+    student = core.student_interactor.get_student(email)
+    print("shemovida")
+    if student.email == email:
+        return {
+            "first_name": student.first_name,
+            "profile_address": student.profile_address,
+            "is_student": True,
+        }
+
+    return failed
 
 
 @homepage_api.get("/courses")

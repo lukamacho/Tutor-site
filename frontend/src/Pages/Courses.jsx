@@ -9,6 +9,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 import { CourseStyledTypography } from "../Components/Styles"
 import { HeaderStyledTypography } from "../Components/Styles"
+import { Link } from "react-router-dom"
 
 const StyledCard = styled(Card)(({ theme }) => ({
   backgroundColor: '#fffede',
@@ -23,9 +24,40 @@ const containerStyle = {
 };
 
 export default function Courses() {
-  const email = JSON.parse(localStorage.getItem("email"))
-  const isStudent = JSON.parse(localStorage.getItem("isStudent"))
+  const email = JSON.parse(sessionStorage.getItem("email"))
   const [courses, setCourses] = useState([])
+  const [isStudent, setIsStudent] = useState(false)
+
+  useEffect(() => {
+    const getUser = async () => {
+      const data = {
+        email: email,
+      }
+
+      console.log("/get_user/parameters")
+      console.log(data)
+
+      try {
+        let response = await fetch('http://localhost:8000/get_user', {
+          method: 'POST',
+          body: JSON.stringify(data),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        response = await response.json();
+        console.log("/get_user/response");
+        console.log(response)
+
+        setIsStudent(response.is_student)
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    getUser();
+  }, []);
 
   useEffect(() => {
     const handleGetCourses = async () => {
@@ -87,7 +119,9 @@ export default function Courses() {
                     </CourseStyledTypography>
                     <CourseStyledTypography variant="h7">
                       <PersonIcon />
-                      {course.tutor_mail}
+                      <Link to={"/tutors/tutor/" + course.tutor_mail}>
+                        {course.tutor_mail}
+                      </Link>
                     </CourseStyledTypography>
                     <CourseStyledTypography variant="h7">
                       <LocalOfferIcon />
