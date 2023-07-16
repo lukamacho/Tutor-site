@@ -2,8 +2,80 @@ import React, { useEffect, useState } from 'react';
 import { useLocation, Link, useNavigate } from 'react-router-dom';
 import { Typography, TextField, Button, Card, CardContent, CardHeader, Grid } from '@mui/material';
 import PropTypes from 'prop-types';
-
+import backgroundImage from '../Images/TutorProfileBG.png';
+import { theme } from "../Components/Theme"
+import { ThemeProvider } from '@mui/material/styles';
 import './TutorProfile.css';
+import { HeaderStyledTypography } from "../Components/Styles"
+import { styled } from '@mui/system';
+import Box from '@mui/material/Box';
+import Avatar from '@mui/material/Avatar';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+
+const containerStyle = {
+  backgroundImage: `url(${backgroundImage})`,
+  backgroundSize: 'cover',
+  backgroundRepeat: 'repeat',
+  backgroundPosition: 'center',
+  minHeight: '100vh',
+};
+
+export const ProfileBox = styled(Box)(({ theme }) => ({
+  alignItems: 'center',
+  backgroundColor: 'rgba(248, 224, 255, 0.2)',
+  borderRadius: '14px',
+  display: 'flex',
+  justifyContent: 'center',
+  width: "100%",
+}));
+
+export const InfoBox = styled(Box)(({ theme }) => ({
+  margin: 15,
+  borderRadius: '10px',
+  boxShadow: '0.5px 0.5px 10px rgba(0, 0, 0, 0.4)',
+  backgroundColor: 'rgba(255, 255, 255, 0.8)',
+}));
+
+export const ProfileImage = styled(Box)(({ theme }) => ({
+  margin: 15,
+  width: 200,
+  height: 200,
+  display: 'flex',
+  alignItems: 'center',
+  borderRadius: '200px',
+  boxShadow: '0.5px 0.5px 10px rgba(0, 0, 0, 0.4)',
+  backgroundColor: 'rgba(255, 255, 255, 0.3)',
+  justifyContent: 'center',
+}));
+
+export const ListBox = styled(Box)(({ theme }) => ({
+  alignItems: 'center',
+  backgroundColor: 'rgba(255, 255, 255, 0.2)',
+  borderRadius: '14px',
+  display: 'flex',
+  flexDirection: 'row',
+  height: 400,
+  justifyContent: 'center',
+  margin: 'auto',
+  marginTop: 20,
+  width: "90%",
+  padding: 25,
+}));
+
+export const ListItemBox = styled(Box)(({ theme }) => ({
+  marginLeft: 20,
+  marginRight: 30,
+  width: '100%',
+  height: '100%',
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  borderRadius: '10px',
+  boxShadow: '0.5px 0.5px 10px rgba(0, 0, 0, 0.4)',
+  backgroundColor: 'rgba(255, 255, 255, 0.5)',
+  justifyContent: 'center',
+}));
 
 const Tutor = ({ token }) => {
   let emailToken = JSON.parse(sessionStorage.getItem('email'))
@@ -281,107 +353,202 @@ const handleCourseDeletion = (course) => {
 };
 
   useEffect(() => {
-    localStorage.setItem("email", JSON.stringify(email));
-    localStorage.setItem("isStudent", JSON.stringify(false));
-    localStorage.setItem("profileImage", JSON.stringify(profileAddress));
+    sessionStorage.setItem("email", JSON.stringify(email));
+    sessionStorage.setItem("isStudent", JSON.stringify(false));
+    sessionStorage.setItem("profileImage", JSON.stringify(profileAddress));
   }, [email]);
 
   return (
-    <div>
-      <Typography variant="h1" gutterBottom>
-        Tutor Profile
-      </Typography>
-      <Grid container spacing={2}>
-        <Grid item xs={12} sm={6}>
-          <Card>
-            <CardContent>
-              <Typography variant="h6" gutterBottom>
-                First Name: {firstName}
-              </Typography>
-              <Typography variant="h6" gutterBottom>
-                Last Name: {lastName}
-              </Typography>
-              <Typography variant="h6" gutterBottom>
-                Email: {email}
-              </Typography>
-              <Typography variant="h6" gutterBottom>
-                Balance: {balance}
-              </Typography>
-              <Typography variant="h6" gutterBottom>
-                Biography: {biography}
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <img
-            src={
-              profileAddress === ''
-                ? require('../Storage/default')
-                : require('../Storage/' + email)
-            }
-            style={{ width: 120, height: 140 }}
-          />
-          <form onSubmit={handleSubmit}>
-            <input
-              name="image"
-              type="file"
-              onChange={changeHandler}
-              accept=".jpeg, .png, .jpg"
-            />
-            <button type="submit">Save</button>
-          </form>
-          <Card>
-            <CardHeader title="Edit Bio" />
-            <CardContent>
-              <TextField
-                value={newBio}
-                onChange={event => setNewBio(event.target.value)}
-                multiline
-                rows={4}
-                variant="outlined"
-                fullWidth
-              />
-              <Button variant="contained" color="primary" onClick={handleBioChange}>
-                Save Bio
-              </Button>
-              <TextField
-                label="Withdrawal Amount"
-                value={withdrawalMoney}
-                onChange={event => setWithdrawalMoney(event.target.value)}
-                variant="outlined"
-                fullWidth
-              />
-              <Button variant="contained" color="primary" onClick={handleWithdrawalRequest}>
-                Request Money Withdrawal
-              </Button>
-              <TextField
-                label="Course name"
-                value={courseName}
-                onChange={event => setCourseName(event.target.value)}
-                variant="outlined"
-                fullWidth
-              />
-              <TextField
-                label="Course price"
-                value={coursePrice}
-                onChange={event => setCoursePrice(event.target.value)}
-                variant="outlined"
-                fullWidth
-              />
-              <Button variant="contained" color="primary" onClick={handleCourseAddition}>
-                Add course
-              </Button>
-              <div>
-                 <button onClick={handleNavigateToMessages}>Go to Messages</button>
-              </div>
-              <ul>
-                {courses.length > 0 ? (
-                  courses.map(course => (
-                    <li key={course.id}>
-                      <span>Subject: {course.subject}</span>
-                      <span>Tutor: {course.tutor_mail}</span>
-                      <span>Course price: {course.price}</span>
+    <div style={containerStyle}>
+      <ThemeProvider theme={theme}>
+        <HeaderStyledTypography variant="h4" align="center">
+          My Profile
+        </HeaderStyledTypography>
+        <ProfileBox>
+          <ProfileImage>
+            <Avatar
+              style={{ width: 180, height: 180 }}
+              src={profileAddress === '' ? require('../Storage/default') : require('../Storage/' + email)} />
+          </ProfileImage>
+          <InfoBox>
+            <List>
+              <ListItem style={{ margin: -5 }}>
+                <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+                  Email:
+                </Typography>
+                <Typography variant="h6" sx={{ marginLeft: 1, }}>
+                  {email}
+                </Typography>
+              </ListItem>
+              <ListItem style={{ margin: -5 }}>
+                <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+                  First Name:
+                </Typography>
+                <Typography variant="h6" sx={{ marginLeft: 1, }}>
+                  {firstName}
+                </Typography>
+              </ListItem>
+              <ListItem style={{ margin: -5 }}>
+                <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+                  Last Name:
+                </Typography>
+                <Typography variant="h6" sx={{ marginLeft: 1, }}>
+                  {lastName}
+                </Typography>
+              </ListItem>
+              <ListItem style={{ margin: -5 }}>
+                <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+                  Balance:
+                </Typography>
+                <Typography variant="h6" sx={{ marginLeft: 1, }}>
+                  {balance}
+                </Typography>
+              </ListItem>
+              <ListItem style={{ margin: -5 }}>
+                <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+                  Biography:
+                </Typography>
+                <Typography variant="h6" sx={{ marginLeft: 1, }}>
+                  {biography}
+                </Typography>
+              </ListItem>
+            </List>
+          </InfoBox>
+          <InfoBox>
+            <List>
+              <ListItem>
+                <TextField
+                  id="new-biography"
+                  fullWidth
+                  label="New Biography"
+                  name="new-biography"
+                  onChange={e => setNewBio(e.target.value)}
+                  value={newBio}
+                  size="small"
+                  multiline
+                  rows={4}
+                />
+                <Button
+                  onClick={handleBioChange}
+                  sx={{ marginLeft: 1, }}
+                  variant="outlined"
+                  size="small"
+                >
+                  Change
+                </Button>
+              </ListItem>
+              <ListItem>
+                <TextField
+                  id="withdrawal-amount"
+                  fullWidth
+                  label="Withdrawal Amount"
+                  name="withdrawal-amount"
+                  onChange={e => setWithdrawalMoney(e.target.value)}
+                  value={withdrawalMoney}
+                  size="small"
+                />
+                <Button
+                  onClick={handleWithdrawalRequest}
+                  sx={{ marginLeft: 1, }}
+                  variant="outlined"
+                  size="small"
+                >
+                  Request
+                </Button>
+              </ListItem>
+              <ListItem>
+                <input name="image" type="file" onChange={changeHandler} accept=".jpeg, .png, .jpg" />
+                <Button
+                  onClick={handleSubmit}
+                  sx={{ marginLet: 1, }}
+                  variant="outlined"
+                  size="small"
+                >
+                  Save
+                </Button>
+              </ListItem>
+            </List>
+          </InfoBox>
+          <InfoBox>
+            <List>
+              <ListItem>
+                <Button
+                  onClick={handleNavigateToMessages}
+                  sx={{ marginLet: 1, }}
+                  variant="outlined"
+                  size="medium"
+                >
+                  Messages
+                </Button>
+                </ListItem>
+                <ListItem>
+                  <TextField
+                    label="My Report"
+                    onChange={e => setReport(e.target.value)}
+                    value={report}
+                    size="small"
+                  />
+                  <Button
+                    onClick={handleSendReportToAdmin}
+                    sx={{ marginLet: 1, }}
+                    variant="outlined"
+                    size="medium"
+                  >
+                    Send to Admin
+                  </Button>
+              </ListItem>
+              <ListItem>
+                <TextField
+                  label="Course Name"
+                  value={courseName}
+                  onChange={event => setCourseName(event.target.value)}
+                  variant="outlined"
+                  fullWidth
+                  size="small"
+                />
+                <TextField
+                  label="Course Price"
+                  value={coursePrice}
+                  onChange={event => setCoursePrice(event.target.value)}
+                  variant="outlined"
+                  fullWidth
+                  size="small"
+                />
+                <Button variant="outlined" color="primary" onClick={handleCourseAddition}>
+                  Add course
+                </Button>
+              </ListItem>
+            </List>
+          </InfoBox>
+        </ProfileBox>
+        <ListBox>
+          <ListItemBox>
+            <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
+              Courses:
+            </Typography>
+            {courses.length > 0 ?
+              (
+                <List>
+                  {courses.map(course => (
+                    <ListItem key={course.id}>
+                      <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+                        Subject:
+                      </Typography>
+                      <Typography variant="h6" sx={{ marginLeft: 1, }}>
+                        {course.subject}
+                      </Typography>
+                      <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+                        Tutor:
+                      </Typography>
+                      <Typography variant="h6" sx={{ marginLeft: 1, }}>
+                        {course.tutor_mail}
+                      </Typography>
+                      <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+                        Price:
+                      </Typography>
+                      <Typography variant="h6" sx={{ marginLeft: 1, }}>
+                        {course.price}
+                      </Typography>
                       <Button
                         variant="contained"
                         color="secondary"
@@ -389,57 +556,67 @@ const handleCourseDeletion = (course) => {
                       >
                         Delete
                       </Button>
-                    </li>
-                  ))
-                ) : (
-                  <li>No courses available</li>
-                )}
-              </ul>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader title="My Students" />
-            <CardContent>
-              {tutorStudents.length > 0 ? (
-                <ul>
-                  {tutorStudents.map(student => (
-                    <li key={student.id}>
-                      <span>First name: {student.first_name}</span>
-                      <span>Last name: {student.last_name}</span>
-                      <TextField
-                        label="Homework"
-                        variant="outlined"
-                        fullWidth
-                        value={homeworkData[student.id] || ''}
-                        onChange={(e) =>
-                          handleHomeworkChange(student.id, e.target.value)
-                        }
-                      />
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={() => handleAddHomework(student.id,student.email)}
-                      >
-                        Add Homework
-                      </Button>
-                    </li>
+                    </ListItem>
                   ))}
-                </ul>
+                </List>
               ) : (
-                <p>No students</p>
-              )}
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
-      <h4>Contact Admin</h4>
-      <input
-        type="text"
-        value={report}
-        onChange={(e) => setReport(e.target.value)}
-        placeholder="my report"
-      />
-      <button onClick={handleSendReportToAdmin}>Send to Admin</button>
+                <Typography variant="h5" sx={{ marginLeft: 1, }}>
+                  No Courses!
+                </Typography>
+              )
+            }
+          </ListItemBox>
+          <ListItemBox>
+            <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
+              Students:
+            </Typography>
+            {tutorStudents.length > 0 ?
+              (
+                <List>
+                  {tutorStudents.map(student =>
+                    (
+                      <ListItem key={student.id}>
+                        <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+                          First Name:
+                        </Typography>
+                        <Typography variant="h6" sx={{ marginLeft: 1, }}>
+                          {student.first_name}
+                        </Typography>
+                        <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+                          Last Name:
+                        </Typography>
+                        <Typography variant="h6" sx={{ marginLeft: 1, }}>
+                          {student.last_name}
+                        </Typography>
+                        <TextField
+                          label="Homework"
+                          variant="outlined"
+                          fullWidth
+                          value={homeworkData[student.id] || ''}
+                          onChange={(e) =>
+                            handleHomeworkChange(student.id, e.target.value)
+                          }
+                        />
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          onClick={() => handleAddHomework(student.id,student.email)}
+                        >
+                          Add Homework
+                        </Button>
+                      </ListItem>
+                    ))
+                  }
+                </List>
+              ) : (
+                <Typography variant="h5" sx={{ marginLeft: 1, }}>
+                  No Students!
+                </Typography>
+              )
+            }
+          </ListItemBox>
+        </ListBox>
+      </ThemeProvider>
     </div>
   );
 }

@@ -12,9 +12,24 @@ import Logout from "@mui/icons-material/Logout";
 import { Link } from "react-router-dom";
 
 export default function AccountController() {
-  const [email, setEmail] = useState(JSON.parse(sessionStorage.getItem("email")));
-  const [profileAddress, setProfileAddress] = useState("");
+
+  let email =
+    localStorage.getItem("email") === "undefined"
+    ? null
+    : JSON.parse(localStorage.getItem("email"));
+  let profileImage =
+    sessionStorage.getItem("profileImage") === "undefined"
+    ? null
+    : JSON.parse(sessionStorage.getItem("profileImage"));
+
+  console.log(email)
+  console.log(profileImage)
+
+
+  //const [email, setEmail] = useState(JSON.parse(sessionStorage.getItem("email")));
+ // const [profileAddress, setProfileAddress] = useState("");
   const [isStudent, setIsStudent] = useState(false);
+
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
 
@@ -68,10 +83,20 @@ export default function AccountController() {
   const handleClickLogOut = () => {
     console.log("handleClickLogOut");
 
-    sessionStorage.setItem("email", JSON.stringify(""));
-    sessionStorage.setItem("token", JSON.stringify(""));
+    email = null
+    profileImage = null
+
+    sessionStorage.setItem("email", JSON.stringify(''));
+    sessionStorage.setItem("token", JSON.stringify(''));
+    sessionStorage.setItem("profileImage", JSON.stringify(''));
+
+    //sessionStorage.setItem("email", JSON.stringify(""));
+    //sessionStorage.setItem("token", JSON.stringify(""));
+
 
     handleClose();
+
+    window.location.reload();
   };
 
   return (
@@ -94,9 +119,11 @@ export default function AccountController() {
             >
               <Avatar
                 src={
-                  profileAddress === null
-                    ? require("../Storage/default")
-                    : "../Storage/" + email
+
+                  profileImage === null
+                  ? require("../Storage/default")
+                  : require("../Storage/" + email)
+
                 }
                 sx={{
                   height: 32,
