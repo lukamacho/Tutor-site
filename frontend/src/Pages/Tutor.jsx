@@ -210,9 +210,19 @@ const Tutor = ({ token }) => {
   };
 
   const handleWithdrawalRequest = () => {
+  // Convert withdrawalMoney to a number (since it is read from an input field)
+  const withdrawalAmount = parseFloat(withdrawalMoney);
+
+  if (isNaN(withdrawalAmount)) {
+    // If the withdrawal amount is not a valid number, display an error or handle it appropriately.
+    console.error('Withdrawal amount is not a valid number.');
+    return;
+  }
+
+  if (balance >= withdrawalAmount) {
     const requestData = {
       tutor_mail: email,
-      amount: withdrawalMoney,
+      amount: withdrawalAmount,
     };
 
     // Send POST request to request money withdrawal
@@ -227,10 +237,16 @@ const Tutor = ({ token }) => {
       .then(data => {
         // Process the response as needed
         console.log('Withdrawal request response:', data);
-        setBalance(balance - withdrawalMoney);
+        setBalance(balance - withdrawalAmount);
       })
       .catch(error => console.error('Error requesting money withdrawal:', error));
-  };
+  } else {
+    // Handle the case where the balance is less than the withdrawal amount
+    console.error('Insufficient balance for withdrawal.');
+    // You can display an error message or take any other action here.
+  }
+};
+
 
    const handleSendReportToAdmin = async () => {
     if (report !== '') {
@@ -250,26 +266,34 @@ const Tutor = ({ token }) => {
     }
   };
 
-  const handleBioChange = () => {
+  const handleBioChange = async () => {
+  try {
     const bioData = {
       tutor_mail: email,
       new_bio: newBio,
     };
 
     // Send POST request to update tutor's bio
-    fetch(`http://localhost:8000/tutor/change_bio`, {
+    const response = await fetch('http://localhost:8000/tutor/change_bio', {
       method: 'POST',
       body: JSON.stringify(bioData),
       headers: {
         'Content-Type': 'application/json',
       },
-    })
-      .then(response => response.json())
-      .then(data => {
-        setNewBio(''); // Clear the newBio state
-      })
-      .catch(error => console.error('Error updating bio:', error));
-  };
+    });
+
+    const responseJson = await response.json();
+    console.log(responseJson);
+
+    // Update the state locally with the new biography
+    setBiography(newBio);
+    // Clear the new bio input field after updating
+    setNewBio('');
+  } catch (error) {
+    console.error('Error updating bio:', error);
+  }
+};
+
 
   const handleCourseAddition = () => {
     const courseData = {

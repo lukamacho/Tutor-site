@@ -279,6 +279,7 @@ async def buy_lesson(
                 lesson.number_of_lessons + 1,
                 data.subject,
             )
+            core.tutor_interactor.increase_tutor_balance(data.tutor_mail, data.lesson_price)
             core.tutor_ranking_interactor.add_number_of_lessons(data.tutor_mail, 1)
 
         core.student_interactor.set_student_balance(

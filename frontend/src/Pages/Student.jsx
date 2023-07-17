@@ -184,44 +184,58 @@ const Student = ({ token }) => {
   };
 
   const handleChangeFirstName = async () => {
-    try {
-      const data = {
-        new_first_name: newFirstName,
-      };
+  try {
+    const data = {
+      new_first_name: newFirstName,
+    };
 
-      const response = await fetch('http://localhost:8000/student/change_first_name/' + email, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      });
-      response = await response.json();
-      console.log(response);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+    const response = await fetch('http://localhost:8000/student/change_first_name/' + email, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+
+    const responseJson = await response.json();
+    console.log(responseJson);
+
+    // Update the state locally with the new first name
+    setFirstName(newFirstName);
+    // Clear the new first name input field after updating
+    setNewFirstName('');
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 
   const handleChangeLastName = async () => {
-    try {
-      const data = {
-        new_last_name: newLastName,
-      };
+  try {
+    const data = {
+      new_last_name: newLastName,
+    };
 
-      const response = await fetch('http://localhost:8000/student/change_last_name/' + email, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      });
-      response = await response.json();
-      console.log(response);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+    const response = await fetch('http://localhost:8000/student/change_last_name/' + email, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+
+    const responseJson = await response.json();
+    console.log(responseJson);
+
+    // Update the state locally with the new last name
+    setLastName(newLastName);
+    // Clear the new last name input field after updating
+    setNewLastName('');
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 
   const handleChangePassword = async () => {
     try {
