@@ -24,7 +24,8 @@ GOOGLE_CLIENT_ID = "your_client_id"
 GOOGLE_CLIENT_SECRET = "your_client_secret"
 GOOGLE_REDIRECT_URI = "your_redirect_uri"
 
-
+ADMIN_MAIL = "tutorsite727@gmail.com"
+ADMIN_PASSWORD = "2b9307d21f40400972079b1520d2f01979f168e3c5ee79e87bb9f33294fedee8"
 class PasswordResetRequest(BaseModel):
     email: str
 
@@ -177,7 +178,7 @@ def sign_in(
 
     email = sign_in_request.email
     password = hash_password(sign_in_request.password)
-
+    print(password)
     tutor = core.tutor_interactor.get_tutor(email)
     student = core.student_interactor.get_student(email)
 
@@ -187,6 +188,15 @@ def sign_in(
         "error": True,
         "token": "",
     }
+
+    if email == ADMIN_MAIL and password == ADMIN_PASSWORD:
+        print("Admin has come in the system.")
+        return {
+            "error": False,
+            "token": token,
+            "is_student": False,
+            "is_admin": True,
+        }
 
     if tutor.email == "" and student.email == "":
         print("tutor is None and student is None")
@@ -202,6 +212,7 @@ def sign_in(
                 "error": False,
                 "token": token,
                 "is_student": False,
+                "is_admin": False,
             }
     else:
         if password != student.password:
@@ -213,6 +224,7 @@ def sign_in(
                 "error": False,
                 "token": token,
                 "is_student": True,
+                "is_admin": False,
             }
 
 

@@ -70,41 +70,45 @@ const LogIn = ({ setToken }) => {
   const [authenticationSuccess, setAuthenticationSuccess] = useState(true);
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    const data = {
-      "email": email,
-      "password": password,
-    }
+  const data = {
+    "email": email,
+    "password": password,
+  };
 
-    try {
-      const response = await fetch('http://localhost:8000/sign_in', {
-        method: 'POST',
-        body: JSON.stringify(data),
-        headers: { 'Content-Type': 'application/json' },
-      });
+  try {
+    const response = await fetch('http://localhost:8000/sign_in', {
+      method: 'POST',
+      body: JSON.stringify(data),
+      headers: { 'Content-Type': 'application/json' },
+    });
 
-      const result = await response.json();
-      console.log(result);
-      setToken(result.token);
+    const result = await response.json();
+    console.log(result);
+    setToken(result.token);
 
-      if (!result.error) {
-        sessionStorage.setItem('email', JSON.stringify(email));
+    if (!result.error) {
+      sessionStorage.setItem('email', JSON.stringify(email));
 
-        if (result.is_student) {
-          // Student sign-in.
-          navigate('/student_profile');
-        } else {
-          // Tutor sign-in.
-          navigate('/tutor_profile');
-        }
+      if (result.is_student) {
+        // Student sign-in.
+        navigate('/student_profile');
+      } else if (result.is_admin) {
+        // Admin sign-in.
+        navigate('/admin');
       } else {
-        setAuthenticationSuccess(false);
+        // Tutor sign-in.
+        navigate('/tutor_profile');
       }
-    } catch (error) {
-      console.error(error);
+    } else {
+      setAuthenticationSuccess(false);
     }
+  } catch (error) {
+    console.error(error);
   }
+};
+
 
   const handleResetPassword = async (e) => {
     e.preventDefault();

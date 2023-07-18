@@ -2,6 +2,11 @@ import React, { useState, useEffect } from 'react';
 import './Admin.css';
 
 const Admin = () => {
+  const [email, setEmail] = useState(() => {
+    const emailToken = sessionStorage.getItem('email');
+    return emailToken ? JSON.parse(emailToken) : '';
+  });
+
   const [studentMail, setStudentMail] = useState('');
   const [tutorMail, setTutorMail] = useState('');
   const [tutorCommissionMail, setTutorCommissionMail] = useState('');
@@ -18,6 +23,7 @@ const Admin = () => {
   const [tutorScoreOptions, setTutorScoreOptions] = useState([]);
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+
 
     const handleDeleteStudent = async () => {
       try {
@@ -312,7 +318,9 @@ const Admin = () => {
     setErrorMessage('');
     setStudentIncreaseRequested(true);
   };
-
+    if (!email) {
+        return null; // Render nothing if email is null
+      }
   return (
     <div className="admin-parts">
       <h1>Admin functionality</h1>
