@@ -76,6 +76,9 @@ export default function AccountController() {
     handleClose();
   };
 
+  console.log("EHHEHHEHE")
+  console.log(profileImage)
+
   const handleClickLogOut = () => {
     console.log("handleClickLogOut");
 
@@ -115,11 +118,9 @@ export default function AccountController() {
             >
               <Avatar
                 src={
-
-                  profileImage === null
+                  profileImage === ''
                   ? require("../Storage/default")
                   : require("../Storage/" + email)
-
                 }
                 sx={{
                   height: 32,

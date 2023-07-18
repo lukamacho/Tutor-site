@@ -138,6 +138,26 @@ export default function StudentMessages() {
           )}
         </ListBox>
         <ListBox>
+          <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
+            Messages:
+          </Typography>
+          {messages.length === 0 ? (
+            <Typography variant="h5" sx={{ marginLeft: 1, }}>
+              No Messages!
+            </Typography>
+          ) : (
+            <List>
+              {messages.map((message, index) => (
+                <ListItem key={index}>
+                  <Typography variant="h6" sx={{ marginLeft: 1, }}>
+                    {message.message_text}
+                  </Typography>
+                </ListItem>
+              ))}
+            </List>
+          )}
+        </ListBox>
+        <ListBox>
           {receiverMail &&
             <div>
               <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
@@ -164,26 +184,6 @@ export default function StudentMessages() {
           >
             Send
           </Button>
-        </ListBox>
-        <ListBox>
-          <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
-            Messages:
-          </Typography>
-          {messages.length === 0 ? (
-            <Typography variant="h5" sx={{ marginLeft: 1, }}>
-              No Messages!
-            </Typography>
-          ) : (
-            <List>
-              {messages.map((message, index) => (
-                <ListItem key={index}>
-                  <Typography variant="h6" sx={{ marginLeft: 1, }}>
-                    {message.message_text}
-                  </Typography>
-                </ListItem>
-              ))}
-            </List>
-          )}
         </ListBox>
       </ThemeProvider>
     </div>
