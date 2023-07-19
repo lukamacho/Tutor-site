@@ -6,12 +6,21 @@ export const background = {
   backgroundRepeat: 'repeat',
   backgroundPosition: 'center',
   minHeight: '100vh',
-  opacity: 0.4,
-  filter: 'blur(0.5px)',
 };
 
 export default function Homepage() {
+  const inspiringSentenceStyle = {
+    fontSize: '48px',
+    fontWeight: 'bold',
+    color: '#ff0000',
+    textAlign: 'center',
+    paddingTop: '40vh',
+    textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)',
+  };
+
   return (
-    <div style={background}/>
+    <div style={background}>
+      <h1 style={inspiringSentenceStyle}>Your Olympic carrier starts here</h1>
+    </div>
   );
 }
