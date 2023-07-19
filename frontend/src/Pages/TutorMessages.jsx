@@ -227,6 +227,15 @@ export default function StudentMessages() {
             value={meetingDate}
             size="small"
           />
+          <TextField
+            type="time"
+            id="meeting-time"
+            fullWidth
+            name="meeting-time"
+            onChange={e => setMeetingTime(e.target.value)}
+            value={meetingTime}
+            size="small"
+          />
           <Button
             onClick={handleGenerateMeetingLink}
             sx={{ marginLeft: 1, }}
